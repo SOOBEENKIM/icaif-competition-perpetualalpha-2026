@@ -1,0 +1,11 @@
+Run from /home/ssd-990/soobeenkim/icaif_competition_2026
+
+Fresh replay (unique NEW output directory; no cached results):
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python -m pair_model_research.reproduce --phase continuous --scenario base
+
+Change --scenario to stress or --phase to validation/comparison for the other fixed comparisons. This verifies deterministic computation, NOT an independent market test.
+
+Generate the report from existing evidence:
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python -m pair_model_research.report
+
+No exchange order sender is used by these commands. The candidate is not installed in the active live strategy.

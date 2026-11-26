@@ -1,0 +1,8 @@
+test_72h_received_book_position_stays_open_at_24h_and_pays_exit_at_72h (experiments.horizon72_gate_20261018.test_horizon.HorizonTests.test_72h_received_book_position_stays_open_at_24h_and_pays_exit_at_72h) ... ok
+test_entry_funding_uses_remaining_72h_without_tripling_fees (experiments.horizon72_gate_20261018.test_horizon.HorizonTests.test_entry_funding_uses_remaining_72h_without_tripling_fees) ... ok
+test_price_labels_and_strict_maturity_follow_72h (experiments.horizon72_gate_20261018.test_horizon.HorizonTests.test_price_labels_and_strict_maturity_follow_72h) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.040s
+
+OK

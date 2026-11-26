@@ -1,0 +1,14 @@
+test_both_missing_sides_have_cost_bounded_limits (experiments.conditional_completion_pairs_20261017.test_completion.ConditionalTests.test_both_missing_sides_have_cost_bounded_limits) ... ok
+test_disabled_policy_reproduces_old_engine (experiments.conditional_completion_pairs_20261017.test_completion.ConditionalTests.test_disabled_policy_reproduces_old_engine) ... ok
+test_future_price_and_funding_do_not_change_past_actions (experiments.conditional_completion_pairs_20261017.test_completion.ConditionalTests.test_future_price_and_funding_do_not_change_past_actions) ... ok
+test_future_source_expiry_and_lost_remaining_value_reject (experiments.conditional_completion_pairs_20261017.test_completion.ConditionalTests.test_future_source_expiry_and_lost_remaining_value_reject) ... ok
+test_global_risk_and_covariance_charge_can_reject (experiments.conditional_completion_pairs_20261017.test_completion.ConditionalTests.test_global_risk_and_covariance_charge_can_reject) ... ok
+test_one_retry_remains_independent_and_charged (experiments.conditional_completion_pairs_20261017.test_completion.ConditionalTests.test_one_retry_remains_independent_and_charged) ... ok
+test_past_fee_does_not_change_cash_choice_but_remains_in_equity (experiments.conditional_completion_pairs_20261017.test_completion.ConditionalTests.test_past_fee_does_not_change_cash_choice_but_remains_in_equity) ... ok
+test_remaining_choice_can_improve_without_recovering_sunk_loss (experiments.conditional_completion_pairs_20261017.test_completion.ConditionalTests.test_remaining_choice_can_improve_without_recovering_sunk_loss) ... ok
+test_zero_liquidity_is_not_a_free_hedge_or_free_unwind (experiments.conditional_completion_pairs_20261017.test_completion.ConditionalTests.test_zero_liquidity_is_not_a_free_hedge_or_free_unwind) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.485s
+
+OK

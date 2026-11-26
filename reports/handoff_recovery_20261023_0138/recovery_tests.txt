@@ -1,0 +1,10 @@
+test_duplicate_response_rows_are_idempotent_but_conflicts_fail (candidate_handoff.test_recovery.RecoveryTests.test_duplicate_response_rows_are_idempotent_but_conflicts_fail) ... ok
+test_exact_crash_after_confirmed_gold_fill_recovers_without_sending (candidate_handoff.test_recovery.RecoveryTests.test_exact_crash_after_confirmed_gold_fill_recovers_without_sending) ... ok
+test_incomplete_receipt_wrong_owner_and_wrong_side_are_rejected (candidate_handoff.test_recovery.RecoveryTests.test_incomplete_receipt_wrong_owner_and_wrong_side_are_rejected) ... ok
+test_repeat_recovery_never_doubles_inventory_or_fees (candidate_handoff.test_recovery.RecoveryTests.test_repeat_recovery_never_doubles_inventory_or_fees) ... ok
+test_unknown_other_market_is_not_erased (candidate_handoff.test_recovery.RecoveryTests.test_unknown_other_market_is_not_erased) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 3.282s
+
+OK

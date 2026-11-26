@@ -1,0 +1,79 @@
+test_missing_flat_market_blocks_outstanding_increase (competition_live.test_operational_repairs.OperationalRepairs.test_missing_flat_market_blocks_outstanding_increase) ... FAIL
+test_missing_flat_market_does_not_block_actual_reduce_only_exit (competition_live.test_operational_repairs.OperationalRepairs.test_missing_flat_market_does_not_block_actual_reduce_only_exit) ... FAIL
+test_missing_held_or_offset_owner_market_still_blocks_valuation (competition_live.test_operational_repairs.OperationalRepairs.test_missing_held_or_offset_owner_market_still_blocks_valuation) ... ok
+test_new_flat_ledger_waits_for_signal (competition_live.test_operational_repairs.OperationalRepairs.test_new_flat_ledger_waits_for_signal) ... ok
+test_restart_restores_risk_loop_without_signal (competition_live.test_operational_repairs.OperationalRepairs.test_restart_restores_risk_loop_without_signal) ... FAIL
+test_runtime_does_not_pickle_quote_client (competition_live.test_operational_repairs.OperationalRepairs.test_runtime_does_not_pickle_quote_client) ... ERROR
+test_sequential_orders_refresh_after_four_second_fill_wait (competition_live.test_operational_repairs.OperationalRepairs.test_sequential_orders_refresh_after_four_second_fill_wait) ... FAIL
+test_stale_refresh_is_rejected (competition_live.test_operational_repairs.OperationalRepairs.test_stale_refresh_is_rejected) ... FAIL
+
+======================================================================
+ERROR: test_runtime_does_not_pickle_quote_client (competition_live.test_operational_repairs.OperationalRepairs.test_runtime_does_not_pickle_quote_client)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/reports/strategy_repairs_20261021/release/competition_live/test_operational_repairs.py", line 118, in test_runtime_does_not_pickle_quote_client
+    save_coordinator(path, p, self.profile, 'fixture')
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/reports/strategy_repairs_20261021/release/competition_live/runtime.py", line 51, in save_coordinator
+    atomic(path,pickle.dumps(dict(fingerprint=fingerprint(profile),reason=reason,portfolio=state),protocol=5))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: Can't pickle local object 'OperationalRepairs.test_runtime_does_not_pickle_quote_client.<locals>.<lambda>'
+
+======================================================================
+FAIL: test_missing_flat_market_blocks_outstanding_increase (competition_live.test_operational_repairs.OperationalRepairs.test_missing_flat_market_blocks_outstanding_increase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/reports/strategy_repairs_20261021/release/competition_live/test_operational_repairs.py", line 111, in test_missing_flat_market_blocks_outstanding_increase
+    self.assertIsNone(p.base_task)
+AssertionError: {'target': array([0.02, 0.  , 0.  , 0.  , 0.  , 0.  , 0.  , 0.  , 0.  , 0.  ]), 'expires': 1792412300} is not None
+
+======================================================================
+FAIL: test_missing_flat_market_does_not_block_actual_reduce_only_exit (competition_live.test_operational_repairs.OperationalRepairs.test_missing_flat_market_does_not_block_actual_reduce_only_exit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/reports/strategy_repairs_20261021/release/competition_live/test_operational_repairs.py", line 84, in test_missing_flat_market_does_not_block_actual_reduce_only_exit
+    self.assertEqual(len(orders), 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_restart_restores_risk_loop_without_signal (competition_live.test_operational_repairs.OperationalRepairs.test_restart_restores_risk_loop_without_signal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/reports/strategy_repairs_20261021/release/competition_live/test_operational_repairs.py", line 46, in test_restart_restores_risk_loop_without_signal
+    live.return_value.tick.assert_called_once()
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/.tools/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/unittest/mock.py", line 918, in assert_called_once
+    raise AssertionError(msg)
+AssertionError: Expected 'tick' to have been called once. Called 0 times.
+
+======================================================================
+FAIL: test_sequential_orders_refresh_after_four_second_fill_wait (competition_live.test_operational_repairs.OperationalRepairs.test_sequential_orders_refresh_after_four_second_fill_wait)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/reports/strategy_repairs_20261021/release/competition_live/test_operational_repairs.py", line 64, in test_sequential_orders_refresh_after_four_second_fill_wait
+    self.assertEqual(len(orders), 2)
+AssertionError: 1 != 2
+
+======================================================================
+FAIL: test_stale_refresh_is_rejected (competition_live.test_operational_repairs.OperationalRepairs.test_stale_refresh_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/reports/strategy_repairs_20261021/release/competition_live/test_operational_repairs.py", line 75, in test_stale_refresh_is_rejected
+    self.assertEqual(orders, [])
+AssertionError: Lists differ: [LimitOrder(coin='pas:BTC', is_buy=True, s[99 chars]85')] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+LimitOrder(coin='pas:BTC', is_buy=True, size='0.01000', price='80079', tif='Ioc', reduce_only=False, cloid='0x72a2787a6f29ecc0c11e3b64c37d1e85')
+
++ []
+- [LimitOrder(coin='pas:BTC',
+-             is_buy=True,
+-             size='0.01000',
+-             price='80079',
+-             tif='Ioc',
+-             reduce_only=False,
+-             cloid='0x72a2787a6f29ecc0c11e3b64c37d1e85')]
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.139s
+
+FAILED (failures=5, errors=1)

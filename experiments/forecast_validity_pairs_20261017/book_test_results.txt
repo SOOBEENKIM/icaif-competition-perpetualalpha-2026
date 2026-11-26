@@ -1,0 +1,13 @@
+test_both_entries_pay_fees_but_open_inventory_is_not_a_completed_trade (experiments.forecast_validity_pairs_20261017.test_books.FixedForecastBookTests.test_both_entries_pay_fees_but_open_inventory_is_not_a_completed_trade) ... ok
+test_failed_completion_retains_actual_fill_then_pays_close (experiments.forecast_validity_pairs_20261017.test_books.FixedForecastBookTests.test_failed_completion_retains_actual_fill_then_pays_close) ... ok
+test_frozen_source_hedge_repriced_from_current_books (experiments.forecast_validity_pairs_20261017.test_books.FixedForecastBookTests.test_frozen_source_hedge_repriced_from_current_books) ... ok
+test_missing_leg_gets_one_paid_completion (experiments.forecast_validity_pairs_20261017.test_books.FixedForecastBookTests.test_missing_leg_gets_one_paid_completion) ... ok
+test_no_price_edge_is_rejected_after_costs (experiments.forecast_validity_pairs_20261017.test_books.FixedForecastBookTests.test_no_price_edge_is_rejected_after_costs) ... ok
+test_oracle_is_not_an_executable_entry_or_exit (experiments.forecast_validity_pairs_20261017.test_books.FixedForecastBookTests.test_oracle_is_not_an_executable_entry_or_exit) ... ok
+test_remaining_horizon_not_reset_by_later_entry (experiments.forecast_validity_pairs_20261017.test_books.FixedForecastBookTests.test_remaining_horizon_not_reset_by_later_entry) ... ok
+test_unknown_arrival_does_not_allow_repeated_orders (experiments.forecast_validity_pairs_20261017.test_books.FixedForecastBookTests.test_unknown_arrival_does_not_allow_repeated_orders) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.011s
+
+OK

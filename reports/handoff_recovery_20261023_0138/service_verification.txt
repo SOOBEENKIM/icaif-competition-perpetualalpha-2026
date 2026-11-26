@@ -1,0 +1,15 @@
+Read-only verification after local recovery, 2026-10-23 KST.
+
+MainPID=0
+ExecMainStatus=1
+Id=icaif-pas-budget-live.service
+ActiveState=failed
+SubState=failed
+
+MainPID=65083
+ExecMainStatus=0
+Id=icaif-pas-budget-signals.service
+ActiveState=active
+SubState=running
+
+No start, restart, stop, reset-failed, order, cancel or leverage action was performed.

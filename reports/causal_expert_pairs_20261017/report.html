@@ -1,0 +1,57 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>페어 예측 앙상블 검증</title>
+<style>body{font:16px/1.65 system-ui;max-width:1250px;margin:40px auto;padding:0 24px;color:#182434}h1{font-size:28px}h2{font-size:21px;margin-top:32px}table{border-collapse:collapse;width:100%;font-size:14px}th,td{border-bottom:1px solid #dce3eb;padding:8px;text-align:right}th:first-child,td:first-child{text-align:left}.scroll{overflow:auto}.note{padding:16px;background:#f0f5fa;border-left:4px solid #426a95}code{font-size:14px}</style><h1>당시 발행한 예측의 성적으로 비중을 갱신하는 페어 앙상블</h1>
+<p class="note"><strong>구현과 비교를 완료했으나 기존 후보를 대체할 성능 개선은 확인하지 못했다.</strong>
+새 계좌 백테스트 48개, 기존 계좌 정확 재현 4개, 원래 예측 상태 정확 재현 8개와 구현 검사 7개를 완료했다.
+이후 기간의 기본 비용에서는 일부 개선됐지만 높은 비용 조건에서 이점을 잃었고, 짧은 실제 par 호가에서도 진입이 발생하지 않았다.</p>
+<h2>기존 앙상블과 달라진 점</h2>
+<p>이전 pairs_forecast 실험의 ridge·tree·GRU 잔차 앙상블은 고정 평균이었다.
+이번에는 이미 구현한 24시간 ridge, 편향 보정, 기울기·편향 보정, 최근 평균의 네 예측을 사용했다.
+각 모델이 당시 발표한 예측을 보관하고, 24시간 뒤 정답이 확정된 자료만으로 비중을 갱신한다.
+오늘의 보정 계수로 과거 예측을 다시 계산하지 않는다. 72시간 예측을 24시간 예측과 섞지도 않는다.</p>
+<p>세 후보는 단순 평균, 정규화된 과거 제곱오차의 역수 비중, 모델 간 오차의 중복까지 고려하는 제약 조합이다.
+마지막 방식은 비중을 음수가 아닌 값으로 제한하고 합을 1로 둔 제곱오차 최소화이며, 균등 비중으로의 정규화를 적용했다.
+최근 90일, 반감기 30일, 사전 표본 강도 12를 실행 전에 고정했다. 학습에는 24시간 간격으로 겹치지 않는 예측만 사용한다.
+현재 시각과 정확히 같은 시각에 만기인 표본도 제외하며, 사용 가능한 표본이 12개 미만이면 균등 비중을 사용한다.</p>
+<p>매시간 신호 갱신·진입·보유 연장·유료 헤지 조정·수수료·펀딩·각 다리의 독립 체결과 계좌 위험 한도는 이전 후보와 같다.
+이번 실험에는 직전 수량 감축 완료 로직을 합치지 않았다. 예측 조합 자체의 효과를 비교했다.</p>
+<h2>동일 자본의 계좌 손익</h2>
+<p>초기 자본 1,000,000. validation: 2026-08-01 12:00~09-01 12:00 UTC.
+comparison: 09-01 12:00~10-15 12:00 UTC. 기본 조건은 편도 수수료 9bp·가격 불이익 10bp,
+stress는 12bp·20bp, 더 적은 체결 가능 수량, 펀딩 수령액 절반이다.
+Q=(max(R,0)+0.005)/(|R|+1.5σ+0.05), σ는 완료 일별 수익률의 표본 표준편차×√n이다.
+아래 순손익은 페어만의 수익이 아니라 기존 전략과 페어를 함께 운용한 계좌 전체 값이다.</p>
+<p>이 기간들은 앞선 연구에서도 사용했다. 이후 기간 실행 전에 선택 파일을 고정했지만,
+이 결과를 독립적인 미래 검증이나 실제 par 지갑 실적으로 제시하지 않는다.</p><div class="scroll"><table><tr><th>기간</th><th>조건</th><th>전략</th><th>순손익</th><th>수익률</th><th>Q</th><th>기간 변동성 σ</th><th>최대낙폭</th><th>완료 페어</th></tr><tr><td>validation</td><td>base</td><td>기존 첫째</td><td>+13,047.40</td><td>+1.30474%</td><td>0.24001593</td><td>0.80967%</td><td>0.21632%</td><td>0</td></tr><tr><td>validation</td><td>base</td><td>기존 둘째</td><td>+11,353.07</td><td>+1.13531%</td><td>0.22869339</td><td>0.67690%</td><td>0.19481%</td><td>0</td></tr><tr><td>validation</td><td>base</td><td>첫째＋이전 bias 페어</td><td>+20,090.87</td><td>+2.00909%</td><td>0.28733045</td><td>1.14888%</td><td>0.53730%</td><td>3</td></tr><tr><td>validation</td><td>base</td><td>첫째＋단순 평균</td><td>+15,369.39</td><td>+1.53694%</td><td>0.25612124</td><td>0.94406%</td><td>0.46114%</td><td>2</td></tr><tr><td>validation</td><td>base</td><td>첫째＋과거 오차 역수</td><td>+14,692.49</td><td>+1.46925%</td><td>0.25307559</td><td>0.87468%</td><td>0.46139%</td><td>2</td></tr><tr><td>validation</td><td>base</td><td>첫째＋오차 공분산 조합</td><td>+14,555.99</td><td>+1.45560%</td><td>0.25260558</td><td>0.85741%</td><td>0.46144%</td><td>1</td></tr><tr><td>validation</td><td>stress</td><td>기존 첫째</td><td>+12,540.35</td><td>+1.25404%</td><td>0.23518742</td><td>0.80266%</td><td>0.21633%</td><td>0</td></tr><tr><td>validation</td><td>stress</td><td>기존 둘째</td><td>+10,775.09</td><td>+1.07751%</td><td>0.22278217</td><td>0.66896%</td><td>0.19534%</td><td>0</td></tr><tr><td>validation</td><td>stress</td><td>첫째＋이전 bias 페어</td><td>+13,089.43</td><td>+1.30894%</td><td>0.23696541</td><td>0.88323%</td><td>0.26067%</td><td>1</td></tr><tr><td>validation</td><td>stress</td><td>첫째＋단순 평균</td><td>+12,540.35</td><td>+1.25404%</td><td>0.23518742</td><td>0.80266%</td><td>0.21633%</td><td>0</td></tr><tr><td>validation</td><td>stress</td><td>첫째＋과거 오차 역수</td><td>+12,540.35</td><td>+1.25404%</td><td>0.23518742</td><td>0.80266%</td><td>0.21633%</td><td>0</td></tr><tr><td>validation</td><td>stress</td><td>첫째＋오차 공분산 조합</td><td>+12,540.35</td><td>+1.25404%</td><td>0.23518742</td><td>0.80266%</td><td>0.21633%</td><td>0</td></tr><tr><td>comparison</td><td>base</td><td>기존 첫째</td><td>+459.53</td><td>+0.04595%</td><td>0.09219151</td><td>0.58399%</td><td>0.65453%</td><td>0</td></tr><tr><td>comparison</td><td>base</td><td>기존 둘째</td><td>+572.88</td><td>+0.05729%</td><td>0.09512015</td><td>0.53433%</td><td>0.58661%</td><td>0</td></tr><tr><td>comparison</td><td>base</td><td>첫째＋이전 bias 페어</td><td>+1,491.90</td><td>+0.14919%</td><td>0.09855552</td><td>0.95857%</td><td>1.33910%</td><td>4</td></tr><tr><td>comparison</td><td>base</td><td>첫째＋단순 평균</td><td>+2,481.11</td><td>+0.24811%</td><td>0.11162614</td><td>0.96922%</td><td>1.15500%</td><td>2</td></tr><tr><td>comparison</td><td>base</td><td>첫째＋과거 오차 역수</td><td>+2,503.38</td><td>+0.25034%</td><td>0.11223224</td><td>0.95683%</td><td>1.21947%</td><td>2</td></tr><tr><td>comparison</td><td>base</td><td>첫째＋오차 공분산 조합</td><td>+1,903.80</td><td>+0.19038%</td><td>0.10422007</td><td>0.95592%</td><td>1.27803%</td><td>2</td></tr><tr><td>comparison</td><td>stress</td><td>기존 첫째</td><td>-457.10</td><td>-0.04571%</td><td>0.08437028</td><td>0.58703%</td><td>0.70068%</td><td>0</td></tr><tr><td>comparison</td><td>stress</td><td>기존 둘째</td><td>-492.97</td><td>-0.04930%</td><td>0.08539936</td><td>0.53703%</td><td>0.63188%</td><td>0</td></tr><tr><td>comparison</td><td>stress</td><td>첫째＋이전 bias 페어</td><td>+1,031.14</td><td>+0.10311%</td><td>0.09395349</td><td>0.87745%</td><td>0.94364%</td><td>2</td></tr><tr><td>comparison</td><td>stress</td><td>첫째＋단순 평균</td><td>-457.10</td><td>-0.04571%</td><td>0.08437028</td><td>0.58703%</td><td>0.70068%</td><td>0</td></tr><tr><td>comparison</td><td>stress</td><td>첫째＋과거 오차 역수</td><td>-457.10</td><td>-0.04571%</td><td>0.08437028</td><td>0.58703%</td><td>0.70068%</td><td>0</td></tr><tr><td>comparison</td><td>stress</td><td>첫째＋오차 공분산 조합</td><td>-2,358.79</td><td>-0.23588%</td><td>0.08042710</td><td>0.65395%</td><td>0.88390%</td><td>1</td></tr></table></div><p>오차 역수 조합은 이후 기본 조건에서 순손익 +2,503.38, Q 0.11223224로,
+이전 bias 페어의 +1,491.90, Q 0.09855552보다 좋아졌다.
+그러나 같은 기간 stress에서는 −457.10으로 이전의 +1,031.14보다 나빴다.
+8월 기본에서도 +14,692.50으로 이전 +20,090.87보다 낮았다.</p>
+<p>8월 stress에서는 세 조합 모두 페어 체결을 추가하지 못해 기존 첫째 전략과 결과가 같았다.
+따라서 PnL·Q 개선과 최소 완료 페어 기준을 통과한 후보는 없다.
+고정된 진단용 선택은 first_dense_hourlyhedge_equal_24, eligible=false이며,
+이후 기본 구간에서 더 좋은 결과가 보였다는 이유로 이를 바꾸지 않았다.</p>
+<h2>예측 오차와 거래 이익을 따로 확인</h2>
+<p>같은 시각·같은 정답을 가진 겹치지 않는 24시간 예측만 비교했다.
+RMSE와 예측 크기는 각각 원래 시점의 페어 변동성×√24로 정규화한 값이다.
+평균 비중 순서는 ridge, bias, affine, recent다. 표본 수는 계좌 체결 수가 아니다.</p><div class="scroll"><table><tr><th>기간</th><th>모델</th><th>표본</th><th>RMSE</th><th>방향 일치율</th><th>평균 절대 예측</th><th>평균 비중</th></tr><tr><td>validation</td><td>bias</td><td>30</td><td>1.084243</td><td>46.67%</td><td>0.135784</td><td>—</td></tr><tr><td>validation</td><td>equal</td><td>30</td><td>1.094744</td><td>50.00%</td><td>0.088136</td><td>0.250, 0.250, 0.250, 0.250</td></tr><tr><td>validation</td><td>imse</td><td>30</td><td>1.095558</td><td>50.00%</td><td>0.085234</td><td>0.244, 0.238, 0.254, 0.263</td></tr><tr><td>validation</td><td>stack</td><td>30</td><td>1.103779</td><td>43.33%</td><td>0.059521</td><td>0.220, 0.103, 0.260, 0.416</td></tr><tr><td>comparison</td><td>bias</td><td>43</td><td>1.137738</td><td>55.81%</td><td>0.287378</td><td>—</td></tr><tr><td>comparison</td><td>equal</td><td>43</td><td>1.133525</td><td>55.81%</td><td>0.205722</td><td>0.250, 0.250, 0.250, 0.250</td></tr><tr><td>comparison</td><td>imse</td><td>43</td><td>1.133790</td><td>55.81%</td><td>0.207231</td><td>0.253, 0.250, 0.253, 0.244</td></tr><tr><td>comparison</td><td>stack</td><td>43</td><td>1.137660</td><td>53.49%</td><td>0.211308</td><td>0.295, 0.233, 0.246, 0.226</td></tr></table></div><p>BTC/HYPE의 이후 구간 RMSE는 bias 1.137738에서 오차 역수 조합 1.133790으로 소폭 줄었다.
+방향 일치율은 둘 다 55.81%다. 평균 절대 예측은 0.287378에서 0.207231로 약 28% 줄었다.
+하지만 높은 비용 조건의 거래 성과는 악화됐다. 8월에는 앙상블의 RMSE 자체도 더 나빴다.
+따라서 오차 감소가 안정적으로 확인됐거나, 오차 감소가 곧 수익 개선이라고 결론 내릴 수 없다.</p>
+<h2>실제 par 호가에서의 진입 검토</h2>
+<p>허용된 과거 호가 기록 5개, 총 약 4.48시간만 사용했다.
+각 조합·비용 조건에서 17개 판단 시점을 확인했고, 두 페어의 양방향을 평가했다.
+호가를 통과한 신규 주문 계획은 0개다. 아래 사유 수는 시점마다 페어·방향별로 평가한 횟수이므로 판단 시점 수와 다르다.</p><div class="scroll"><table><tr><th>조합</th><th>조건</th><th>판단 시점</th><th>전체 비용 미달</th><th>수량 단위 불균형</th><th>최소 주문 깊이 미달</th><th>양쪽 진입</th></tr><tr><td>equal</td><td>base</td><td>17</td><td>66</td><td>2</td><td>0</td><td>0</td></tr><tr><td>equal</td><td>stress</td><td>17</td><td>59</td><td>8</td><td>1</td><td>0</td></tr><tr><td>imse</td><td>base</td><td>17</td><td>66</td><td>2</td><td>0</td><td>0</td></tr><tr><td>imse</td><td>stress</td><td>17</td><td>59</td><td>8</td><td>1</td><td>0</td></tr><tr><td>stack</td><td>base</td><td>17</td><td>66</td><td>2</td><td>0</td><td>0</td></tr><tr><td>stack</td><td>stress</td><td>17</td><td>59</td><td>8</td><td>1</td><td>0</td></tr></table></div><p>기본 조건에서는 68개 페어·방향 평가 중 66개가 전체 비용 미달, 2개가 주문 수량 단위 불균형이었다.
+실제 체결·장기 청산 성능을 새로 입증한 것은 없다. par 캔들·펀딩 계좌 재현에서도 새 조합의 완료 페어는 0개였다.
+호가 검사는 현재 비용과 표시 수량만 검증하며, 미래 청산 유동성을 보장하지 않는다.</p>
+<h2>논문과 검증 범위</h2>
+<p><a href="https://www.frontiersin.org/journals/applied-mathematics-and-statistics/articles/10.3389/fams.2026.1749337/full">2026년 암호화폐 페어 딥러닝 연구</a>의
+최근 예측 정확도에 따른 동적 비중 아이디어를 참고했다. 해당 논문은 거래 비용과 유동성 제약을 직접 모형화하지 않는다.
+이번 구현은 기존 예측기에 대한 자체 조합 실험이며 논문의 DNN·LSTM·Johansen 모형을 재현한 것이 아니다.</p>
+<p>독립적인 수치 최적화기와 비중 해를 대조하고, 미래 자료 변경 시 과거 예측·비중이 불변인지,
+만기 경계를 엄격히 지키는지, 결측 표본을 배제하는지, 기존 예측이 그대로 재현되는지 검사했다.
+원전략과의 정확 계좌 대조와 페어 손익 분해도 완료했다.</p>
+<h2>다음 개발 판단</h2>
+<p>이번 세 조합은 교체 후보로 채택하지 않는다. 다음에는 예측을 평균내서 오차를 줄이는 목적과
+비용을 지불할 가치가 있는 방향·시점을 고르는 목적을 구분해야 한다.
+가능한 다음 검증은 고정된 모델 중 하나를 선택하되, 결과가 확정된 과거의 비용 반영 의사결정 성적을 사용하는 방식이다.
+단순히 축소된 예측을 사후 배수로 키우거나 유리했던 이후 기간을 다시 최종 검증으로 사용하지 않는다.
+이 다음 방식은 아직 구현·평가하지 않았다.</p><p>실제 주문 전송 0개, 실거래 교체 없음. 활성 소스 373개와 예약 의존 파일 345개의 해시가 그대로다.</p></html>

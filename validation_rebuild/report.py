@@ -1,0 +1,109 @@
+"""Render recorded evidence without changing candidate selection."""
+import html
+import gzip
+import json
+from datetime import datetime
+from zoneinfo import ZoneInfo
+from pathlib import Path
+from .study import OUT, ROOT, write
+from competition_live.profile import verify_deployment
+
+
+def kst(t):
+    return datetime.fromtimestamp(t, ZoneInfo("Asia/Seoul")).strftime("%Y-%m-%d %H:%M KST")
+
+
+def main():
+    p = json.loads((OUT/"protocol.json").read_text())
+    model = json.loads((OUT/"model.json").read_text())
+    rows = json.loads((OUT/"reference_results.json").read_text())
+    pas = json.loads((OUT/"pas_results.json").read_text())
+    accuracy = json.loads((OUT/"forecast_diagnostics.json").read_text())
+    register = OUT/"forward/registration.json"
+    forward = json.loads(register.read_text()) if register.exists() else {}
+    deployed = verify_deployment()
+    same_fills = all(
+        json.load(gzip.open(OUT/"reference"/f"fixed_fit_candidate_continuous_{s}.json.gz","rt"))["fills"]
+        == json.load(gzip.open(OUT/"reference"/f"previous_rolling_candidate_continuous_{s}.json.gz","rt"))["fills"]
+        for s in ("base","stress"))
+    if not same_fills:
+        raise ValueError("Report assumption about equivalent fills no longer holds")
+    decision = dict(
+        workflow_rebuilt=True, auxiliary_fits=1, auxiliary_evaluation_refits=0,
+        train_rows=model["rows"], train_end=p["train_end"], last_label_maturity=model["last_maturity"],
+        historical_independence=False, historical_reference_runs=len(rows), historical_pas_runs=len(pas),
+        every_reference_replay_valid=all(r["timing_pass"] and r["accounting_error"]<1e-6
+                                       and r["risk_breach_bars"]==0 for r in rows),
+        fixed_and_rolling_executed_fills_equal=same_fills,
+        same_period_return_improvement_does_not_validate_forecast_skill=True,
+        candidate_reselected_after_results=False,
+        independent_forward=forward, independent_forward_result_available=False,
+        unchanged_live_files=len(deployed["files"]), orders_sent=0, live_changed=False)
+    # This report can be regenerated, but the protocol/model/results remain immutable.
+    (OUT/"decision.json").write_text(json.dumps(decision,indent=2))
+    labels = dict(incumbent="현재 제출판", previous_rolling_candidate="이전 연구 후보(매일 릿지 학습)",
+                  fixed_fit_candidate="고정 학습 후보(릿지 1회)")
+    phases = dict(validation="8/1–9/1 개발", comparison="9/1–10/15 재사용 후반",
+                  continuous="8/1–10/15 연속")
+    body = """<h1>학습·검증 경계 재구축과 비교 결과</h1>
+<p><b>새 릿지를 한 번만 학습한 재검증을 완료했다. 독립 PAS 시험은 별도 기간에 등록했다.</b>
+기존 자료는 이미 전략 개발에 사용했으므로, 아래 과거 성과는 독립 테스트가 아니다.
+실거래 전략·서비스·주문은 변경하지 않았다.</p>"""
+    body += f"""<h2>학습과 평가 계약</h2><table><tr><th>구분</th><th>내용</th></tr>
+<tr><td>추가 릿지 학습</td><td>{kst(p['train_start'])} 이상 ~ {kst(p['train_end'])} 미만, {model['rows']}개 자산별 사례</td></tr>
+<tr><td>마지막 학습 정답 확정</td><td>{kst(model['last_maturity'])}. 예측 원점+25시간의 정답 완성 시각으로 검사</td></tr>
+<tr><td>개발·검증</td><td>{kst(p['validation_start'])} ~ {kst(p['validation_end'])}. 기존에 본 구간</td></tr>
+<tr><td>후반 진단</td><td>{kst(p['retrospective_start'])} ~ {kst(p['retrospective_end'])}. 기존에 본 구간</td></tr>
+<tr><td>재학습</td><td>새 릿지는 1회 학습 후 고정. 기존 페어·진입 게이트의 과거 확정 정답 기반 롤링 갱신은 양쪽에 동일하게 유지.
+모든 구성요소가 고정된 실험이라고 부르지 않는다.</td></tr>
+<tr><td>후보 선택</td><td>결과를 보기 전에 고정 학습 후보를 지정. 결과에 맞춘 재선택·임계값 변경 없음</td></tr>
+<tr><td>자본·비용</td><td>팀 100,000, 운용 50,000, 예비 50,000. 동일 수수료·체결비용·거래량·위험 제한</td></tr></table>"""
+    body += "<h2>외부 기준시장 결과 — 재사용 과거 구간</h2><table><tr><th>기간</th><th>비용</th><th>전략</th><th>순손익</th><th>팀 수익률</th><th>기간 변동성</th><th>Q</th><th>체결</th></tr>"
+    for r in rows:
+        body += "<tr>"+"".join(f"<td>{html.escape(str(x))}</td>" for x in [
+            phases[r["phase"]],r["scenario"],labels[r["variant"]],f'{r["net_pnl"]:+,.2f}',
+            f'{r["return_fraction"]*100:+.5f}%',f'{r["volatility"]*100:.5f}%',
+            f'{r["Q"]:.6f}',r["fills"]])+"</tr>"
+    body += """</table><p>고정 학습 후보와 이전 롤링 후보의 연속 평가 체결 원장은 동일했다.
+목표 비중이 다른 시점도 있었지만 체결 제약과 기존 제어기를 통과한 거래는 같았다.
+따라서 이 비교에서 반복 릿지 학습이 수익 개선을 만들었다는 근거는 없다.
+전체 기간은 제출판보다 높지만, 후반 구간에서는 낮다.</p>"""
+    body += "<h2>추가 릿지 예측력</h2><table><tr><th>기간</th><th>모델 MAE(bp)</th><th>변화 없음 MAE(bp)</th><th>관측</th></tr>"
+    for r in accuracy:
+        body += f"<tr><td>{r['period']}</td><td>{r['mae_bps']:.3f}</td><td>{r['zero_forecast_mae_bps']:.3f}</td><td>{r['observations']}</td></tr>"
+    body += "</table><p>두 구간 모두 단순 변화 없음보다 오차가 크다. 계좌 수익률 개선을 새 모델의 예측력 개선이라고 표현하지 않는다.</p>"
+    body += "<h2>PAS 과거 구간 — 별도 조건부 모의 체결</h2><table><tr><th>조건</th><th>전략</th><th>순손익</th><th>청산비용 차감</th><th>체결</th></tr>"
+    for r in pas:
+        body += f"<tr><td>{r['scenario']}</td><td>{labels[r['variant']]}</td><td>{r['net_pnl']:+.6f}</td><td>{r['pnl_after_liquidation_reserve']:+.6f}</td><td>{r['fills']}</td></tr>"
+    body += """</table><p>10/19 21:00–10/20 22:44 KST에 확보한 PAS 자료.
+과거 호가가 없어 분봉 고가·저가, 체결량 제한으로 계산한 조건부 결과다. 실제 지갑 손익이 아니다.
+일별 수익률이 1개라 변동성·Q를 만들지 않았다. 후보의 PAS 개선은 확인되지 않았다.</p>"""
+    if forward:
+        body += f"""<h2>새 독립 PAS 시험</h2><p><b>{kst(forward['start'])} ~ {kst(forward['end'])}</b>, 72시간.
+시험 종료 전 성과 계산·열람을 차단하고, 같은 호가로 제출판과 고정 학습 후보를 비교한다.
+공개 호가·마크·오라클·신호 수신시각을 수집하고, 실제 확정 펀딩과 수수료·호가 수량·지연·청산을 반영한다.
+종료 후 한 번 평가하며 실패해도 같은 구간에서 후보를 다시 고르지 않는다.
+연결 단절·누락·알 수 없는 체결·잔여 포지션은 무효 사유다.
+3개의 일별 수익률은 초기 비교에 불과하며 장기 수익성 입증이 아니다.
+실제 주문 전송과 자동 실거래 교체는 없다.</p>
+<p>상태: <a href="forward/health.json">수집 상태</a> · <a href="forward/plan.json">고정 계약</a>
+· <a href="forward/registration.json">평가 등록</a></p>"""
+    body += """<h2>확인한 절차</h2><ul>
+<li>학습 함수 진입 전에 학습 종료 이후 행을 제거하고, 경계에 걸치는 정답을 제외했다.</li>
+<li>미래 가격·펀딩을 바꿔도 학습 계수가 같고, 미래 48시간 삭제 후 이전 판단이 같은지 검사했다.</li>
+<li>예측 함수의 학습·정답 생성 호출을 금지하는 테스트를 통과했다.</li>
+<li>이미 본 기간, 학습 정답 경계 위반, 조기 열람, 변경된 모델, 같은 시험의 재사용을 거부한다.</li>
+<li>후보 비중이 실제 평가 실행자가 읽는 incumbent 필드까지 전달되는지 숏 체결로 통합 검사했다.</li>
+</ul><p><a href="exposure_audit.json">자료 사용 이력</a> · <a href="protocol.json">과거 진단 계약</a>
+· <a href="causality.json">시간 경계 검사</a> · <a href="reference_results.json">전체 결과</a>
+· <a href="forecast_diagnostics.json">예측 오차</a> · <a href="decision.json">판정 기록</a></p>
+<p>방법 근거: <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html">시간순 분할</a>,
+<a href="https://scikit-learn.org/stable/common_pitfalls.html#data-leakage">최종 시험 분리</a>,
+<a href="https://perpetual-alpha26.github.io/leaderboard">공식 순위 기준</a>.</p>"""
+    page = '<!doctype html><html lang="ko"><meta charset="utf-8"><title>검증 절차 재구축</title><style>body{font:16px/1.65 system-ui;max-width:1300px;margin:40px auto;padding:0 24px;color:#18212b}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:8px;border:1px solid #ddd;text-align:left}th{background:#eef3f6}h2{margin-top:36px}a{color:#0755a2}</style>'+body+'</html>'
+    (OUT/"report.html").write_text(page)
+    print(OUT/"report.html")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,16 @@
+test_future_received_book_cannot_be_used (pas_venue_research.test_policy.VenuePolicyTests.test_future_received_book_cannot_be_used) ... ok
+test_large_gap_is_only_an_unvalidated_hypothesis (pas_venue_research.test_policy.VenuePolicyTests.test_large_gap_is_only_an_unvalidated_hypothesis) ... ok
+test_limit_price_rounding_does_not_cross_to_improve_a_fill (pas_venue_research.test_policy.VenuePolicyTests.test_limit_price_rounding_does_not_cross_to_improve_a_fill) ... ok
+test_observed_depth_shrink_caps_remaining_liquidity (pas_venue_research.test_policy.VenuePolicyTests.test_observed_depth_shrink_caps_remaining_liquidity) ... ok
+test_passive_queue_requires_trades_and_does_not_credit_cancellations (pas_venue_research.test_policy.VenuePolicyTests.test_passive_queue_requires_trades_and_does_not_credit_cancellations) ... ok
+test_passive_rejects_past_snapshot_and_wrong_aggressor (pas_venue_research.test_policy.VenuePolicyTests.test_passive_rejects_past_snapshot_and_wrong_aggressor) ... ok
+test_repeated_quotes_cannot_refill_consumed_exit_liquidity (pas_venue_research.test_policy.VenuePolicyTests.test_repeated_quotes_cannot_refill_consumed_exit_liquidity) ... ok
+test_small_discount_does_not_override_fees_or_risk (pas_venue_research.test_policy.VenuePolicyTests.test_small_discount_does_not_override_fees_or_risk) ... ok
+test_stale_book_or_context_is_not_a_profit_opportunity (pas_venue_research.test_policy.VenuePolicyTests.test_stale_book_or_context_is_not_a_profit_opportunity) ... ok
+test_taker_limit_and_depth_are_binding_on_actual_shadow_quantity (pas_venue_research.test_policy.VenuePolicyTests.test_taker_limit_and_depth_are_binding_on_actual_shadow_quantity) ... ok
+test_taker_proposal_limit_is_exchange_price_not_fractional_vwap (pas_venue_research.test_policy.VenuePolicyTests.test_taker_proposal_limit_is_exchange_price_not_fractional_vwap) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.001s
+
+OK

@@ -1,0 +1,12 @@
+test_completed_candle_prefix_matches_no_future_and_all_symbols (candidate_handoff.test_entry_policy.EntryPolicyTests.test_completed_candle_prefix_matches_no_future_and_all_symbols) ... ok
+test_future_and_inconsistent_history_is_rejected (candidate_handoff.test_entry_policy.EntryPolicyTests.test_future_and_inconsistent_history_is_rejected) ... ok
+test_live_adapter_equals_selected_controller_on_saved_pas_decisions (candidate_handoff.test_entry_policy.EntryPolicyTests.test_live_adapter_equals_selected_controller_on_saved_pas_decisions) ... ok
+test_new_policy_keeps_held_units_and_risk_reductions_both_sides (candidate_handoff.test_entry_policy.EntryPolicyTests.test_new_policy_keeps_held_units_and_risk_reductions_both_sides) ... ok
+test_packet_policy_and_history_are_bound_to_digest_and_expected_revision (candidate_handoff.test_entry_policy.EntryPolicyTests.test_packet_policy_and_history_are_bound_to_digest_and_expected_revision) ... ok
+test_policy_contract_prevents_silent_reversion (candidate_handoff.test_entry_policy.EntryPolicyTests.test_policy_contract_prevents_silent_reversion) ... ok
+test_sparse_no_trade_candles_cannot_make_stale_prices_fresh (candidate_handoff.test_entry_policy.EntryPolicyTests.test_sparse_no_trade_candles_cannot_make_stale_prices_fresh) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.491s
+
+OK

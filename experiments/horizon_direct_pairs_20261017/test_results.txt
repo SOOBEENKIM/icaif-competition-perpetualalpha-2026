@@ -1,0 +1,10 @@
+test_24h_control_exact_forecast_and_risk_units (experiments.horizon_direct_pairs_20261017.test_model.HorizonDirectTests.test_24h_control_exact_forecast_and_risk_units) ... ok
+test_future_mutation_cannot_change_forecasts_or_daily_fit (experiments.horizon_direct_pairs_20261017.test_model.HorizonDirectTests.test_future_mutation_cannot_change_forecasts_or_daily_fit) ... ok
+test_horizon_propagates_to_close_lead_and_original_stop (experiments.horizon_direct_pairs_20261017.test_model.HorizonDirectTests.test_horizon_propagates_to_close_lead_and_original_stop) ... ok
+test_targets_use_own_horizon_and_fixed_source_hedge (experiments.horizon_direct_pairs_20261017.test_model.HorizonDirectTests.test_targets_use_own_horizon_and_fixed_source_hedge) ... ok
+test_unknown_horizon_rejected_and_spec_not_mutated (experiments.horizon_direct_pairs_20261017.test_model.HorizonDirectTests.test_unknown_horizon_rejected_and_spec_not_mutated) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.108s
+
+OK

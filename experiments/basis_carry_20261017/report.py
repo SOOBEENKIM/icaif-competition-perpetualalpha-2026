@@ -1,0 +1,138 @@
+"""Render frozen research outputs without changing rules or running orders."""
+import html
+import json
+from collections import Counter
+from datetime import datetime, timezone, timedelta
+
+from .collect import HERE, ROOT, OUT, save, sha
+
+
+def read(path):
+    return json.loads(path.read_text())
+
+
+def table(headers, rows):
+    def cell(value):
+        return html.escape(str(value))
+    return '<table><thead><tr>' + ''.join('<th>'+cell(x)+'</th>' for x in headers) + '</tr></thead><tbody>' + ''.join(
+        '<tr>'+''.join('<td>'+cell(x)+'</td>' for x in row)+'</tr>' for row in rows) + '</tbody></table>'
+
+
+def main():
+    funding=read(OUT/'funding/results.json')
+    probes=read(OUT/'quote_probe/results.json')
+    edges=read(OUT/'quote_probe/edge_diagnostic.json')
+    official=read(OUT/'official_score_reconciliation.json')
+    counts=read(ROOT/'reports/traded_team_count_20261017/summary.json')
+    inputs=read(OUT/'raw/manifest.json')
+    integrity=read(OUT/'integrity.json')
+    policy=read(HERE/'evaluation_policy.json')
+    grouped=[]
+    for phase in ('validation','later'):
+        for horizon in (6,24):
+            for model in ('zero','persistence','ar1'):
+                rows=[r for r in funding['summaries'] if r['phase']==phase and r['horizon']==horizon and r['model']==model]
+                n=sum(r['blocks'] for r in rows)
+                grouped.append(dict(phase=phase,hours=horizon,model=model,asset_blocks=n,
+                    mae_bps=sum(r['blocks']*r['mae_bps'] for r in rows)/n,
+                    carry_only_bps=sum(r['blocks']*r['average_carry_only_bps'] for r in rows)/n,
+                    above_18bp_fee=sum(r['blocks_exceeding_18bp_fee_only'] for r in rows)))
+    generated=datetime.now(timezone(timedelta(hours=9))).isoformat()
+    summary=dict(generated_at_kst=generated,team_count={k:v for k,v in counts.items() if k!='rows'},
+        funding_observations=sum(r['observations'] for r in inputs['receipts']),
+        quote_hours=sum(r['hours'] for r in probes['coverage']),funding_model_comparison=grouped,
+        quote_edge_diagnostics=edges['summary'],official_score_reconciliation={k:v for k,v in official.items() if k!='rows'},
+        decision='No demonstrated advantage to replace the incumbent. No orders or deployment changes.',
+        official_score_for_this_candidate=None,reason='No closed probes or adequate daily equity path',
+        evaluation_policy=policy,integrity=integrity,tests_passed=12)
+    dest=ROOT/'reports/basis_carry_20261017';dest.mkdir(exist_ok=True)
+    save(dest/'summary.json',summary)
+    funding_table=table(['구간','보유시간','모델','종목×구간 수','예측 MAE (bp)','펀딩만의 수입 (bp)','18bp 초과 수'],[
+        ['검증' if r['phase']=='validation' else '이후',r['hours'],r['model'],r['asset_blocks'],
+         f"{r['mae_bps']:.3f}",f"{r['carry_only_bps']:.3f}",r['above_18bp_fee']] for r in grouped])
+    edge_table=table(['조건','후보','판단 수','예상 순수익 중앙값 (bp)','최댓값 (bp)','양수','진입 기준 5bp 이상'],[
+        [r['scenario'],r['arm'],r['decisions'],f"{r['median']:.3f}",f"{r['max']:.3f}",r['positive'],r['above_entry_buffer']] for r in edges['summary']])
+    coverage_table=table(['자료','실제 관측시간'],[[r['path'],f"{r['hours']:.3f}시간"] for r in probes['coverage']])
+    body=f'''<!doctype html><html lang="ko"><meta charset="utf-8"><title>par 괴리·펀딩 검증 — 2026-10-17</title>
+<style>body{{font:16px/1.7 system-ui,sans-serif;color:#172b3a;background:#f7fafc;max-width:1180px;margin:32px auto;padding:0 24px}}table{{border-collapse:collapse;width:100%;background:white;font-size:14px;margin:18px 0}}td,th{{border:1px solid #d8e2ea;padding:9px;text-align:left;overflow-wrap:anywhere}}th{{background:#e9f0f6}}.note{{padding:16px;background:#fff3d9;border-left:4px solid #b97b14}}code{{overflow-wrap:anywhere}}a{{color:#1764a3}}</style>
+<h1>실제 par 오라클 괴리·펀딩 조사 결과</h1><p>작성: {generated}</p>
+<p class="note"><strong>현재 자료로 기존 전략을 교체할 근거는 확보하지 못했습니다.</strong>
+30분 괴리 축소 후보는 진입 0건입니다. 6~24시간 펀딩 예측은 일부 가능했지만, 펀딩 수입이 곧 가격 위험과 비용을 차감한 순이익이라는 근거는 없습니다.
+이번 연구는 주문을 보내거나 운용 전략을 바꾸지 않았습니다.</p>
+<h2>체결한 팀 수</h2>
+<p>공식 Practice 최종표는 전체 64팀 중 42팀을 순위에 포함합니다. 집계 종료는 2026-10-16 12:00 UTC, 즉 한국시간 10월 16일 21시입니다.
+공개 체결을 확인한 시각인 <strong>10월 17일 01:19:55 KST</strong>에는 주최 측으로부터 1M USDPR을 받은 64개 지갑 중 <strong>44개</strong>에서 par 체결이 확인됐습니다. 사용자 지갑도 포함됩니다.
+추가 2개 지갑의 첫 체결은 각각 10월 16일 22:38:16, 10월 17일 00:31:05 KST입니다. 따라서 최종 공식표의 42팀과 이후 누적 44개 지갑은 집계 시점이 다릅니다.</p>
+<p>개별 팀명과 지갑의 대응표는 공개되지 않았습니다. 64개 지갑은 주최 측 배분 계정의 정확히 1M USDPR 지급을 기준으로 정했으며 공식 명단 규모와 일치합니다.
+시장 운영 계정은 이 모집단에 넣지 않았고, 특정 지갑의 Keyrock 소속을 확인했다고 주장하지 않습니다.
+<a href="../traded_team_count_20261017/report.html">주소별 체결 근거</a></p>
+<h2>새 공식 점수 적용</h2>
+<p><a href="https://perpetual-alpha26.github.io/leaderboard#practice">현재 공식 리더보드</a>의 식을 적용합니다.
+R은 입출금을 보정한 일별 수익률과 오늘의 부분 수익률을 복리로 연결합니다. 일 경계는 UTC 12시 / KST 21시입니다.
+σ = 표본 표준편차 × √n이며, 완료된 일별 수익률만 사용합니다. 누락 구간의 변동성 입력은 r/√(포함 일수)입니다.
+계산에는 퍼센트 숫자가 아닌 소수 단위를 사용합니다.</p>
+<p><code>Q = (max(R, 0) + 0.005) / (abs(R) + 1.5 × σ + 0.05)</code><br>
+<code>Score = 0.8 × Q + 0.2 × J</code>, 심사 전 J = 0.</p>
+<p>공식표의 순위 대상 42팀에 대해 Q와 Score를 재계산했고 최대 절대 오차가 모두 <strong>0</strong>입니다.
+최소 1일의 대회 시장 체결, 시작 표본, 완료된 일별 수익률 2개가 있어야 순위 자격을 가집니다.
+과거 40/30/30 방식 및 팀 간 최솟값·최댓값 정규화는 새 연구의 선정 기준으로 사용하지 않습니다.
+교체 판단은 같은 기간·자본·허용 위험에서 Q를 비교하고, 최대낙폭과 노출 한도를 함께 확인합니다.
+변동성이 조금 증가했다는 이유만으로 개선 후보를 자동 탈락시키지는 않습니다. 기존 결과표를 새 점수로 소급 표시하지도 않았습니다.</p>
+<h2>자료와 검증 조건</h2>
+<p>par 10종목에서 10월 5일 00:00 UTC부터 10월 16일 16:00 UTC까지 종목별 281개, 총 2,810개의 시간별 실제 정산 펀딩을 수집했습니다.
+원본 응답·요청·수집 시각·해시를 저장했습니다. 학습은 10월 12일 00시 이전에 제한했고 이후 재학습하지 않았습니다.</p>
+<p>가격·오라클·수량을 동시에 확인할 수 있는 기존 공개 호가 기록은 총 <strong>{summary['quote_hours']:.3f}시간</strong>입니다.
+파일명에 24h가 있어도 실제 연속 관측은 약 67분이므로 24시간 자료로 계산하지 않았습니다. 이 자료는 과거 개발에 사용됐고 독립 평가 표본이 아닙니다.</p>{coverage_table}
+<h2>30분 괴리 축소 후보</h2>
+<p>종목별 약 500 USDPR, 5분 간격 판단입니다. 오라클이 유지되고 괴리의 절반이 30분 내 줄어드는 가설과,
+펀딩을 함께 고려하는 가설을 비교했습니다. 별도로 완전한 괴리 해소까지 가정한 낙관적 진단도 계산했습니다.
+이것들은 학습으로 검증된 미래 가격 예측이 아닙니다.</p>
+<p>현재 호가 수량의 가중평균 체결가, 매수·매도 호가 차이, 진입·청산 각각 9bp 수수료를 반영했습니다.
+부정적 조건은 수수료 12bp, 표시 수량 50%, 지연 3초입니다. 유리한 펀딩 예측은 절반만 인정하고 불리한 펀딩은 전부 반영합니다.
+정수 시간의 정산을 실제로 넘는 경우에만 펀딩을 계산하며, 30분 보유라는 이유로 시간당 펀딩의 절반을 자동 지급하지 않습니다.</p>
+{edge_table}
+<p><strong>절반 괴리 해소 후보는 가장 유리한 시점도 −8.203bp</strong>였습니다. 5bp 안전 여유가 없더라도 양수인 진입이 없습니다.
+완전 해소를 가정해도 261개 종목·판단 시점 중 양수는 3개, 최대 +3.130bp입니다. 비용·수량을 불리하게 하면 최대 −3.273bp로 바뀝니다.
+따라서 현재 0건이라는 결과를 안전 여유만 지나치게 크게 잡았기 때문이라고 해석할 수 없습니다.</p>
+<p>진입이 0건이므로 실현된 수익률·승률·일별 변동성·공식 Q는 산출하지 않았습니다. 위 숫자는 현재 정보로 계산한 가정상 예상 이익이지 실현 순손익이 아닙니다.
+새 호가에 대한 지연 진입, 부분 체결, 실제 반대편 호가 청산, 펀딩, 손익 분해 기능은 구현하고 단위 검증했지만 이번 자료에서 거래 경로로 검증되지는 않았습니다.</p>
+<h2>6~24시간 펀딩 예측</h2>
+<p>zero는 펀딩 예측 0·현금, persistence는 최근 정산률 유지, AR(1)은 학습 구간에서 고정한 자기회귀 모형입니다.
+모두 미래 6시간 또는 24시간의 정산률 합을 예측합니다. 양수 예측이면 숏, 음수면 롱을 선택한 경우의 펀딩만 계산했습니다.
+검증은 10월 12~15일, 이후 구간은 10월 15일 이후이며 모두 UTC입니다. 블록은 종목 내에서 겹치지 않지만 종목 간에는 같은 시각을 공유하므로 독립 표본 수로 해석하면 안 됩니다.</p>
+{funding_table}
+<p>이후 구간에서 최근 펀딩 유지 기준의 6시간 평균 펀딩 수입은 +1.658bp, 24시간은 +5.469bp였습니다.
+24시간 수치는 각 종목당 단 1개 구간입니다. SP500의 +29.629bp는 왕복 수수료 18bp를 초과했으나, 매수·매도 호가 차이와 가격 변동 손익은 빠져 있습니다.
+가격이 0.3%만 불리하게 움직여도 약 30bp이므로 이를 수익성이 확인된 거래라고 볼 수 없습니다.
+AR(1)은 같은 이후 24시간 구간에서 평균 −4.056bp로, 단순 최근값 유지보다 나빴습니다. 모델을 복잡하게 만든 자체가 개선은 아니었습니다.</p>
+<h2>논문과 실제 적용의 차이</h2>
+<p><a href="https://arxiv.org/html/2212.06888v5">Fundamentals of Perpetual Futures</a>의 현물·무기한선물 양방향 포지션과 비용 분석을 검토했습니다.
+본 후보는 오라클 가격으로 현물을 체결할 수 없으므로 해당 논문의 헤지된 차익거래와 같지 않습니다.</p>
+<p><a href="https://arxiv.org/html/2506.08573v1">Designing funding rates for perpetual futures in cryptocurrency markets (2025)</a>는 펀딩의 경로 의존성과 가격 결정 구조를 다룹니다.
+펀딩을 고정된 무료 수입으로 취급하지 않는 근거로 사용했으며, par에서 수익을 입증한 논문으로 인용하지 않았습니다.</p>
+<p><a href="https://link.springer.com/article/10.1007/s42521-026-00213-3">Centralized–decentralized exchange funding rate arbitrage as a basis trade (2026)</a>에서 제시한
+펀딩·잔여 시장 위험·실행 비용 분해를 참고했습니다. 주된 분석에 합성 DEX 펀딩이 포함되어 있어 그 성과 수치를 우리 시장의 검증 결과로 옮기지 않았습니다.</p>
+<p><a href="https://hyperliquid.gitbook.io/hyperliquid-docs/trading/funding">Hyperliquid 정산 규칙</a>에 따라 펀딩 지급액은 포지션 수량 × 오라클 가격 × 정산률로 구현했습니다.
+현재 표시 펀딩률과 이후 실제 정산률을 구분하고, 오라클 자체의 움직임에서 생긴 방향 손익과 괴리 축소 손익을 따로 기록합니다.</p>
+<h2>현재 판단과 남은 검증</h2>
+<p><strong>30분 괴리 축소 후보를 실거래 대체 전략으로 채택하지 않습니다.</strong> 6~24시간 후보는 실제 연속 호가·오라클·펀딩 자료로 진입부터 청산까지 확인해야 합니다.
+현재 보유한 짧은 호가 자료와 펀딩 이력만으로 그 거래의 수익률이나 공식 점수를 만들 수 없습니다.
+추가 연구는 전체 종목에 동일한 사전 기준을 적용해 펀딩 지속성, 가격 위험과 청산 비용을 함께 검증해야 하며, 이번에 좋았던 SP500 한 구간을 골라 성과로 일반화하지 않습니다.</p>
+<p>12개 검증 테스트 통과. 기존 운용 관련 373개 파일과 별도 평가 의존성 345개 파일의 해시가 모두 유지됐습니다.
+봉인한 향후 평가 결과는 열지 않았습니다. 기존 <code>icaif-par-practice-budget.service</code>는 읽기 전용 상태 확인에서 active/running, 재시작 0회였습니다.</p>
+<p><a href="../../experiments/basis_carry_20261017/protocol.json">고정한 연구 조건</a> ·
+<a href="../../experiments/basis_carry_20261017/evaluation_policy.json">공식 평가 기준</a> ·
+<a href="../../experiments/basis_carry_20261017/artifacts/funding/results.json">펀딩 원결과</a> ·
+<a href="../../experiments/basis_carry_20261017/artifacts/quote_probe/results.json">호가 원결과</a> ·
+<a href="../../experiments/basis_carry_20261017/artifacts/quote_probe/edge_diagnostic.json">예상 이익 진단</a> ·
+<a href="../../experiments/basis_carry_20261017/artifacts/official_score_reconciliation.json">공식표 점수 대조</a> ·
+<a href="summary.json">요약 데이터</a></p></html>'''
+    (dest/'report.html').write_text(body)
+    files=[*HERE.glob('*.py'),HERE/'protocol.json',HERE/'evaluation_policy.json',
+        *OUT.glob('*.json'),*OUT.glob('*/*.json'),dest/'summary.json',dest/'report.html']
+    save(dest/'manifest.json',dict(generated_at_kst=generated,files={str(p.relative_to(ROOT)):sha(p) for p in files}))
+    print(dest/'report.html')
+
+
+if __name__=='__main__':
+    main()

@@ -1,0 +1,154 @@
+<!doctype html><meta charset="utf-8"><title>개선 정체 원인 점검</title><style>body{font:16px system-ui;max-width:1100px;margin:35px auto;line-height:1.7}table{border-collapse:collapse;font-size:13px}th,td{border:1px solid #bbb;padding:8px}pre{white-space:pre-wrap;background:#f5f5f5;padding:16px}</style>
+<h1>개선 정체 원인 점검</h1><p>개선 후보는 구현했지만 비용 차감 후 안정적인 교체 우위를 입증하지 못했다. 아래는 초기 자본 1M, 기준시장 2026-09-01 12UTC부터 10-15 12UTC까지의 재사용 과거 자료 모의 계좌다. 대회 지갑의 실제 손익이나 독립 검증이 아니다.</p>
+<table><tr><th>전략</th><th>비용 조건</th><th>전체 계좌 순손익</th><th>Q</th><th>완료 페어 수</th></tr><tr><td>first_strategy</td><td>base</td><td>+459.53</td><td>0.092192</td><td>0</td></tr><tr><td>first_strategy</td><td>stress</td><td>-457.10</td><td>0.084370</td><td>0</td></tr><tr><td>second_strategy</td><td>base</td><td>+572.88</td><td>0.095120</td><td>0</td></tr><tr><td>second_strategy</td><td>stress</td><td>-492.97</td><td>0.085399</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_cash_direct_24</td><td>base</td><td>+3,422.16</td><td>0.124304</td><td>3</td></tr><tr><td>first_dense_hourlyhedge_cash_direct_24</td><td>stress</td><td>+3,305.71</td><td>0.124467</td><td>1</td></tr><tr><td>first_dense_hourlyhedge_raw_24</td><td>base</td><td>-903.84</td><td>0.075261</td><td>9</td></tr><tr><td>first_dense_hourlyhedge_raw_24</td><td>stress</td><td>+3,305.71</td><td>0.124467</td><td>1</td></tr><tr><td>first_dense_hourlyhedge_joint_24</td><td>base</td><td>-37.71</td><td>0.078041</td><td>5</td></tr><tr><td>first_dense_hourlyhedge_joint_24</td><td>stress</td><td>+3,305.71</td><td>0.124467</td><td>1</td></tr></table>
+<h2>막힌 지점</h2><p>최근 raw 후보의 24시간 예측 오차는 81.2620bp로 변화 없음 기준 80.8203bp보다 크다. 전체 오차만으로 모든 조건부 수익 기회를 부정할 수는 없지만, 예측력 개선의 증거도 아니다. 페어 부분 가격 손익 +3441.9475에서 체결 비용 2429.2634, 수수료 2171.5450, 펀딩 지급 170.2080을 빼면 -1329.0688이다. 이는 실제 거래소 체결이 아닌 기준시장 시뮬레이션이다.</p>
+<p>기준 연구 후보가 첫째·둘째보다 높은 구간은 있으나 비용 스트레스에서 완료 페어가 하나이며, 기존 견고성 점검에서 특정 수익 거래의 영향이 컸다. 대회 par 자료에서는 완료 페어를 확보하지 못했다. 반복 사용한 기간을 새 독립 검증으로 부를 수 없다.</p>
+<h2>다음 모델을 추가하기 전 중복 점검</h2><p>같은 입력·표본·가중치·릿지 규제와 고정된 시장 노출을 쓰면, 시장과 잔차를 각각 회귀한 뒤 합친 예측은 원래 목표를 직접 회귀한 예측과 같다. 수치 검사를 통과했다. 기존 특징의 비정규화된 공통 움직임과 가격차로 각 자산의 과거 수익률을 복원할 수 있다. 다만 현재 회귀에는 변동성 정규화·클리핑이 있으므로 실제 모델 전체가 동일하다는 뜻은 아니다. 별도 BTC 입력·공유 모델·시간에 따라 바뀌는 노출은 다른 가설이며 검증 대상이다.</p>
+<p>즉, 시장/잔차 분해는 원인 분석에 유용하지만 그 자체로 새로운 수익 신호가 되지는 않는다. 예측과 비용 후 거래 선택이 나아지는지 확인하기 전에 모델 이름이나 실행 변형만 늘리는 것은 적절하지 않다.</p>
+<h2>논문과 적용 범위</h2><p><a href="https://arxiv.org/html/2510.11616v1">Attention Factors for Statistical Arbitrage (ICAIF 2025)</a>는 대규모 미국 주식의 기업 특성과 잔차 신호 및 비용 후 거래 목표를 함께 학습한다. 우리 BTC 요인 릿지는 해당 논문의 재현이 아니며 데이터·시장·체결 조건이 다르다. <a href="https://arxiv.org/abs/2412.11432">factor-residual 재현 문서</a>는 종목 집합 선택 오류로 철회되었으므로 성과 근거에서 제외했다.</p>
+<p>이번 작업은 진단과 중복 검증이다. 새 거래 모델 성능 개선, 신규 주문 또는 실거래 전략 교체를 주장하지 않는다.</p><h2>재현 검사</h2><pre>{
+  &quot;identity&quot;: {
+    &quot;max_prediction_error&quot;: 4.440892098500626e-16,
+    &quot;passed&quot;: true,
+    &quot;conditions&quot;: &quot;Identical linear operator and constant loading; no separate clipping. Variable-loading or different-feature models need a separate empirical test.&quot;
+  },
+  &quot;features&quot;: {
+    &quot;rows&quot;: [
+      {
+        &quot;pair&quot;: [
+          &quot;BTC&quot;,
+          &quot;ETH&quot;
+        ],
+        &quot;horizon&quot;: 1,
+        &quot;source_rows&quot;: 1800,
+        &quot;clipped_rows&quot;: 2,
+        &quot;max_unclipped_reconstruction_error&quot;: 6.938893903907228e-18,
+        &quot;max_clipped_reconstruction_error_bps&quot;: 102.12398409159839
+      },
+      {
+        &quot;pair&quot;: [
+          &quot;BTC&quot;,
+          &quot;ETH&quot;
+        ],
+        &quot;horizon&quot;: 6,
+        &quot;source_rows&quot;: 1800,
+        &quot;clipped_rows&quot;: 0,
+        &quot;max_unclipped_reconstruction_error&quot;: 6.938893903907228e-18,
+        &quot;max_clipped_reconstruction_error_bps&quot;: 6.938893903907228e-14
+      },
+      {
+        &quot;pair&quot;: [
+          &quot;BTC&quot;,
+          &quot;ETH&quot;
+        ],
+        &quot;horizon&quot;: 24,
+        &quot;source_rows&quot;: 1800,
+        &quot;clipped_rows&quot;: 0,
+        &quot;max_unclipped_reconstruction_error&quot;: 1.3877787807814457e-17,
+        &quot;max_clipped_reconstruction_error_bps&quot;: 2.7755575615628914e-13
+      },
+      {
+        &quot;pair&quot;: [
+          &quot;BTC&quot;,
+          &quot;ETH&quot;
+        ],
+        &quot;horizon&quot;: 72,
+        &quot;source_rows&quot;: 1800,
+        &quot;clipped_rows&quot;: 0,
+        &quot;max_unclipped_reconstruction_error&quot;: 2.7755575615628914e-17,
+        &quot;max_clipped_reconstruction_error_bps&quot;: 2.7755575615628914e-13
+      },
+      {
+        &quot;pair&quot;: [
+          &quot;BTC&quot;,
+          &quot;ETH&quot;
+        ],
+        &quot;horizon&quot;: 168,
+        &quot;source_rows&quot;: 1800,
+        &quot;clipped_rows&quot;: 0,
+        &quot;max_unclipped_reconstruction_error&quot;: 5.551115123125783e-17,
+        &quot;max_clipped_reconstruction_error_bps&quot;: 5.551115123125783e-13
+      },
+      {
+        &quot;pair&quot;: [
+          &quot;BTC&quot;,
+          &quot;ETH&quot;
+        ],
+        &quot;horizon&quot;: 336,
+        &quot;source_rows&quot;: 1800,
+        &quot;clipped_rows&quot;: 0,
+        &quot;max_unclipped_reconstruction_error&quot;: 5.551115123125783e-17,
+        &quot;max_clipped_reconstruction_error_bps&quot;: 5.551115123125783e-13
+      },
+      {
+        &quot;pair&quot;: [
+          &quot;BTC&quot;,
+          &quot;HYPE&quot;
+        ],
+        &quot;horizon&quot;: 1,
+        &quot;source_rows&quot;: 1800,
+        &quot;clipped_rows&quot;: 3,
+        &quot;max_unclipped_reconstruction_error&quot;: 3.469446951953614e-18,
+        &quot;max_clipped_reconstruction_error_bps&quot;: 17.864576841527814
+      },
+      {
+        &quot;pair&quot;: [
+          &quot;BTC&quot;,
+          &quot;HYPE&quot;
+        ],
+        &quot;horizon&quot;: 6,
+        &quot;source_rows&quot;: 1800,
+        &quot;clipped_rows&quot;: 0,
+        &quot;max_unclipped_reconstruction_error&quot;: 6.938893903907228e-18,
+        &quot;max_clipped_reconstruction_error_bps&quot;: 1.3877787807814457e-13
+      },
+      {
+        &quot;pair&quot;: [
+          &quot;BTC&quot;,
+          &quot;HYPE&quot;
+        ],
+        &quot;horizon&quot;: 24,
+        &quot;source_rows&quot;: 1800,
+        &quot;clipped_rows&quot;: 0,
+        &quot;max_unclipped_reconstruction_error&quot;: 6.938893903907228e-18,
+        &quot;max_clipped_reconstruction_error_bps&quot;: 1.3877787807814457e-13
+      },
+      {
+        &quot;pair&quot;: [
+          &quot;BTC&quot;,
+          &quot;HYPE&quot;
+        ],
+        &quot;horizon&quot;: 72,
+        &quot;source_rows&quot;: 1800,
+        &quot;clipped_rows&quot;: 0,
+        &quot;max_unclipped_reconstruction_error&quot;: 1.3877787807814457e-17,
+        &quot;max_clipped_reconstruction_error_bps&quot;: 1.3877787807814457e-13
+      },
+      {
+        &quot;pair&quot;: [
+          &quot;BTC&quot;,
+          &quot;HYPE&quot;
+        ],
+        &quot;horizon&quot;: 168,
+        &quot;source_rows&quot;: 1800,
+        &quot;clipped_rows&quot;: 0,
+        &quot;max_unclipped_reconstruction_error&quot;: 1.3877787807814457e-17,
+        &quot;max_clipped_reconstruction_error_bps&quot;: 2.7755575615628914e-13
+      },
+      {
+        &quot;pair&quot;: [
+          &quot;BTC&quot;,
+          &quot;HYPE&quot;
+        ],
+        &quot;horizon&quot;: 336,
+        &quot;source_rows&quot;: 1800,
+        &quot;clipped_rows&quot;: 0,
+        &quot;max_unclipped_reconstruction_error&quot;: 2.7755575615628914e-17,
+        &quot;max_clipped_reconstruction_error_bps&quot;: 5.551115123125783e-13
+      }
+    ],
+    &quot;future_perturbation_passed&quot;: true,
+    &quot;meaning&quot;: &quot;No additional raw market source is introduced by explicit BTC features. Source-dependent scales/loading, clipping, and different feature sets mean this is not proof that normalized ridge models are prediction-equivalent.&quot;
+  },
+  &quot;verified_files&quot;: 2054
+}</pre>

@@ -1,0 +1,17 @@
+Restart=no
+MainPID=65096
+Id=icaif-pas-budget-live.service
+ActiveState=active
+SubState=running
+
+Restart=on-failure
+MainPID=65083
+Id=icaif-pas-budget-signals.service
+ActiveState=active
+SubState=running
+
+Restart=no
+MainPID=0
+Id=icaif-pas-scored-live.service
+ActiveState=inactive
+SubState=dead

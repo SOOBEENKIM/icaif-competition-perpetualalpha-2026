@@ -1,0 +1,11 @@
+test_daily_fit_only_strictly_mature_training_rows (experiments.funding_feature_pairs_20261017.test_model.FundingFeaturesTests.test_daily_fit_only_strictly_mature_training_rows) ... ok
+test_exact_hourly_units_and_source_rate_exclusion (experiments.funding_feature_pairs_20261017.test_model.FundingFeaturesTests.test_exact_hourly_units_and_source_rate_exclusion) ... ok
+test_future_changes_preserve_forecasts_and_fit_scaling (experiments.funding_feature_pairs_20261017.test_model.FundingFeaturesTests.test_future_changes_preserve_forecasts_and_fit_scaling) ... ok
+test_price_features_and_labels_unchanged (experiments.funding_feature_pairs_20261017.test_model.FundingFeaturesTests.test_price_features_and_labels_unchanged) ... ok
+test_price_only_control_reproduces_retained (experiments.funding_feature_pairs_20261017.test_model.FundingFeaturesTests.test_price_only_control_reproduces_retained) ... ok
+test_unobserved_is_missing_observed_zero_is_valid (experiments.funding_feature_pairs_20261017.test_model.FundingFeaturesTests.test_unobserved_is_missing_observed_zero_is_valid) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.780s
+
+OK

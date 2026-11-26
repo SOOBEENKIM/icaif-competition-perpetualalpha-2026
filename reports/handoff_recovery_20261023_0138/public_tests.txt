@@ -1,0 +1,8 @@
+test_429_is_one_http_attempt_and_shared_cooldown (candidate_handoff.test_public.PublicTests.test_429_is_one_http_attempt_and_shared_cooldown) ... ok
+test_response_weight_is_charged_for_history (candidate_handoff.test_public.PublicTests.test_response_weight_is_charged_for_history) ... ok
+test_shared_instances_obey_weighted_rolling_limit (candidate_handoff.test_public.PublicTests.test_shared_instances_obey_weighted_rolling_limit) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.139s
+
+OK

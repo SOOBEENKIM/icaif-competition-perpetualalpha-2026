@@ -1,0 +1,9 @@
+test_completion_does_not_chase_through_limit (experiments.venue_execution_value_20261018.test_book_completion.BookCompletionTests.test_completion_does_not_chase_through_limit) ... ok
+test_completion_preserves_original_limit_and_filled_leg (experiments.venue_execution_value_20261018.test_book_completion.BookCompletionTests.test_completion_preserves_original_limit_and_filled_leg) ... ok
+test_current_account_risk_is_respected (experiments.venue_execution_value_20261018.test_book_completion.BookCompletionTests.test_current_account_risk_is_respected) ... ok
+test_missing_book_is_not_a_fabricated_completion (experiments.venue_execution_value_20261018.test_book_completion.BookCompletionTests.test_missing_book_is_not_a_fabricated_completion) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.008s
+
+OK

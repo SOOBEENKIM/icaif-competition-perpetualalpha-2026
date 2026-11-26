@@ -1,0 +1,514 @@
+{
+  "validation": {
+    "scanned_wallets": 47,
+    "granted_wallets": 47,
+    "detailed_wallets": 14,
+    "official_chart_has_addresses": false,
+    "all_scanned_single_grant": true,
+    "max_identity_error": 0.0,
+    "history_issues": [],
+    "accounting_residuals": [
+      {
+        "address": "0x06a336acf9d4ed8fae9e60c453fff4ecda409a11",
+        "difference": 0.22153500000240456
+      },
+      {
+        "address": "0x125778065a578d598d88bddaa3fdd635280d0e47",
+        "difference": 0.08133500000479899
+      },
+      {
+        "address": "0x1ba2ee6b502381e2e06a9f41d8758aebda281ca4",
+        "difference": 0.09323499999845808
+      },
+      {
+        "address": "0x37bc6c61a2408474c15e3a0c69f44e83bb26970a",
+        "difference": -2.9801161538500764e-12
+      },
+      {
+        "address": "0x499d4a0f554fe78cbdd4504411500ea9347c353f",
+        "difference": -0.04764900000569128
+      },
+      {
+        "address": "0x7df82de32cfa21a06d4a1b06bff69cb3e7680d5b",
+        "difference": 0.0942689999974391
+      },
+      {
+        "address": "0x94ea16ece139e246a1d84e71aacf7dd1f47cb12c",
+        "difference": 1.2824186157445183e-12
+      },
+      {
+        "address": "0xbf6187b58cd9875000d522bf9a6b4f8013edd07c",
+        "difference": -8.800000164654875e-05
+      },
+      {
+        "address": "0xc8e3425c92d7145ef4aa051ad4cb443824a2ff48",
+        "difference": 0.05360199999682891
+      },
+      {
+        "address": "0xd1c9a31d53dd5ea3b34463d4204dd0c072f1f690",
+        "difference": 5.49999967063286e-05
+      },
+      {
+        "address": "0xdd0da0d42b4d19c8ebe86e8f3d33e41c2ef75f84",
+        "difference": 0.20683500000086497
+      },
+      {
+        "address": "0xde13132f77965e429b01a4b019eaa23061e9b3a6",
+        "difference": -0.3634850000021288
+      },
+      {
+        "address": "0xf36923e2ea5f251b72e9bcd080e9bd164ea7bdd1",
+        "difference": 1.611176470017739e-13
+      },
+      {
+        "address": "0xf6c3271b318d0b0d946efebb40eaebf0156a503d",
+        "difference": 0.04949900000477214
+      }
+    ],
+    "chart_generated_kst": "2026-10-24T21:14:00.001233+09:00",
+    "collection_started": "2026-10-24T21:04:42.566873+09:00",
+    "collection_completed": "2026-10-24T21:13:13.392384+09:00"
+  },
+  "official_top10": [
+    {
+      "name": "White-Noise-Walkers",
+      "live_pnl_rank": 1,
+      "live_return_pct": 2.40211,
+      "sample_kst": "2026-10-24T21:10:46.563000+09:00",
+      "daily_score_rank": 1,
+      "daily_return_pct": 2.3927720340000125,
+      "daily_std_pct": 0.7836692499866402,
+      "period_sigma_pct": 1.7523377148464039,
+      "q": 0.28866296883415715,
+      "score": 0.23093037506732572
+    },
+    {
+      "name": "Secretive Plotter",
+      "live_pnl_rank": 2,
+      "live_return_pct": 1.73744,
+      "sample_kst": "2026-10-24T21:10:28.569000+09:00",
+      "daily_score_rank": 3,
+      "daily_return_pct": 1.7201416560000071,
+      "daily_std_pct": 1.0981524168678913,
+      "period_sigma_pct": 2.4555434537722918,
+      "q": 0.21340422619690602,
+      "score": 0.17072338095752482
+    },
+    {
+      "name": "Marimbalpha",
+      "live_pnl_rank": 3,
+      "live_return_pct": 1.49499,
+      "sample_kst": "2026-10-24T21:10:01.614000+09:00",
+      "daily_score_rank": 2,
+      "daily_return_pct": 1.4689053930000195,
+      "daily_std_pct": 0.44104978517488913,
+      "period_sigma_pct": 0.9862173011127311,
+      "q": 0.24771616572541835,
+      "score": 0.1981729325803347
+    },
+    {
+      "name": "BerserkerBots",
+      "live_pnl_rank": 4,
+      "live_return_pct": 0.53357,
+      "sample_kst": "2026-10-24T21:10:56.809000+09:00",
+      "daily_score_rank": 4,
+      "daily_return_pct": 0.5200706459999926,
+      "daily_std_pct": 0.28103010767285463,
+      "period_sigma_pct": 0.6284024244805884,
+      "q": 0.157840330701384,
+      "score": 0.1262722645611072
+    },
+    {
+      "name": "Illini Quants",
+      "live_pnl_rank": 5,
+      "live_return_pct": 0.41252,
+      "sample_kst": "2026-10-24T21:10:41.038000+09:00",
+      "daily_score_rank": 5,
+      "daily_return_pct": 0.4125161100000163,
+      "daily_std_pct": 0.20880722049233807,
+      "period_sigma_pct": 0.466907139213655,
+      "q": 0.14927768660257243,
+      "score": 0.11942214928205795
+    },
+    {
+      "name": "SFINX",
+      "live_pnl_rank": 6,
+      "live_return_pct": 0.23113999999999998,
+      "sample_kst": "2026-10-24T21:09:59.996000+09:00",
+      "daily_score_rank": 6,
+      "daily_return_pct": 0.22674058300000688,
+      "daily_std_pct": 0.16039915782555045,
+      "period_sigma_pct": 0.3586634204316482,
+      "q": 0.1260665916183314,
+      "score": 0.10085327329466512,
+      "confirmed_address": "0x125778065a578d598d88bddaa3fdd635280d0e47"
+    },
+    {
+      "name": "FINX",
+      "live_pnl_rank": 7,
+      "live_return_pct": 0.1574,
+      "sample_kst": "2026-10-24T21:10:31.194000+09:00",
+      "daily_score_rank": 25,
+      "daily_return_pct": 0.16771840700000595,
+      "daily_std_pct": 0.8214285368352728,
+      "period_sigma_pct": 1.8367700470218602,
+      "q": 0.08427730278584926,
+      "score": 0.0674218422286794
+    },
+    {
+      "name": "BostonAlpha",
+      "live_pnl_rank": 8,
+      "live_return_pct": 0.11445999999999999,
+      "sample_kst": "2026-10-24T21:09:59.996000+09:00",
+      "daily_score_rank": 7,
+      "daily_return_pct": 0.1008609959999962,
+      "daily_std_pct": 0.1779973154735925,
+      "period_sigma_pct": 0.398014097211428,
+      "q": 0.10545339146105483,
+      "score": 0.08436271316884386
+    },
+    {
+      "name": "Reinforcement Traders",
+      "live_pnl_rank": 9,
+      "live_return_pct": 0.03736,
+      "sample_kst": "2026-10-24T21:10:47.482000+09:00",
+      "daily_score_rank": 8,
+      "daily_return_pct": 0.03534189800000753,
+      "daily_std_pct": 0.039372016898685185,
+      "period_sigma_pct": 0.08803850619673054,
+      "q": 0.10359986327828076,
+      "score": 0.08287989062262462
+    },
+    {
+      "name": "Polenta e Osei",
+      "live_pnl_rank": 10,
+      "live_return_pct": 0.0145,
+      "sample_kst": "2026-10-24T21:10:00.947000+09:00",
+      "daily_score_rank": 19,
+      "daily_return_pct": 0.013117888000047095,
+      "daily_std_pct": 0.07751487271861487,
+      "period_sigma_pct": 0.1733285246660668,
+      "q": 0.0973083858134895,
+      "score": 0.0778467086507916
+    }
+  ],
+  "top10": [
+    {
+      "observed_pnl_rank": 1,
+      "address": "0xdd0da0d42b4d19c8ebe86e8f3d33e41c2ef75f84",
+      "return_pct": 2.4016930900000006,
+      "balance_net_pnl": 2401.6930900000007,
+      "current_longs": [
+        "BRENT"
+      ],
+      "current_shorts": [
+        "BTC",
+        "ETH",
+        "HYPE",
+        "SP500",
+        "EWY",
+        "EWJ",
+        "GOLD",
+        "USDEUR",
+        "USDJPY"
+      ],
+      "configured_leverages": [
+        5
+      ],
+      "gross_equity_pct": 24.22737113359577,
+      "long_share_pct": 10.431188478258152,
+      "short_share_pct": 89.56881152174185,
+      "closed_pnl": 1828.244133,
+      "unrealized": 794.2164809999999,
+      "funding": -69.47868400000007,
+      "fees": 151.49567499999998,
+      "filled_orders": 151,
+      "fills": 579,
+      "volume": 334687.58061899996,
+      "maker_notional_pct": 74.55851482582139,
+      "open_orders": 0,
+      "history_issues": []
+    },
+    {
+      "observed_pnl_rank": 2,
+      "address": "0x06a336acf9d4ed8fae9e60c453fff4ecda409a11",
+      "return_pct": 1.737353065000003,
+      "balance_net_pnl": 1737.353065000003,
+      "current_longs": [],
+      "current_shorts": [
+        "BTC",
+        "ETH",
+        "HYPE",
+        "EWY",
+        "GOLD"
+      ],
+      "configured_leverages": [
+        10,
+        20
+      ],
+      "gross_equity_pct": 30.961291306522554,
+      "long_share_pct": 0.0,
+      "short_share_pct": 100.0,
+      "closed_pnl": 1460.8392700000004,
+      "unrealized": 569.494597,
+      "funding": -177.417896,
+      "fees": 115.78444099999993,
+      "filled_orders": 1285,
+      "fills": 1748,
+      "volume": 369514.6766339999,
+      "maker_notional_pct": 97.77594762463522,
+      "open_orders": 2,
+      "history_issues": []
+    },
+    {
+      "observed_pnl_rank": 3,
+      "address": "0x7df82de32cfa21a06d4a1b06bff69cb3e7680d5b",
+      "return_pct": 1.5435122229999978,
+      "balance_net_pnl": 1543.512222999998,
+      "current_longs": [
+        "SP500",
+        "BRENT"
+      ],
+      "current_shorts": [
+        "EWY",
+        "EWJ",
+        "GOLD",
+        "USDJPY"
+      ],
+      "configured_leverages": [
+        20
+      ],
+      "gross_equity_pct": 546.2037315963286,
+      "long_share_pct": 41.09053261754005,
+      "short_share_pct": 58.90946738245996,
+      "closed_pnl": -108.632982,
+      "unrealized": -776.8889079999999,
+      "funding": 3100.6181860000006,
+      "fees": 671.678342,
+      "filled_orders": 87,
+      "fills": 310,
+      "volume": 746309.4077229998,
+      "maker_notional_pct": 0.0,
+      "open_orders": 0,
+      "history_issues": []
+    },
+    {
+      "observed_pnl_rank": 4,
+      "address": "0x1ba2ee6b502381e2e06a9f41d8758aebda281ca4",
+      "return_pct": 0.5336038459999981,
+      "balance_net_pnl": 533.6038459999982,
+      "current_longs": [
+        "BTC",
+        "SP500",
+        "BRENT",
+        "USDEUR"
+      ],
+      "current_shorts": [
+        "EWY",
+        "EWJ",
+        "GOLD",
+        "USDJPY"
+      ],
+      "configured_leverages": [
+        5,
+        20
+      ],
+      "gross_equity_pct": 690.231061718384,
+      "long_share_pct": 58.41803964673984,
+      "short_share_pct": 41.58196035326016,
+      "closed_pnl": 37.501892,
+      "unrealized": -824.860353,
+      "funding": 1949.9959009999995,
+      "fees": 629.1268289999997,
+      "filled_orders": 990,
+      "fills": 1328,
+      "volume": 723160.0412180002,
+      "maker_notional_pct": 5.005018948369833,
+      "open_orders": 1,
+      "history_issues": []
+    },
+    {
+      "observed_pnl_rank": 5,
+      "address": "0xc8e3425c92d7145ef4aa051ad4cb443824a2ff48",
+      "return_pct": 0.4125161099999969,
+      "balance_net_pnl": 412.51610999999684,
+      "current_longs": [],
+      "current_shorts": [],
+      "configured_leverages": [],
+      "gross_equity_pct": 0.0,
+      "long_share_pct": null,
+      "short_share_pct": null,
+      "closed_pnl": 517.250448,
+      "unrealized": 0.0,
+      "funding": -15.328447,
+      "fees": 89.459493,
+      "filled_orders": 6,
+      "fills": 33,
+      "volume": 99399.45715,
+      "maker_notional_pct": 0.0,
+      "open_orders": 0,
+      "history_issues": []
+    },
+    {
+      "observed_pnl_rank": 6,
+      "address": "0x125778065a578d598d88bddaa3fdd635280d0e47",
+      "return_pct": 0.23179147300000477,
+      "balance_net_pnl": 231.79147300000477,
+      "current_longs": [
+        "BTC",
+        "BRENT"
+      ],
+      "current_shorts": [
+        "ETH",
+        "HYPE",
+        "EWY",
+        "EWJ",
+        "GOLD",
+        "USDEUR",
+        "USDJPY"
+      ],
+      "configured_leverages": [
+        1
+      ],
+      "gross_equity_pct": 13.134929488461184,
+      "long_share_pct": 40.80915116286203,
+      "short_share_pct": 59.19084883713796,
+      "closed_pnl": 219.203528,
+      "unrealized": 120.60339499999999,
+      "funding": -49.14461500000001,
+      "fees": 58.95217000000001,
+      "filled_orders": 29,
+      "fills": 55,
+      "volume": 65502.444133,
+      "maker_notional_pct": 0.0,
+      "open_orders": 0,
+      "history_issues": []
+    },
+    {
+      "observed_pnl_rank": 7,
+      "address": "0xde13132f77965e429b01a4b019eaa23061e9b3a6",
+      "return_pct": 0.156663486999998,
+      "balance_net_pnl": 156.66348699999799,
+      "current_longs": [
+        "BTC",
+        "ETH",
+        "HYPE",
+        "EWY",
+        "GOLD"
+      ],
+      "current_shorts": [],
+      "configured_leverages": [
+        1
+      ],
+      "gross_equity_pct": 21.35590676178652,
+      "long_share_pct": 100.0,
+      "short_share_pct": 0.0,
+      "closed_pnl": 524.8790280000001,
+      "unrealized": -264.900313,
+      "funding": 150.50454000000005,
+      "fees": 253.45628299999998,
+      "filled_orders": 93,
+      "fills": 217,
+      "volume": 285161.01155600004,
+      "maker_notional_pct": 1.8635767361753783,
+      "open_orders": 0,
+      "history_issues": []
+    },
+    {
+      "observed_pnl_rank": 8,
+      "address": "0xd1c9a31d53dd5ea3b34463d4204dd0c072f1f690",
+      "return_pct": 0.11446104599999671,
+      "balance_net_pnl": 114.46104599999671,
+      "current_longs": [],
+      "current_shorts": [
+        "ETH"
+      ],
+      "configured_leverages": [
+        20
+      ],
+      "gross_equity_pct": 21.381099000437803,
+      "long_share_pct": 0.0,
+      "short_share_pct": 100.0,
+      "closed_pnl": -0.066102,
+      "unrealized": 197.310917,
+      "funding": -63.21284199999999,
+      "fees": 19.570982,
+      "filled_orders": 5,
+      "fills": 12,
+      "volume": 21745.542019999997,
+      "maker_notional_pct": 0.0,
+      "open_orders": 0,
+      "history_issues": []
+    },
+    {
+      "observed_pnl_rank": 9,
+      "address": "0xbf6187b58cd9875000d522bf9a6b4f8013edd07c",
+      "return_pct": 0.037457697999998346,
+      "balance_net_pnl": 37.457697999998345,
+      "current_longs": [
+        "SP500",
+        "BRENT"
+      ],
+      "current_shorts": [
+        "BTC",
+        "HYPE",
+        "EWY",
+        "GOLD",
+        "USDJPY"
+      ],
+      "configured_leverages": [
+        10,
+        20
+      ],
+      "gross_equity_pct": 14.330475343823746,
+      "long_share_pct": 26.55655439468217,
+      "short_share_pct": 73.44344560531783,
+      "closed_pnl": -38.807828,
+      "unrealized": 39.974746,
+      "funding": 46.52845199999999,
+      "fees": 10.237584000000002,
+      "filled_orders": 26,
+      "fills": 48,
+      "volume": 24320.801819999997,
+      "maker_notional_pct": 79.84328310274435,
+      "open_orders": 0,
+      "history_issues": []
+    },
+    {
+      "observed_pnl_rank": 10,
+      "address": "0x499d4a0f554fe78cbdd4504411500ea9347c353f",
+      "return_pct": 0.012918569999994363,
+      "balance_net_pnl": 12.91856999999436,
+      "current_longs": [
+        "ETH",
+        "SP500",
+        "EWY",
+        "BRENT",
+        "USDEUR"
+      ],
+      "current_shorts": [
+        "BTC",
+        "HYPE",
+        "EWJ",
+        "GOLD",
+        "USDJPY"
+      ],
+      "configured_leverages": [
+        3
+      ],
+      "gross_equity_pct": 64.43250361591764,
+      "long_share_pct": 78.5306488172403,
+      "short_share_pct": 21.469351182759702,
+      "closed_pnl": -9.580817000000003,
+      "unrealized": -137.766821,
+      "funding": 234.61875200000003,
+      "fees": 74.30489499999999,
+      "filled_orders": 326,
+      "fills": 337,
+      "volume": 115937.238075,
+      "maker_notional_pct": 43.182059195349694,
+      "open_orders": 2,
+      "history_issues": []
+    }
+  ]
+}

@@ -1,0 +1,213 @@
+"""Join prespecified efficacy, timing, capacity and actual-ledger checks.
+
+This report does not place orders, modify a service, or issue a deployment
+release. Selection remains conditional on a short, overlapping paper window.
+"""
+import gzip
+import html
+import json
+import sys
+import time
+from datetime import datetime, timezone
+
+import numpy as np
+
+from .protocol import OUT, ROOT, save, sha
+
+DEST = OUT / 'qualification_review'
+END = 1792915500
+REVIEWS = {
+    'realistic_phase0': OUT / 'lot_exact_forward_review/phase_0',
+    'realistic_phase45': OUT / 'lot_exact_forward_review/phase_45',
+}
+
+
+def qualification(groups, capacity, fidelity):
+    """Require every declared condition; diagnostics cannot replace primaries."""
+    if set(groups) != set(REVIEWS):
+        raise ValueError('Incomplete timing comparisons')
+    reference = groups['realistic_phase0']
+    reasons = []
+    expected = (reference['name'], reference['primary'], reference['controls'],
+                reference['start'], reference['replay_start'])
+    for label, group in groups.items():
+        actual = (group['name'], group['primary'], group['controls'],
+                  group['start'], group['replay_start'])
+        if actual != expected:
+            raise ValueError('Compared strategies or windows differ')
+        if len(group['checks']) != 2 or {c['scenario'] for c in group['checks']} != {'base', 'stress'}:
+            raise ValueError('Missing cost scenario')
+        for check in group['checks']:
+            comparisons = check['comparisons']
+            if {c['control'] for c in comparisons} != set(reference['controls']):
+                raise ValueError('Missing prespecified control')
+            if not check['passed']:
+                reasons.append(f'{label}/{check["scenario"]}: profitability, paired improvement or data validity failed')
+        expected_arms = set(reference['controls']) | {reference['primary']}
+        for scenario in ('base', 'stress'):
+            found = [r for r in group['rows'] if r['scenario'] == scenario]
+            if {r['arm'] for r in found} != expected_arms or len(found) != len(expected_arms):
+                raise ValueError('Missing or duplicate strategy result')
+            for row in found:
+                key = (label, row['arm'], scenario)
+                if key not in capacity or not capacity[key]['complete']:
+                    reasons.append('/'.join(key) + ': venue capacity unresolved')
+        if label not in fidelity or not fidelity[label]['valid']:
+            reasons.append(label + ': actual incumbent comparison unresolved')
+            continue
+        base = next(c for c in group['checks'] if c['scenario'] == 'base')
+        incumbent = next(c for c in base['comparisons'] if c['control'] == 'incumbent')
+        advantage = incumbent['advantage_after_exit']
+        if advantage is None or not np.isfinite(advantage):
+            reasons.append(label + ': no valid paired advantage')
+        elif advantage <= fidelity[label]['absolute_exit_pnl_mismatch'] + incumbent['rounding_bound']:
+            reasons.append(label + ': improvement does not exceed observed incumbent replay discrepancy')
+    return dict(short_conditional_trial_eligible=not reasons, reasons=reasons,
+                no_profit_guarantee=True, official_Q=None,
+                statistical_confidence_claim=False, live_release_created=False)
+
+
+def freeze():
+    assert time.time() < END and not (DEST / 'protocol.json').exists()
+    parents = ['exact_forward_review/protocol.json', 'paced_forward_review/protocol.json',
+               'venue_feasibility/protocol.json', 'incumbent_real_execution_audit/protocol.json',
+               'delayed_forward_review/protocol.json', 'data_aware_forward_review/protocol.json',
+               'lot_exact_forward_review/protocol.json']
+    save(DEST / 'protocol.json', dict(at=time.time(), end=END,
+        source_sha=sha(__file__), parents={p: sha(OUT / p) for p in parents},
+        rule='Use BOTH phases of the corrected actual-read-pause and90/120s serial-pre-send-work evaluator in base AND stress. Same five frozen primaries and controls. Original fast/immediate-send and missing-input-fatal replays remain diagnostic results, not competing timing winners. Audit OI for every corrected path. Reconstruct actual owner PnL in each exact window and compare terminal-exit PnL; require advantage above incumbent replay discrepancy plus settlement rounding. Discrepancy is empirical, not a statistical error bound. No favorable-phase or diagnostic-arm selection.',
+        scope='Read-only short conditional trial qualification; no automatic live cutover, no long-term or official Q claim.',
+        outcomes_opened=False, orders_sent=0))
+
+
+def check():
+    p = json.loads((DEST / 'protocol.json').read_text())
+    assert sha(__file__) == p['source_sha']
+    for f, digest in p['parents'].items():
+        assert sha(OUT / f) == digest, f
+    return p
+
+
+def actual_comparison(ledger, streams, profile, experiment, paper):
+    from unittest.mock import patch
+    from .book_replay import BookVenue
+    from .liquidation_audit import terminal_value, value_at
+    from .live_replay_audit import ledger_value
+    from .lot_sweep import sweep as lot_exact_sweep
+    sc = dict(fee_bps=9., depth_fraction=1., latency_ms=1000, receipt_multiplier=1.)
+    start = experiment['start']
+    first, last = [ledger_value(ledger, BookVenue(streams, profile, sc, t, t, []).marks(), t)
+                   for t in (start, END)]
+    paper_first, paper_last = [value_at(streams, profile, sc, paper, t) for t in (start, END)]
+    with patch('production_replay_20261025.liquidation_audit.sweep',lot_exact_sweep):
+        end_exit = terminal_value(streams, profile, sc, last)
+        paper_exit = terminal_value(streams, profile, sc, paper_last, paper['orders'])
+    ambiguities = first['boundary_fill_timestamp_ambiguities'] + last['boundary_fill_timestamp_ambiguities']
+    valid = end_exit['complete'] and paper_exit['complete'] and ambiguities == 0
+    actual_net = last['equity'] - first['equity']
+    paper_net = paper_last['equity'] - paper_first['equity']
+    actual_liquidated = actual_net + end_exit['priced_partial_adjustment'] if end_exit['complete'] else None
+    paper_liquidated = paper_net + paper_exit['priced_partial_adjustment'] if paper_exit['complete'] else None
+    return dict(valid=bool(valid), actual_net_pnl=actual_net, paper_net_pnl=paper_net,
+        actual_after_terminal_exit=actual_liquidated, paper_after_terminal_exit=paper_liquidated,
+        absolute_exit_pnl_mismatch=abs(actual_liquidated-paper_liquidated) if valid else None,
+        initial_qty_difference=(np.array(paper_first['qty'])-np.array(first['qty'])).tolist(),
+        terminal_qty_difference=(np.array(paper_last['qty'])-np.array(last['qty'])).tolist(),
+        boundary_timestamp_ambiguities=ambiguities, start=start, end=END)
+
+
+def run():
+    check()
+    while time.time() < END + 2400:
+        save(DEST / 'status.json', dict(at=time.time(), state='waiting_for_all_prespecified_audits'))
+        time.sleep(min(30, max(1, END + 2400-time.time())))
+    required = [OUT / 'exact_forward_review/status.json', OUT / 'paced_forward_review/status.json',
+                OUT / 'venue_feasibility/status.json', OUT / 'incumbent_real_execution_audit/status.json',
+                OUT / 'lot_exact_forward_review/status.json']
+    while not all(f.exists() and json.loads(f.read_text()).get('state') == 'complete' for f in required):
+        if time.time() > END + 3300:
+            raise ValueError('Required final audit incomplete')
+        time.sleep(15)
+    check()
+    from competition_live.profile import load_profile
+    from competition_live.runtime import private_load
+    from .book_replay import load_books
+    from .venue_feasibility import assess
+    profile = load_profile()
+    capture = OUT / 'sealed_forward_capture/received_through_fixed_end.jsonl.gz'
+    streams, capture_manifest = load_books([capture], END)
+    checkpoint = ROOT / '.runtime/pas_budget_lifecycle/coordinator.pkl'
+    for _ in range(5):
+        before = sha(checkpoint)
+        p = private_load(checkpoint)['portfolio']
+        after = sha(checkpoint)
+        if before == after:
+            break
+        time.sleep(1)
+    else:
+        raise ValueError('Live checkpoint changed during all read attempts')
+    a = p.account.physical
+    cash = a.initial - sum(f['signed_qty']*f['price']+f['fee'] for f in a.fills)
+    cash += sum(f['signed_amount'] for f in a.funding_events)
+    if abs(cash-a.shadow_cash) > 1e-6 or p.account.unknown or p.account.pending_orders or p.fatal:
+        raise ValueError('Actual owner ledger is not fully reconciled')
+    reserve = private_load(OUT / 'forward_seed.pkl')['portfolio'].account.reserved.qty
+    reviews = {label: json.loads((folder / 'results.json').read_text()) for label, folder in REVIEWS.items()}
+    expected_names = {g['name'] for g in reviews['realistic_phase0']['experiments']}
+    if len(expected_names) != 5 or any({g['name'] for g in r['experiments']} != expected_names for r in reviews.values()):
+        raise ValueError('Incomplete experiment family')
+    output = []
+    for reference in reviews['realistic_phase0']['experiments']:
+        name = reference['name']
+        groups = {label: next(g for g in r['experiments'] if g['name'] == name) for label, r in reviews.items()}
+        capacity, fidelity = {}, {}
+        for label, group in groups.items():
+            for row in group['rows']:
+                file = REVIEWS[label] / name / f'{row["arm"]}_{row["scenario"]}.json.gz'
+                with gzip.open(file, 'rt') as fp:
+                    result = json.load(fp)
+                stress = row['scenario'] == 'stress'
+                sc = dict(fee_bps=12. if stress else 9., depth_fraction=.5 if stress else 1.,
+                          latency_ms=3000 if stress else 1000, receipt_multiplier=.5 if stress else 1.)
+                capacity[(label, row['arm'], row['scenario'])] = assess(result, streams, profile, sc, reserve)
+                if row['arm'] == 'incumbent' and not stress:
+                    fidelity[label] = actual_comparison(a, streams, profile, group, result)
+        output.append(dict(name=name, primary=reference['primary'], start=reference['start'], end=END,
+            verdict=qualification(groups, capacity, fidelity),
+            comparisons=groups, actual_incumbent_comparisons=fidelity,
+            capacity=[dict(timing=k[0], arm=k[1], scenario=k[2], **v) for k, v in capacity.items()]))
+    save(DEST / 'results.json', dict(at=time.time(), experiments=output,
+        actual_checkpoint_sha=after, capture=capture_manifest,
+        source_results={str(f.relative_to(OUT)):sha(f) for folder in REVIEWS.values() for f in [folder/'results.json']},
+        orders_sent=0, live_changed=False))
+    render(output)
+    save(DEST / 'status.json', dict(at=time.time(), state='complete', orders_sent=0))
+
+
+def render(groups):
+    def fmt(value):
+        return '확인 불가' if value is None else f'{value:,.4f}'
+    lines = ['<!doctype html><html lang="ko"><meta charset="utf-8"><title>SFINX 최종 비교</title>',
+        '<style>body{font:16px/1.6 system-ui;max-width:1400px;margin:32px auto;padding:16px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;padding:8px}</style>',
+        '<h1>고정 후보의 실제 수신 호가 평가</h1>',
+        '<p>자기 자본 50,000 USDP. 팀원 손익 제외. 단위 USDP. 종료는 10월 25일 17:05 KST. 수수료·펀딩·잔여 호가 청산 비용을 반영한 조건부 모의 결과이며 실거래 수익이 아닙니다.</p>']
+    for group in groups:
+        lines += ['<h2>'+html.escape(group['name'])+'</h2>',
+            '<p>지정 후보: '+html.escape(group['primary'])+' · 모든 단기 조건 '+('통과' if group['verdict']['short_conditional_trial_eligible'] else '미통과')+'</p>',
+            '<table><tr><th>실행 주기</th><th>비용 조건</th><th>후보 순손익</th><th>후보 종료 청산 후</th><th>기존판 종료 청산 후</th><th>차이</th><th>실제 기존판과 모의 기존판 차이</th></tr>']
+        for label, comparison in group['comparisons'].items():
+            for scenario in ('base','stress'):
+                rows = {r['arm']:r for r in comparison['rows'] if r['scenario']==scenario}
+                candidate, incumbent = rows[group['primary']],rows['incumbent']
+                c, b = candidate.get('net_after_terminal_exit'),incumbent.get('net_after_terminal_exit')
+                fields = [candidate.get('net_pnl'),c,b,c-b if c is not None and b is not None else None,
+                          group['actual_incumbent_comparisons'][label]['absolute_exit_pnl_mismatch'] if scenario=='base' else None]
+                lines.append('<tr><td>'+label+'</td><td>'+scenario+'</td>'+''.join('<td>'+fmt(v)+'</td>' for v in fields)+'</tr>')
+        lines += ['</table><ul>'] + ['<li>'+html.escape(r)+'</li>' for r in group['verdict']['reasons']] + ['</ul>']
+    lines += ['<p>겹치는 다섯 후보 비교입니다. 좋은 결과를 선택했다면 이 기간은 선택에 사용된 기간입니다. 과적합 부재·장기 우월성·공식 Q를 증명하지 않으며, 실제 기존판과의 차이도 통계적 오차 한도가 아닌 실행 모형 점검치입니다.</p>',
+              '<p><a href="results.json">전체 수치·검사</a> · <a href="protocol.json">결과 열람 전 고정 조건</a></p></html>']
+    (DEST / 'report.html').write_text('\n'.join(lines))
+
+
+if __name__ == '__main__':
+    globals()[sys.argv[1]]()

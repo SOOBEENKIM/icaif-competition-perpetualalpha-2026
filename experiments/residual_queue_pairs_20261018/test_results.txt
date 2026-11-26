@@ -1,0 +1,17 @@
+test_disabled_is_exact_original (experiments.residual_queue_pairs_20261018.test_queue.PortfolioTests.test_disabled_is_exact_original) ... ok
+test_future_market_changes_do_not_change_earlier_handoffs_or_fills (experiments.residual_queue_pairs_20261018.test_queue.PortfolioTests.test_future_market_changes_do_not_change_earlier_handoffs_or_fills) ... ok
+test_new_disjoint_entry_can_fill_while_paid_residual_exit_continues (experiments.residual_queue_pairs_20261018.test_queue.PortfolioTests.test_new_disjoint_entry_can_fill_while_paid_residual_exit_continues) ... ok
+test_completion_requires_observed_zero_inventory (experiments.residual_queue_pairs_20261018.test_queue.ResidualTests.test_completion_requires_observed_zero_inventory) ... ok
+test_funding_is_conserved_after_handoff_with_opposing_base (experiments.residual_queue_pairs_20261018.test_queue.ResidualTests.test_funding_is_conserved_after_handoff_with_opposing_base) ... ok
+test_handoff_conserves_cash_positions_equity_fees_and_episode (experiments.residual_queue_pairs_20261018.test_queue.ResidualTests.test_handoff_conserves_cash_positions_equity_fees_and_episode) ... ok
+test_internal_cross_to_base_does_not_create_external_fee (experiments.residual_queue_pairs_20261018.test_queue.ResidualTests.test_internal_cross_to_base_does_not_create_external_fee) ... ok
+test_received_book_unknown_leg_blocks_new_submissions (experiments.residual_queue_pairs_20261018.test_queue.ResidualTests.test_received_book_unknown_leg_blocks_new_submissions) ... ok
+test_reduction_priority_is_allocated_once (experiments.residual_queue_pairs_20261018.test_queue.ResidualTests.test_reduction_priority_is_allocated_once) ... ok
+test_residual_cannot_increase_and_active_symbol_cannot_overlap (experiments.residual_queue_pairs_20261018.test_queue.ResidualTests.test_residual_cannot_increase_and_active_symbol_cannot_overlap) ... ok
+test_residual_leg_risk_is_checked_without_assuming_it_fills (experiments.residual_queue_pairs_20261018.test_queue.ResidualTests.test_residual_leg_risk_is_checked_without_assuming_it_fills) ... ok
+test_unobserved_or_unattempted_exit_cannot_handoff (experiments.residual_queue_pairs_20261018.test_queue.ResidualTests.test_unobserved_or_unattempted_exit_cannot_handoff) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.072s
+
+OK

@@ -1,0 +1,13 @@
+test_directional_score_uses_matching_historical_actions (experiments.cost_selected_pairs_20261017.test_model.CostSelectionTests.test_directional_score_uses_matching_historical_actions) ... ok
+test_future_changes_do_not_change_earlier_states_and_controls_exact (experiments.cost_selected_pairs_20261017.test_model.CostSelectionTests.test_future_changes_do_not_change_earlier_states_and_controls_exact) ... ok
+test_mature_only_selector_preserves_exact_expert_value (experiments.cost_selected_pairs_20261017.test_model.CostSelectionTests.test_mature_only_selector_preserves_exact_expert_value) ... ok
+test_missing_funding_or_terminal_does_not_become_zero_profit (experiments.cost_selected_pairs_20261017.test_model.CostSelectionTests.test_missing_funding_or_terminal_does_not_become_zero_profit) ... ok
+test_nonpositive_score_suppresses_source_instead_of_zero_mu (experiments.cost_selected_pairs_20261017.test_model.CostSelectionTests.test_nonpositive_score_suppresses_source_instead_of_zero_mu) ... ok
+test_price_gap_changes_payoff_not_source_decision (experiments.cost_selected_pairs_20261017.test_model.CostSelectionTests.test_price_gap_changes_payoff_not_source_decision) ... ok
+test_proxy_accounts_for_next_bar_two_leg_costs_and_settlements (experiments.cost_selected_pairs_20261017.test_model.CostSelectionTests.test_proxy_accounts_for_next_bar_two_leg_costs_and_settlements) ... ok
+test_source_flat_has_zero_label_when_full_window_observed (experiments.cost_selected_pairs_20261017.test_model.CostSelectionTests.test_source_flat_has_zero_label_when_full_window_observed) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 2.692s
+
+OK

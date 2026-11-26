@@ -1,0 +1,13 @@
+test_duplicate_intervals_share_weight (experiments.lifecycle_value_pairs_20261018.test_model.LifecycleValueTests.test_duplicate_intervals_share_weight) ... ok
+test_forecast_values_and_quantities_not_replaced (experiments.lifecycle_value_pairs_20261018.test_model.LifecycleValueTests.test_forecast_values_and_quantities_not_replaced) ... ok
+test_future_payoff_and_features_do_not_change_fit (experiments.lifecycle_value_pairs_20261018.test_model.LifecycleValueTests.test_future_payoff_and_features_do_not_change_fit) ... ok
+test_held_policy_and_execution_body_unchanged (experiments.lifecycle_value_pairs_20261018.test_model.LifecycleValueTests.test_held_policy_and_execution_body_unchanged) ... ok
+test_missing_model_preserves_order_and_two_pair_scope (experiments.lifecycle_value_pairs_20261018.test_model.LifecycleValueTests.test_missing_model_preserves_order_and_two_pair_scope) ... ok
+test_open_and_unattempted_not_zero_labels (experiments.lifecycle_value_pairs_20261018.test_model.LifecycleValueTests.test_open_and_unattempted_not_zero_labels) ... ok
+test_partial_overlap_weight (experiments.lifecycle_value_pairs_20261018.test_model.LifecycleValueTests.test_partial_overlap_weight) ... ok
+test_strict_outcome_boundary (experiments.lifecycle_value_pairs_20261018.test_model.LifecycleValueTests.test_strict_outcome_boundary) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.022s
+
+OK

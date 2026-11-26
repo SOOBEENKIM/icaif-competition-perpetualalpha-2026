@@ -1,0 +1,1 @@
+{"installed": "minimum_required_margin_v1", "orders_sent": 0, "setting_updates": 0, "holdings_preserved": true}

@@ -1,0 +1,16 @@
+test_completion_values_the_frozen_individual_leg_prices (experiments.joint_leg_pairs_20261017.test_joint.JointTests.test_completion_values_the_frozen_individual_leg_prices) ... ok
+test_entry_preserves_explicit_hypothesis_and_future_account_prefix (experiments.joint_leg_pairs_20261017.test_joint.JointTests.test_entry_preserves_explicit_hypothesis_and_future_account_prefix) ... ok
+test_explicit_prices_reach_both_renewal_branches (experiments.joint_leg_pairs_20261017.test_joint.JointTests.test_explicit_prices_reach_both_renewal_branches) ... ok
+test_explicit_zero_common_prices_reproduce_old_account (experiments.joint_leg_pairs_20261017.test_joint.JointTests.test_explicit_zero_common_prices_reproduce_old_account) ... ok
+test_future_targets_and_terminal_activity_cannot_change_current_prediction (experiments.joint_leg_pairs_20261017.test_joint.JointTests.test_future_targets_and_terminal_activity_cannot_change_current_prediction) ... ok
+test_no_explicit_prices_reproduce_old_account (experiments.joint_leg_pairs_20261017.test_joint.JointTests.test_no_explicit_prices_reproduce_old_account) ... ok
+test_pair_independence_and_missing_warmup (experiments.joint_leg_pairs_20261017.test_joint.JointTests.test_pair_independence_and_missing_warmup) ... ok
+test_scalar_is_not_an_identified_leg_forecast_and_projection_preserves_pair (experiments.joint_leg_pairs_20261017.test_joint.JointTests.test_scalar_is_not_an_identified_leg_forecast_and_projection_preserves_pair) ... ok
+test_state_uses_source_clock_and_explicit_prices (experiments.joint_leg_pairs_20261017.test_joint.JointTests.test_state_uses_source_clock_and_explicit_prices) ... ok
+test_terminal_inactive_rows_are_not_training_labels (experiments.joint_leg_pairs_20261017.test_joint.JointTests.test_terminal_inactive_rows_are_not_training_labels) ... ok
+test_two_output_fit_matches_independent_augmented_least_squares (experiments.joint_leg_pairs_20261017.test_joint.JointTests.test_two_output_fit_matches_independent_augmented_least_squares) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.563s
+
+OK

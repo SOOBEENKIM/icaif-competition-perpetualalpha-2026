@@ -1,0 +1,99 @@
+test_changed_external_inventory_before_send_is_rejected_without_unknown_order (candidate_handoff.test_handoff.HandoffTests.test_changed_external_inventory_before_send_is_rejected_without_unknown_order) ... ok
+test_does_not_reschedule_same_round_or_backdate_off_cadence_entry (candidate_handoff.test_handoff.HandoffTests.test_does_not_reschedule_same_round_or_backdate_off_cadence_entry) ... ok
+test_exact_candidate_target_reaches_retained_live_executor_without_reset (candidate_handoff.test_handoff.HandoffTests.test_exact_candidate_target_reaches_retained_live_executor_without_reset) ... ok
+test_explicit_external_mode_does_not_claim_teammate_is_integrated (candidate_handoff.test_handoff.HandoffTests.test_explicit_external_mode_does_not_claim_teammate_is_integrated) ... ok
+test_inbox_is_unsigned_idempotent_and_rejects_changed_or_expired_requests (candidate_handoff.test_handoff.HandoffTests.test_inbox_is_unsigned_idempotent_and_rejects_changed_or_expired_requests) ... ok
+test_joint_executor_closes_ours_without_closing_teammate_and_no_double_send (candidate_handoff.test_handoff.HandoffTests.test_joint_executor_closes_ours_without_closing_teammate_and_no_double_send) ... ok
+test_joint_funding_sync_preserves_opposing_owner_quantities_and_is_idempotent (candidate_handoff.test_handoff.HandoffTests.test_joint_funding_sync_preserves_opposing_owner_quantities_and_is_idempotent) ... ok
+test_migration_preserves_actual_inventory_entries_pnl_and_control_state (candidate_handoff.test_handoff.HandoffTests.test_migration_preserves_actual_inventory_entries_pnl_and_control_state) ... ok
+test_missing_ownership_policy_stops_before_loading_signer (candidate_handoff.test_handoff.HandoffTests.test_missing_ownership_policy_stops_before_loading_signer) ... ok
+test_pair_exit_state_and_owner_binding_survive_adoption (candidate_handoff.test_handoff.HandoffTests.test_pair_exit_state_and_owner_binding_survive_adoption) ... ok
+test_preview_executes_preflight_but_cannot_call_sender (candidate_handoff.test_handoff.HandoffTests.test_preview_executes_preflight_but_cannot_call_sender) ... ok
+test_restart_reads_new_checkpoint_and_keeps_pending_base_task (candidate_handoff.test_handoff.HandoffTests.test_restart_reads_new_checkpoint_and_keeps_pending_base_task) ... ok
+test_same_wallet_lock_excludes_old_and_new_and_releases_after_error (candidate_handoff.test_handoff.HandoffTests.test_same_wallet_lock_excludes_old_and_new_and_releases_after_error) ... ok
+test_selected_policy_one_row_matches_original_clock_and_allows_short (candidate_handoff.test_handoff.HandoffTests.test_selected_policy_one_row_matches_original_clock_and_allows_short) ... ok
+test_tampered_forecast_or_unavailable_signal_is_rejected (candidate_handoff.test_handoff.HandoffTests.test_tampered_forecast_or_unavailable_signal_is_rejected) ... ok
+test_teammate_queue_uses_same_dispatcher_and_preserves_our_ownership (candidate_handoff.test_handoff.HandoffTests.test_teammate_queue_uses_same_dispatcher_and_preserves_our_ownership) ... ok
+test_teammate_receipts_are_not_reclassified_as_our_orders (candidate_handoff.test_handoff.HandoffTests.test_teammate_receipts_are_not_reclassified_as_our_orders) ... ok
+test_unified_equity_uses_bracketing_marks_and_still_rejects_missing_cash (candidate_handoff.test_handoff.HandoffTests.test_unified_equity_uses_bracketing_marks_and_still_rejects_missing_cash) ... ok
+test_drawdown_halt_still_cancels_intent_and_closes_position (candidate_handoff.test_risk_priority.RiskPriorityTests.test_drawdown_halt_still_cancels_intent_and_closes_position) ... ok
+test_dust_cap_does_not_block_other_target_or_repeat_empty_packets (candidate_handoff.test_risk_priority.RiskPriorityTests.test_dust_cap_does_not_block_other_target_or_repeat_empty_packets) ... FAIL
+test_dust_does_not_starve_existing_pair_lifecycle (candidate_handoff.test_risk_priority.RiskPriorityTests.test_dust_does_not_starve_existing_pair_lifecycle) ... FAIL
+test_expired_normal_intent_cannot_resume_after_reduction (candidate_handoff.test_risk_priority.RiskPriorityTests.test_expired_normal_intent_cannot_resume_after_reduction) ... ok
+test_genuine_physical_full_close_keeps_below_minimum_exception (candidate_handoff.test_risk_priority.RiskPriorityTests.test_genuine_physical_full_close_keeps_below_minimum_exception) ... ok
+test_material_risk_cut_retains_other_target_and_resumes_only_remaining_qty (candidate_handoff.test_risk_priority.RiskPriorityTests.test_material_risk_cut_retains_other_target_and_resumes_only_remaining_qty) ... FAIL
+test_partial_risk_fill_retries_remainder_before_normal_addition (candidate_handoff.test_risk_priority.RiskPriorityTests.test_partial_risk_fill_retries_remainder_before_normal_addition) ... FAIL
+test_unknown_outcome_blocks_all_continuation (candidate_handoff.test_risk_priority.RiskPriorityTests.test_unknown_outcome_blocks_all_continuation) ... ok
+test_virtual_close_that_increases_team_net_has_no_minimum_exception (candidate_handoff.test_risk_priority.RiskPriorityTests.test_virtual_close_that_increases_team_net_has_no_minimum_exception) ... FAIL
+
+======================================================================
+FAIL: test_dust_cap_does_not_block_other_target_or_repeat_empty_packets (candidate_handoff.test_risk_priority.RiskPriorityTests.test_dust_cap_does_not_block_other_target_or_repeat_empty_packets)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/candidate_handoff/test_risk_priority.py", line 49, in test_dust_cap_does_not_block_other_target_or_repeat_empty_packets
+    self.assertEqual([o.coin for o in orders],['pas:ETH'])
+AssertionError: Lists differ: [] != ['pas:ETH']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'pas:ETH'
+
+- []
++ ['pas:ETH']
+
+======================================================================
+FAIL: test_dust_does_not_starve_existing_pair_lifecycle (candidate_handoff.test_risk_priority.RiskPriorityTests.test_dust_does_not_starve_existing_pair_lifecycle)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/candidate_handoff/test_risk_priority.py", line 96, in test_dust_does_not_starve_existing_pair_lifecycle
+    self.assertEqual(len(calls),1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_material_risk_cut_retains_other_target_and_resumes_only_remaining_qty (candidate_handoff.test_risk_priority.RiskPriorityTests.test_material_risk_cut_retains_other_target_and_resumes_only_remaining_qty)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/candidate_handoff/test_risk_priority.py", line 37, in test_material_risk_cut_retains_other_target_and_resumes_only_remaining_qty
+    self.assertIsNotNone(p.base_task)
+AssertionError: unexpectedly None
+
+======================================================================
+FAIL: test_partial_risk_fill_retries_remainder_before_normal_addition (candidate_handoff.test_risk_priority.RiskPriorityTests.test_partial_risk_fill_retries_remainder_before_normal_addition)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/candidate_handoff/test_risk_priority.py", line 74, in test_partial_risk_fill_retries_remainder_before_normal_addition
+    self.assertEqual([o.coin for o in orders],['pas:BTC','pas:BTC','pas:ETH'])
+AssertionError: Lists differ: ['pas:BTC', 'pas:BTC'] != ['pas:BTC', 'pas:BTC', 'pas:ETH']
+
+Second list contains 1 additional elements.
+First extra element 2:
+'pas:ETH'
+
+- ['pas:BTC', 'pas:BTC']
++ ['pas:BTC', 'pas:BTC', 'pas:ETH']
+?                      +++++++++++
+
+
+======================================================================
+FAIL: test_virtual_close_that_increases_team_net_has_no_minimum_exception (candidate_handoff.test_risk_priority.RiskPriorityTests.test_virtual_close_that_increases_team_net_has_no_minimum_exception)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/candidate_handoff/test_risk_priority.py", line 109, in test_virtual_close_that_increases_team_net_has_no_minimum_exception
+    self.assertEqual([o.coin for o in orders],['pas:ETH'])
+AssertionError: Lists differ: ['pas:BTC'] != ['pas:ETH']
+
+First differing element 0:
+'pas:BTC'
+'pas:ETH'
+
+- ['pas:BTC']
+?       ^ ^
+
++ ['pas:ETH']
+?       ^ ^
+
+
+----------------------------------------------------------------------
+Ran 27 tests in 0.334s
+
+FAILED (failures=5)

@@ -1,0 +1,1 @@
+This inventory is a pre-cleanup historical snapshot. See ../../cleanup_records/20261015_selected_strategy/report.html for retained files and validation. Deleted source references do not denote currently available files.

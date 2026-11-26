@@ -1,0 +1,11 @@
+test_every_symbol_can_be_long_or_short_without_forced_trade (pas_allocation_study.test_research.ResearchContracts.test_every_symbol_can_be_long_or_short_without_forced_trade) ... ok
+test_funding_sign_and_current_entry_price (pas_allocation_study.test_research.ResearchContracts.test_funding_sign_and_current_entry_price) ... ok
+test_future_basis_cannot_change_forecast (pas_allocation_study.test_research.ResearchContracts.test_future_basis_cannot_change_forecast) ... ok
+test_label_maturity_and_source_anchor (pas_allocation_study.test_research.ResearchContracts.test_label_maturity_and_source_anchor) ... ok
+test_quote_probe_uses_ask_for_buy_bid_for_sell (pas_allocation_study.test_research.ResearchContracts.test_quote_probe_uses_ask_for_buy_bid_for_sell) ... ok
+test_all_ten_short_close_and_long_with_paid_fills (pas_allocation_study.test_execution_contract.ExecutionContracts.test_all_ten_short_close_and_long_with_paid_fills) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.143s
+
+OK

@@ -1,0 +1,68 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><title>SFINX 연습 순위·운용 확인</title>
+<style>body{font:16px/1.7 system-ui;max-width:1150px;margin:32px auto;padding:0 20px}table{border-collapse:collapse;width:100%;margin:16px 0}td,th{border:1px solid #c6cdd2;padding:8px;text-align:right}td:first-child,th:first-child{text-align:left}a{color:#146cba}</style>
+<h1>SFINX 연습 최종표와 갱신 중인 표</h1>
+<p>공식 갱신표 생성: 2026-10-18T16:34:00.000494+09:00. 현재 운용 기록: 2026-10-18T16:39:27.716180+09:00.</p>
+<p><strong>Practice (final)는 5위 그대로이며, 현재 갱신표는 37위다.</strong> 사이트는 두 개의 다른 JSON을 읽는다. 최종표 종료는 10월 16일 21시, 현재 표의 집계 종료 설정은 10월 18일 21시 KST다. 주최 측이 왜 기간 설정을 바꿨는지에 대한 별도 공지는 이 분석에서 확인하지 않았다.</p>
+<table><tr><th>항목</th><th>연습 최종표</th><th>현재 갱신표</th></tr>
+<tr><td>순위</td><td>5 / 42</td><td>37 / 44</td></tr>
+<tr><td>PnL 수익률</td><td>+0.01401763%</td><td>-0.04541763%</td></tr>
+<tr><td>100만 자본 환산 순손익</td><td>+140.18 USDPR</td><td>-454.18 USDPR</td></tr>
+<tr><td>일별 표준편차 s</td><td>0.00422647%</td><td>0.01798034%</td></tr>
+<tr><td>공식 표시 기간 변동성 σ</td><td>0.01401763%</td><td>0.06228573%</td></tr>
+<tr><td>Q</td><td>0.102088010</td><td>0.097298105</td></tr>
+<tr><td>Score</td><td>0.081670408</td><td>0.077838484</td></tr>
+</table>
+<p>이전 SFINX 점수를 유지했다면 현재 다른 팀 점수들과 비교해도 5위다. 따라서 대폭 하락의 주원인은 우리 수익률의 음수 전환과 기간 변동성 증가다. 순손익 환산 변화는 -594.35 USDPR다. 점수가 0.08 부근인 팀이 많아 작은 점수 하락이 큰 순위 하락으로 보인다.</p>
+<p>다른 팀의 변화도 있다. Reinforcement Traders는 −0.04777969%에서 +0.08124033%로 개선되어 41위에서 3위가 됐다. 반면 SFINX 점수를 고정한 비교에서는 여전히 5위이므로 남들의 개선만으로 이번 하락을 설명할 수 없다. λ=1.5, c=0.05, ε=0.005, 금융 80%·심사 20% 공식은 비교 기록 간 동일하다.</p>
+<p>현재 표는 일별 샘플로 계산된다. 12개의 완료 일별 수익률을 반영했으며, 갱신 시각인 10월 18일 오후 장중 손익과 같지 않다. 10월 17일 21:00:08의 별도 운용 관측은 −466.64 USDPR로 공식 표와 12.46 차이가 난다. 이는 같은 순간의 관측이 아니므로 해당 관측을 공식 샘플로 대체하지 않았다.</p>
+<h2>실행 중인 연습 전략</h2>
+<p><code>risk_cap_budget_matched_v1</code> — 추세＋7일 되돌림에 위험 감축과 고정 규모 보정을 적용한 두 번째 전략. 2026-10-16T22:50:04.704203+09:00에 교체했고, PAR / USDPR에서 계속 실행 중이다. systemd의 실제 프로세스 번호 3699529와 갱신 중인 상태 파일을 대조했다. 오늘 준비한 PAS용 decision-gate 페어 전략은 아직 활성화하지 않았다.</p>
+<p>보유: BTC 0.4682 롱, HYPE 85.78 롱. 총 14개 체결 조각 / 주문 ID 5개. 마지막 체결은 2026-10-17T03:02:56.326000+09:00 HYPE 추가 매수이며, 실현 청산손익은 0이다. 이후 가격 변화로 미실현손익이 변한다. 정상 판단은 매일 03·09·15·21시 KST이며, 최근 15시 판단은 목표 수량과 실제 수량이 같아 HOLD였다. 다음 정상 판단은 2026-10-18T21:00:00+09:00.</p>
+<p>별도 장중 운용 기록의 계좌 손익은 -393.89 USDPR, 두 번째 전략 교체 시점 대비는 -108.94 USDPR다. 계좌 전체 과거 손익을 전부 두 번째 전략의 성과로 보지 않았다. 누적 수수료 40.91, 수취 펀딩 209.19 USDPR. 두 롱의 가격 하락 평가손실이 펀딩 수입을 웃돈다.</p>
+<h2>팀별 비교</h2><table><tr><th>팀</th><th>최종표 순위</th><th>갱신표 순위</th><th>최종표 수익률</th><th>갱신표 수익률</th><th>갱신표 Score</th></tr>
+<tr><td>White-Noise-Walkers</td><td>1</td><td>1</td><td>+0.15806932%</td><td>+0.18116096%</td><td>0.093559575</td></tr>
+<tr><td>sloppy31</td><td>2</td><td>2</td><td>+0.03959002%</td><td>+0.03959002%</td><td>0.083756823</td></tr>
+<tr><td>Reinforcement Traders</td><td>41</td><td>3</td><td>-0.04777969%</td><td>+0.08124033%</td><td>0.082580472</td></tr>
+<tr><td>Secretive Plotter</td><td>3</td><td>4</td><td>+0.02199932%</td><td>+0.01595210%</td><td>0.081958789</td></tr>
+<tr><td>Market Makers</td><td>7</td><td>5</td><td>+0.01118342%</td><td>+0.01118342%</td><td>0.080147524</td></tr>
+<tr><td>Overfitting Anonymous</td><td>6</td><td>6</td><td>+0.00217382%</td><td>+0.00091972%</td><td>0.080030696</td></tr>
+<tr><td>ETAL</td><td>24</td><td>7</td><td>-0.00003463%</td><td>+0.00019194%</td><td>0.080022089</td></tr>
+<tr><td>Tortellini al pesto e polenta</td><td>12</td><td>8</td><td>+0.00000777%</td><td>+0.00000575%</td><td>0.080000665</td></tr>
+<tr><td>Team Anchorium</td><td>13</td><td>9</td><td>+0.00000505%</td><td>+0.00000505%</td><td>0.080000151</td></tr>
+<tr><td>BishopGambit</td><td>14</td><td>10</td><td>-0.00000147%</td><td>-0.00000147%</td><td>0.079999941</td></tr>
+<tr><td>Cavallo pazzo</td><td>15</td><td>11</td><td>-0.00000341%</td><td>-0.00000341%</td><td>0.079999864</td></tr>
+<tr><td>Marimbalpha</td><td>16</td><td>12</td><td>-0.00000362%</td><td>-0.00000362%</td><td>0.079999855</td></tr>
+<tr><td>HashStock</td><td>—</td><td>13</td><td>+0.00000000%</td><td>-0.00000368%</td><td>0.079999853</td></tr>
+<tr><td>Kolmogorov juniors</td><td>17</td><td>14</td><td>-0.00000408%</td><td>-0.00000408%</td><td>0.079999837</td></tr>
+<tr><td>lifeisluck</td><td>18</td><td>15</td><td>-0.00000442%</td><td>-0.00000442%</td><td>0.079999823</td></tr>
+<tr><td>GradientAlpha</td><td>19</td><td>16</td><td>-0.00000461%</td><td>-0.00000461%</td><td>0.079999815</td></tr>
+<tr><td>Thorp</td><td>20</td><td>17</td><td>-0.00000476%</td><td>-0.00000476%</td><td>0.079999810</td></tr>
+<tr><td>Anonynynynynymous</td><td>21</td><td>18</td><td>-0.00000627%</td><td>-0.00000627%</td><td>0.079999749</td></tr>
+<tr><td>Not Cheating</td><td>22</td><td>19</td><td>-0.00000652%</td><td>-0.00000652%</td><td>0.079999739</td></tr>
+<tr><td>Slipstream</td><td>10</td><td>20</td><td>+0.00001943%</td><td>-0.00000066%</td><td>0.079999252</td></tr>
+<tr><td>Trade Brothers</td><td>23</td><td>21</td><td>-0.00002604%</td><td>-0.00002604%</td><td>0.079999027</td></tr>
+<tr><td>Polenta e Osei</td><td>—</td><td>22</td><td>+0.00000000%</td><td>-0.00006411%</td><td>0.079997436</td></tr>
+<tr><td>Overfit &amp; Overconfident</td><td>26</td><td>23</td><td>-0.00009125%</td><td>-0.00009125%</td><td>0.079996350</td></tr>
+<tr><td>Rentech2</td><td>25</td><td>24</td><td>+0.00001583%</td><td>-0.00006336%</td><td>0.079994604</td></tr>
+<tr><td>RoboQuant</td><td>27</td><td>25</td><td>-0.00014520%</td><td>-0.00014520%</td><td>0.079994469</td></tr>
+<tr><td>QUANT TAIWAN</td><td>11</td><td>26</td><td>+0.00004666%</td><td>-0.00001310%</td><td>0.079994103</td></tr>
+<tr><td>ErmoColle</td><td>29</td><td>27</td><td>-0.00081602%</td><td>-0.00081602%</td><td>0.079969626</td></tr>
+<tr><td>ACLA trading</td><td>9</td><td>28</td><td>+0.00007483%</td><td>-0.00080565%</td><td>0.079965754</td></tr>
+<tr><td>Quantchester United</td><td>30</td><td>29</td><td>-0.00164984%</td><td>-0.00208103%</td><td>0.079939285</td></tr>
+<tr><td>Vibe Trader</td><td>28</td><td>30</td><td>-0.00028322%</td><td>-0.00309541%</td><td>0.079883427</td></tr>
+<tr><td>B&amp;S</td><td>8</td><td>31</td><td>+0.00043030%</td><td>-0.00440439%</td><td>0.079811904</td></tr>
+<tr><td>I Sapienti</td><td>32</td><td>32</td><td>-0.01022168%</td><td>-0.01046038%</td><td>0.079593587</td></tr>
+<tr><td>Blackswans</td><td>31</td><td>33</td><td>-0.00226998%</td><td>-0.01500587%</td><td>0.079459870</td></tr>
+<tr><td>BenBen</td><td>33</td><td>34</td><td>-0.02198243%</td><td>-0.03465871%</td><td>0.078781425</td></tr>
+<tr><td>FINX</td><td>4</td><td>35</td><td>+0.01419219%</td><td>-0.02097148%</td><td>0.078746184</td></tr>
+<tr><td>Illini Quants</td><td>34</td><td>36</td><td>-0.04172249%</td><td>-0.04270422%</td><td>0.078661776</td></tr>
+<tr><td>SFINX</td><td>5</td><td>37</td><td>+0.01401763%</td><td>-0.04541763%</td><td>0.077838484</td></tr>
+<tr><td>BostonAlpha</td><td>35</td><td>38</td><td>-0.10408533%</td><td>-0.10408533%</td><td>0.076959415</td></tr>
+<tr><td>Hedging Face</td><td>37</td><td>39</td><td>-0.10730038%</td><td>-0.10730038%</td><td>0.075926527</td></tr>
+<tr><td>Team HyperTrading</td><td>38</td><td>40</td><td>-0.14455014%</td><td>-0.14455014%</td><td>0.075749654</td></tr>
+<tr><td>Algo Hedge</td><td>36</td><td>41</td><td>-0.03195886%</td><td>-0.09371089%</td><td>0.075071049</td></tr>
+<tr><td>Need for spread</td><td>39</td><td>42</td><td>-0.04851932%</td><td>-0.09039894%</td><td>0.074778415</td></tr>
+<tr><td>BerserkerBots</td><td>40</td><td>43</td><td>-0.13190900%</td><td>-0.14232957%</td><td>0.074677661</td></tr>
+<tr><td>SAPS</td><td>42</td><td>44</td><td>-0.59053509%</td><td>-0.61563747%</td><td>0.058918376</td></tr>
+</table><p>이번 확인에서 전략·주문·서비스를 변경하지 않았다.</p>
+<p><a href="https://perpetual-alpha26.github.io/leaderboard#practice">공식 연습 최종표</a> · <a href="https://perpetual-alpha26.github.io/leaderboard">공식 갱신표</a> · <a href="practice.json">최종표 원본</a> · <a href="current.json">갱신표 원본</a> · <a href="analysis.json">계산 결과</a></p></html>

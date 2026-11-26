@@ -1,0 +1,13 @@
+test_base_cost_is_not_subtracted_twice (experiments.venue_execution_value_20261018.test_model.VenueCashTests.test_base_cost_is_not_subtracted_twice) ... ok
+test_censoring_and_not_admitted_are_not_zero_outcomes (experiments.venue_execution_value_20261018.test_model.VenueCashTests.test_censoring_and_not_admitted_are_not_zero_outcomes) ... ok
+test_completion_deadline_cannot_be_extended (experiments.venue_execution_value_20261018.test_model.VenueCashTests.test_completion_deadline_cannot_be_extended) ... ok
+test_direction_interactions_preserve_common_features (experiments.venue_execution_value_20261018.test_model.VenueCashTests.test_direction_interactions_preserve_common_features) ... ok
+test_future_outcomes_cannot_change_fit (experiments.venue_execution_value_20261018.test_model.VenueCashTests.test_future_outcomes_cannot_change_fit) ... ok
+test_horizon_uses_actual_first_fill (experiments.venue_execution_value_20261018.test_model.VenueCashTests.test_horizon_uses_actual_first_fill) ... ok
+test_observed_unfilled_outcome_is_valid_zero (experiments.venue_execution_value_20261018.test_model.VenueCashTests.test_observed_unfilled_outcome_is_valid_zero) ... ok
+test_stress_only_deducts_incremental_reserve (experiments.venue_execution_value_20261018.test_model.VenueCashTests.test_stress_only_deducts_incremental_reserve) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.002s
+
+OK

@@ -1,0 +1,86 @@
+import html,json,re,hashlib
+from pathlib import Path
+from competition_live.profile import ROOT,verify_deployment
+
+
+def table(headers,rows):
+    return '<table><tr>'+''.join('<th>'+html.escape(str(v))+'</th>' for v in headers)+'</tr>'+''.join('<tr>'+''.join('<td>'+html.escape(str(v))+'</td>' for v in row)+'</tr>' for row in rows)+'</table>'
+
+
+def main():
+    out=ROOT/'reports/candidate_handoff_20261022';r=json.loads((out/'rehearsal.json').read_text())
+    tests=(out/'tests.txt').read_text();assert '\nOK\n' in tests
+    count=int(re.search(r'Ran (\d+) tests',tests).group(1));verify_deployment()
+    rows=[]
+    for item in r['asset_previews']:
+        p=item['plan']
+        if p:rows.append([item['symbol'],p['expected_owned'],p['delta'],f"{p['price']:,.4f}",f"{abs(p['delta'])*p['price']:,.2f}",p['owner_target'],p['physical_target'],p['reduce_only']])
+    instructions=dict(schema='owner_delta_v1',team_wallet='0x125778065a578d598D88bddaA3FdD635280d0E47',
+        owner_capital={'ours':50000.,'teammate':50000.},global_lock=str(ROOT/'.runtime/wallet_writer.lock'),
+        transport='shared_inbox',teammate_direct_orders_disabled=False,verified_teammate_adapter=None,
+        note='Example only. The external teammate program has not been inspected or migrated. Do not mark verified without checking that program.')
+    (out/'team_execution_contract.example.json').write_text(json.dumps(instructions,indent=2))
+    runtime=ROOT/'.runtime/pas_budget_lifecycle'
+    unit='''[Unit]
+Description=SFINX budget lifecycle staged %s
+
+[Service]
+Type=simple
+WorkingDirectory=%s
+ExecStart=%s/.venv/bin/python -m candidate_handoff.%s --directory %s %s
+Restart=no
+UMask=0077
+NoNewPrivileges=true
+'''
+    (out/'candidate-producer.service').write_text(unit%('producer',ROOT,ROOT,'producer',runtime,''))
+    (out/'candidate-worker.service').write_text(unit%('worker',ROOT,ROOT,'runner',runtime,'--execute'))
+    decision=dict(candidate='budget_lifecycle',existing_inventory_adoption_pass=True,
+        current_pas_unsigned_preflight_pass=all(x.get('preflight_pass',False) for x in r['asset_previews']),
+        old_new_writer_exclusion_pass=r['old_writer_excluded'],tests_passed=count,
+        staged_execution_path_implemented=True,shared_teammate_inbox_implemented=True,
+        actual_teammate_program_integrated=False,live_activated=False,orders_sent=0,
+        replacement_decision='Conditional: code and current-account rehearsal support replacing the faulty execution path. Do not activate same-market sharing until the external teammate program is verified to publish owner targets through the common writer.',
+        performance_claim='Previous48h PAS replay shows conditional improvement over original size, not superiority beyond simply doubling exposure or independent predictive validation.',
+        quote_time_kst=r['at_kst'],next_normal_round_at_rehearsal=r['next_normal_round_kst'])
+    (out/'decision.json').write_text(json.dumps(decision,ensure_ascii=False,indent=2))
+    body='''<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SFINX 전략 인계 및 연결 검증</title><style>
+body{font:16px/1.7 system-ui,sans-serif;max-width:1200px;padding:25px;margin:auto;color:#142b36}table{border-collapse:collapse;font-size:14px;width:100%}td,th{border:1px solid #d1dbe3;padding:9px;text-align:right}th{background:#e9f1f7}h2{margin-top:32px}pre{white-space:pre-wrap;background:#f0f4f8;padding:15px}.status{background:#fff5d9;border-left:5px solid #bb8520;padding:16px}</style>
+<h1>현재 보유분 인계 · 새 전략 첫 주문 · 중복 실행 방지</h1>
+<div class="status"><b>판정: 우리 쪽 실행 연결과 현재 계좌를 이용한 무전송 검사는 통과했다. 팀원 프로그램의 공통 실행기 연결 확인 전에는 실전 교체를 활성화하지 않는다.</b><br>이번 작업으로 기존 실행 서비스를 중지·교체하지 않았고 주문·서명·레버리지 변경은 0건이다.</div>
+'''+f'''<p>실제 공개 계좌·호가 검사 시각: <b>{html.escape(r['at_kst'])}</b>. 후보: <code>budget_lifecycle</code>. 50,000 USDP씩 내부 장부 분리.</p>
+<h2>그대로 인계한 보유 내역</h2>'''+table(['소유자','종목','보유 수량','처리'],[['우리','BTC',r['own_qty'][0],'진입가·실현손익·수수료·펀딩 이력 유지'],['팀원','ETH',r['teammate_qty'][1],'팀원 소유 숏 유지']])+f'''
+<p>계좌를 0에서 시작하거나 기존 포지션을 청산하지 않았다. 기존 판단 시각, 주문 식별자와 순번, 최고 평가액·중단 상태, 페어 거래 상태도 보존했다. 이전 전략의 아직 제출되지 않은 목표만 폐기하고 새 목표와 현재 수량의 차이를 계산한다. 인계 장부 수량 오차 {r['adoption']['conservation']['quantity']}, 합산 평가액 오차 {r['adoption']['conservation']['equity']:.3g} USDP.</p>
+<h2>지금 정상 재조정을 한다면 — 실제 호가로 검사한 주문 초안</h2>
+<p>아래는 당시 호가를 사용한 조건부 초안이다. 정해진 6시간 판단 시각을 앞당겨 주문한 것이 아니다. 당시 실제 스케줄 경로의 주문은 {"없음" if r['scheduled_first_order'] is None else "별도 원시 결과 참조"}, 다음 정상 판단은 {html.escape(r['next_normal_round_kst'])}였다. 그 시각에는 새로운 자료와 호가로 다시 판단한다. 각 종목 검사는 앞 종목이 체결되었다고 가정하지 않고 현재 상태에서 따로 수행했다.</p>
+'''+table(['종목','우리 현재','매수 수량','지정가 상한','주문 명목액 USDP','우리 목표','거래소 합산 목표','거래소 reduce-only'],rows)+'''
+<p>BTC는 기존 보유에 추가한다. ETH는 우리 장부에 롱을 새로 만들지만 팀원 숏과 상쇄되므로, 거래소 전체에서는 숏을 줄이는 매수 주문이 된다. 팀원 장부의 숏 수량은 유지된다. 실제 체결가와 수량은 주문 시점 유동성에 따라 달라지며, 저장된 이 초안을 나중에 그대로 전송하지 않는다.</p>
+<h2>구현한 연결</h2><ol>
+<li><b>독립 신호 계산:</b> 고정된 168시간 모델과 기존 위험 보정으로 신호를 생성한다. 모델 재학습은 없다. 계산은 주문 실행 루프와 분리되며, 시간별 새 자료가 있을 때만 수행한다. 기존 페어 신호 생성자는 계속 사용한다.</li>
+<li><b>기존 계좌 인계:</b> 공개 체결·펀딩을 기존 주문 식별자와 대조해 우리/팀원 장부를 복원한다. 기존 체크포인트의 우리 수량·평균가·수수료·손익과 다르면 활성화가 진행되지 않는다.</li>
+<li><b>선정 후보의 실제 실행 연결:</b> 후보의 정확한 목표 수량을 유지한 채 기존 페어 상태 기계를 사용한다. 최종 위험 감축, 취득한 실제 수량 유지, 반대 방향 전환 전 청산 규칙을 적용한다.</li>
+<li><b>같은 종목의 주문:</b> 우리 내부 목표의 차이만 계산하고, 거래소의 합산 순포지션으로 reduce-only와 주문 가능 수량을 결정한다. 거래소 순포지션을 우리 단독 목표로 덮어쓰지 않는다.</li>
+<li><b>전송·체결:</b> 각 종목 직전에 호가를 새로 조회하고 PAS·USDP·수량 정밀도·OI·실제 증거금·우리 위험 한도를 검사한다. 전송 전에 소유자와 주문 ID를 기록하고 실제 체결 내역만 장부에 반영한다. 응답이 불명확하면 임의 재전송하지 않는다.</li>
+<li><b>단일 실행자:</b> 기존 봇의 세 잠금 파일을 새 실행자도 모두 사용한다. 현재 기존 봇이 잠금을 보유한 동안 새 실행자가 잠금을 얻지 못하는 것을 실제로 확인했다. 서명자는 이 잠금 획득 이후에만 로드될 수 있다.</li>
+<li><b>팀원 연결부:</b> 팀원은 자신의 현재 가상 보유량과 목표 수량을 inbox에 제출한다. 같은 실행자가 검사·주문·체결 확인을 담당한다. 만료된 요청, 오래된 보유량, 중복 ID, 부분 체결과 불확실한 응답을 구분한다. 팀원 전략이 독립적으로 거래소 전체 수량을 복구하려고 주문하면 이 보장이 깨지므로 기존 팀원 프로그램을 확인해야 한다.</li></ol>
+<h2>검증 결과와 남은 조건</h2>
+'''+f'''<p>테스트 <b>{count}개 통과</b>. 후보 목표가 실제 실행 어댑터까지 동일하게 전달되는지, 기존 보유와 누적 손익 유지, 롱·숏·전환, 주문 간 호가 갱신, 부분 체결, 팀원 소유 수량 보존, 펀딩 중복 반영 방지, 동일 지갑 잠금, 요청 재전송 차단을 검사했다. 공개 API 검사에서는 BTC·ETH 모두 사전 검사를 통과했다.</p>'''+'''
+<p><b>남은 조건은 팀원 프로그램의 실제 주문 방식 확인과 연결이다.</b> 같은 종목의 내부 장부 공동 운용에 동의한 것과, 팀원의 현재 프로그램이 그 방식으로 구현된 것은 별개다. 새로운 inbox 인터페이스와 시작 설정 파일은 준비했지만 확인되지 않은 프로그램을 연결 완료로 표시하지 않았다. 팀원 직접 주문을 종료하고 공통 실행기를 사용하도록 바뀐 것을 확인한 뒤 기존 주문 실행자만 중지하고, 신호 생성자는 유지하며 새 실행자를 시작해야 한다.</p>
+<p>반대 방향의 내부 수량이 정확히 상쇄되면 거래소의 펀딩 지급액 0만으로 각 전략의 펀딩을 알 수 없다. 실제 관측한 종목별 단위 수량당 정산 정보가 없으면 장부를 임의로 0 처리하지 않고 실행을 멈춘다. 이 예외와 네트워크·미확정 주문 시 중단 경로는 유지한다. 검사 통과가 코드 전체의 무오류나 향후 수익을 보장하지는 않는다.</p>
+<p>앞선 48시간 PAS 실험은 체결 가정에 따라 기존 규모보다 PnL·Q가 높았지만, 단순 증액 이상의 예측 이득은 확인하지 못했다. 따라서 이번 판단은 <b>확인된 오류 수정과 합리적인 후보 적용을 위한 실행 준비</b>에 관한 것이며, 독립적인 수익성 우월성 증명은 아니다.</p>
+<h2>파일과 재현</h2><ul>
+<li><a href="rehearsal.json">현재 계좌·첫 주문 검사 결과</a> · <a href="decision.json">교체 판단</a> · <a href="tests.txt">테스트 전체 기록</a></li>
+<li><a href="joint_book.json">공개 체결로 복원한 공동 장부</a> · <a href="signal.json">고정 모델의 신호</a> · <a href="source_manifest.json">검사한 소스 해시</a></li>
+<li><a href="team_execution_contract.example.json">미확인 상태의 팀원 연결 설정 예시</a> · <a href="candidate-producer.service">신호 생성 서비스 초안</a> · <a href="candidate-worker.service">실행 서비스 초안</a></li></ul>
+<pre>코드: candidate_handoff/ (새 연결), joint_wallet/dispatch.py (미리보기·실행 검사를 공유)
+무전송 검사: .venv/bin/python -m candidate_handoff.rehearsal
+테스트: .venv/bin/python -m unittest candidate_handoff.test_handoff joint_wallet.test_book joint_wallet.test_dispatch strategy_final_risk.test_final_risk pas_economic_allocation.test_lifecycle -v
+팀원 인터페이스: candidate_handoff.inbox.publish(directory, request_id=..., symbol=..., target=..., expected_owned=..., source_time=..., expires_at=...)
+반환된 경로는 요청 파일이며 체결 확인이 아니다. teammate_results와 실제 owner 장부를 읽어야 한다.
+기존 서비스를 시작/중지하거나 새 실행자를 --execute로 실행하는 작업은 이번에 수행하지 않았다.</pre></html>'''
+    (out/'report.html').write_text(body)
+    files=[*(ROOT/'candidate_handoff').glob('*.py'),*(ROOT/'joint_wallet').glob('*.py'),ROOT/'reports/pas_economic_allocation_20261022/fit.json']
+    (out/'release_manifest.json').write_text(json.dumps({str(f.relative_to(ROOT)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files},indent=2))
+    print(json.dumps(decision,ensure_ascii=False,indent=2))
+
+
+if __name__=='__main__':main()

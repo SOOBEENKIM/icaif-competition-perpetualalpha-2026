@@ -1,0 +1,13 @@
+.venv/
+.tools/
+.cache/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+config.local.json
+.secrets/
+.runtime/
+*.log
+replay_lab/output/

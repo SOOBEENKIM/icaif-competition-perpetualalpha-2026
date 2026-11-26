@@ -1,0 +1,50 @@
+{
+  "before": {
+    "task_retained_after_risk": false,
+    "first_tick": [
+      "pas:BTC",
+      "pas:USDEUR"
+    ],
+    "second_tick": [],
+    "final_qty": [
+      0.01074,
+      -0.1549,
+      -3.68,
+      0.0,
+      -3.263,
+      -18.725,
+      7.04,
+      -0.187,
+      -1557.8,
+      0.0
+    ],
+    "last_decision": 1792713600
+  },
+  "after": {
+    "task_retained_after_risk": true,
+    "first_tick": [
+      "pas:BTC",
+      "pas:USDEUR"
+    ],
+    "second_tick": [
+      "pas:ETH",
+      "pas:HYPE",
+      "pas:EWY",
+      "pas:GOLD"
+    ],
+    "final_qty": [
+      0.01074,
+      -0.1992,
+      -7.3,
+      0.0,
+      -6.089,
+      -18.725,
+      7.04,
+      -0.3598,
+      -1557.8,
+      0.0
+    ],
+    "last_decision": 1792713600
+  },
+  "scope": "Observed 09:00 held/target quantities; reconstructed marks; fixed covariance and synthetic depth/fills to isolate scheduling. No empirical fill/PnL improvement claimed."
+}

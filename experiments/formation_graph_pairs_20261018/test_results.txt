@@ -1,0 +1,11 @@
+test_activity_is_required_at_both_endpoints (experiments.formation_graph_pairs_20261018.test_formation.FormationTests.test_activity_is_required_at_both_endpoints) ... ok
+test_entry_mask_keeps_held_forecasts_and_input (experiments.formation_graph_pairs_20261018.test_formation.FormationTests.test_entry_mask_keeps_held_forecasts_and_input) ... ok
+test_future_mutation_has_no_effect (experiments.formation_graph_pairs_20261018.test_formation.FormationTests.test_future_mutation_has_no_effect) ... ok
+test_insufficient_data_does_not_force_pair (experiments.formation_graph_pairs_20261018.test_formation.FormationTests.test_insufficient_data_does_not_force_pair) ... ok
+test_missing_hour_is_not_a_single_hour_return (experiments.formation_graph_pairs_20261018.test_formation.FormationTests.test_missing_hour_is_not_a_single_hour_return) ... ok
+test_ties_deterministic_and_no_cycle (experiments.formation_graph_pairs_20261018.test_formation.FormationTests.test_ties_deterministic_and_no_cycle) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.004s
+
+OK

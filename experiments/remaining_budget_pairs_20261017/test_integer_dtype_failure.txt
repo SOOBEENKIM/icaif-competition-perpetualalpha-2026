@@ -1,0 +1,29 @@
+.FF...........
+======================================================================
+FAIL: test_large_budget_never_widens_existing_limits (experiments.remaining_budget_pairs_20261017.test_policy.BudgetTests.test_large_budget_never_widens_existing_limits)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/remaining_budget_pairs_20261017/test_policy.py", line 21, in test_large_budget_never_widens_existing_limits
+    r=intersect_limits([1,-2],[2,-4],[100,50],[0,1],{'0':101,'1':49.5},1000.,
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/remaining_budget_pairs_20261017/policy.py", line 27, in intersect_limits
+    assert side*(limits[n]-old)<=1e-8
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_limits_tighten_both_sides_and_fund_worst_cost (experiments.remaining_budget_pairs_20261017.test_policy.BudgetTests.test_limits_tighten_both_sides_and_fund_worst_cost)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/remaining_budget_pairs_20261017/test_policy.py", line 11, in test_limits_tighten_both_sides_and_fund_worst_cost
+    limits=intersect_limits([1,-2],[2,-4],[100,50],[0,1],{'0':120,'1':40},5.,p,sc)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/remaining_budget_pairs_20261017/policy.py", line 29, in intersect_limits
+    assert worst<=maximum_cost+1e-8
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.018s
+
+FAILED (failures=2)

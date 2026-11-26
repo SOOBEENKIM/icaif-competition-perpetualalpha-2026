@@ -1,0 +1,9 @@
+test_absent_annotation_logged_without_mutation (experiments.venue_execution_value_20261018.test_control_audit_v2.ControlAudit.test_absent_annotation_logged_without_mutation) ... ok
+test_existing_annotation_must_match (experiments.venue_execution_value_20261018.test_control_audit_v2.ControlAudit.test_existing_annotation_must_match) ... ok
+test_order_or_financial_difference_is_not_compatible (experiments.venue_execution_value_20261018.test_control_audit_v2.ControlAudit.test_order_or_financial_difference_is_not_compatible) ... ok
+test_true_annotation_requires_both_zero_fill_and_capacity (experiments.venue_execution_value_20261018.test_control_audit_v2.ControlAudit.test_true_annotation_requires_both_zero_fill_and_capacity) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+OK

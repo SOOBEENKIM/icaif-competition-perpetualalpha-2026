@@ -1,0 +1,1 @@
+{"maximum_leverage": 5, "target_sizing_unchanged": true, "orders_sent": 0}

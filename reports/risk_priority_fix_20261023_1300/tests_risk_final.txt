@@ -1,0 +1,18 @@
+test_expiry_between_preflight_and_transmission_is_known_rejection (candidate_handoff.test_risk_priority.DeadlineTests.test_expiry_between_preflight_and_transmission_is_known_rejection) ... ok
+test_expiry_during_preflight_never_reaches_send_or_leaves_pending (candidate_handoff.test_risk_priority.DeadlineTests.test_expiry_during_preflight_never_reaches_send_or_leaves_pending) ... ok
+test_drawdown_halt_still_cancels_intent_and_closes_position (candidate_handoff.test_risk_priority.RiskPriorityTests.test_drawdown_halt_still_cancels_intent_and_closes_position) ... ok
+test_dust_cap_does_not_block_other_target_or_repeat_empty_packets (candidate_handoff.test_risk_priority.RiskPriorityTests.test_dust_cap_does_not_block_other_target_or_repeat_empty_packets) ... ok
+test_dust_does_not_starve_existing_pair_lifecycle (candidate_handoff.test_risk_priority.RiskPriorityTests.test_dust_does_not_starve_existing_pair_lifecycle) ... ok
+test_expired_normal_intent_cannot_resume_after_reduction (candidate_handoff.test_risk_priority.RiskPriorityTests.test_expired_normal_intent_cannot_resume_after_reduction) ... ok
+test_genuine_physical_full_close_keeps_below_minimum_exception (candidate_handoff.test_risk_priority.RiskPriorityTests.test_genuine_physical_full_close_keeps_below_minimum_exception) ... ok
+test_material_risk_cut_retains_other_target_and_resumes_only_remaining_qty (candidate_handoff.test_risk_priority.RiskPriorityTests.test_material_risk_cut_retains_other_target_and_resumes_only_remaining_qty) ... ok
+test_partial_risk_fill_retries_remainder_before_normal_addition (candidate_handoff.test_risk_priority.RiskPriorityTests.test_partial_risk_fill_retries_remainder_before_normal_addition) ... ok
+test_risk_cap_cannot_be_undone_by_saved_normal_target (candidate_handoff.test_risk_priority.RiskPriorityTests.test_risk_cap_cannot_be_undone_by_saved_normal_target) ... ok
+test_unfilled_material_reduction_preserves_task_and_blocks_risk_addition (candidate_handoff.test_risk_priority.RiskPriorityTests.test_unfilled_material_reduction_preserves_task_and_blocks_risk_addition) ... ok
+test_unknown_outcome_blocks_all_continuation (candidate_handoff.test_risk_priority.RiskPriorityTests.test_unknown_outcome_blocks_all_continuation) ... ok
+test_virtual_close_that_increases_team_net_has_no_minimum_exception (candidate_handoff.test_risk_priority.RiskPriorityTests.test_virtual_close_that_increases_team_net_has_no_minimum_exception) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.262s
+
+OK

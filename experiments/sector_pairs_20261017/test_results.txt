@@ -1,0 +1,9 @@
+test_future_changes_cannot_change_prior_forecasts (experiments.sector_pairs_20261017.test_model.SectorTests.test_future_changes_cannot_change_prior_forecasts) ... ok
+test_original_two_pair_forecasts_unchanged (experiments.sector_pairs_20261017.test_model.SectorTests.test_original_two_pair_forecasts_unchanged) ... ok
+test_reordering_pair_list_preserves_symbol_identified_forecasts (experiments.sector_pairs_20261017.test_model.SectorTests.test_reordering_pair_list_preserves_symbol_identified_forecasts) ... ok
+test_training_is_pair_separate_daily_and_strictly_mature (experiments.sector_pairs_20261017.test_model.SectorTests.test_training_is_pair_separate_daily_and_strictly_mature) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.806s
+
+OK

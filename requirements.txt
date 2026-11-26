@@ -1,0 +1,2 @@
+# Participant Guide SDK version. Transitive versions are recorded in requirements.lock.
+hyperliquid-python-sdk==0.24.0

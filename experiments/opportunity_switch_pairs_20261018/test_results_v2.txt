@@ -1,0 +1,65 @@
+test_busy_inventory_is_not_switched_and_identity_is_checked (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_busy_inventory_is_not_switched_and_identity_is_checked) ... ok
+test_costed_comparison_rejects_unfunded_switch (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_costed_comparison_rejects_unfunded_switch) ... ok
+test_delayed_partial_close_must_finish_before_new_entry (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_delayed_partial_close_must_finish_before_new_entry) ... ERROR
+test_disabled_policy_is_exact_old_engine (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_disabled_policy_is_exact_old_engine) ... ERROR
+test_future_market_and_forecast_values_cannot_change_current_plan (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_future_market_and_forecast_values_cannot_change_current_plan) ... FAIL
+test_missing_source_close_capacity_cannot_be_assumed (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_missing_source_close_capacity_cannot_be_assumed) ... ok
+test_opportunity_can_disappear_during_paid_close (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_opportunity_can_disappear_during_paid_close) ... ERROR
+test_partial_close_risk_can_reject (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_partial_close_risk_can_reject) ... FAIL
+test_stale_held_or_different_maturity_cannot_be_compared (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_stale_held_or_different_maturity_cannot_be_compared) ... ok
+
+======================================================================
+ERROR: test_delayed_partial_close_must_finish_before_new_entry (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_delayed_partial_close_must_finish_before_new_entry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/test_switch.py", line 84, in test_delayed_partial_close_must_finish_before_new_entry
+    request=next(e for e in events if e['event']=='switch_exit_requested')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_disabled_policy_is_exact_old_engine (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_disabled_policy_is_exact_old_engine)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/test_switch.py", line 79, in test_disabled_policy_is_exact_old_engine
+    self.assertEqual(self.run_arm(),self.run_arm(previous_replay))
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/.tools/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/unittest/case.py", line 873, in assertEqual
+    assertion_func(first, second, msg=msg)
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/.tools/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/unittest/case.py", line 1166, in assertDictEqual
+    if d1 != d2:
+       ^^^^^^^^
+ValueError: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+
+======================================================================
+ERROR: test_opportunity_can_disappear_during_paid_close (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_opportunity_can_disappear_during_paid_close)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/test_switch.py", line 100, in test_opportunity_can_disappear_during_paid_close
+    r=self.run_arm();flat=next(e for e in r['events'] if e['event']=='switch_flat_confirmed')
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+FAIL: test_future_market_and_forecast_values_cannot_change_current_plan (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_future_market_and_forecast_values_cannot_change_current_plan)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/test_switch.py", line 53, in test_future_market_and_forecast_values_cannot_change_current_plan
+    before=self.plan();self.assertTrue(before['accepted'])
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_partial_close_risk_can_reject (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_partial_close_risk_can_reject)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/test_switch.py", line 69, in test_partial_close_risk_can_reject
+    self.assertEqual(self.plan()['reason'],'partial_close_global_risk')
+AssertionError: 'switch_advantage_below_buffer' != 'partial_close_global_risk'
+- switch_advantage_below_buffer
++ partial_close_global_risk
+
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.060s
+
+FAILED (failures=2, errors=3)

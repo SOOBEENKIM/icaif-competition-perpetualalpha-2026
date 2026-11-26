@@ -1,0 +1,72 @@
+<!doctype html><meta charset="utf-8"><title>추가 par 과거 24시간 비교</title><style>body{font:15px system-ui;margin:32px;line-height:1.65}table{border-collapse:collapse;font-size:13px}td,th{border:1px solid #bbb;padding:7px;text-align:right}td:first-child{text-align:left}pre{background:#f3f4f5;padding:16px;overflow:auto}</style>
+<h1>기존 페어 후보: 추가 par 과거 자료 비교</h1>
+<p>추가 자료: 2026년 10월 16일 21:00 → 17일 21:00 KST. 기존 데이터와 예측값을 보존하고 설정을 바꾸지 않았다. 전체 연장 구간은 10월 8일 21:00 → 17일 21:00 KST. 각 계좌는 1M USDPR·빈 포지션에서 시작한다. 실제 지갑 성과가 아닌 과거 모의 계좌다.</p>
+<p>4개 고정 전략 × 2개 비용 × 2개 기간 = 새 계좌 16개. 기존 기간 8개 재실행의 체결·이벤트·스냅샷·지표 일치와 연장 계좌의 기존 경로 일치를 확인했다. 저장된 회귀·트리 계수로 추가 7시간의 예측을 생성했다. 새 모델 학습·전략 규칙 조정·후보 재선정은 없다. 최초 수집 어댑터는 실제 펀딩 시각이 정각과 다르다는 검증에서 중단되었다. 수정판은 추가 구간의 실제 정산을 다음 5분 관측 시점에 인식하며, 그 전에 보유한 수량과 정산 시점에 알려진 기준가격을 사용한다. 종료 직후 12UTC+수 밀리초 정산은 제외한다. 기존 구간의 정각 버킷 근사는 대조를 위해 그대로 보존한다.</p>
+<p>base: 편도 수수료 9bp·불리한 가격 10bp·관측 거래량 참여 한도 10%. stress: 12bp·20bp·참여 5%·양의 펀딩 수취 절반. 양쪽 주문은 따로 체결된다. 실제 과거 호가를 재구성한 결과가 아니며, 종가·거래량 기반 체결 가정이다. 잔여 포지션은 평가손익에 포함되며 청산했다고 가정하지 않는다.</p>
+<p>하루 단독 평가는 완성 일별 수익률 1개이므로 표본 표준편차와 Q를 산출할 수 없다. 연장 계좌는 9개 일별 수익률로 산출한다. 아래 연속 계좌 하루 변화는 10월 16일 포지션을 그대로 이어간 결과이며 빈 계좌 하루 실험과 다르다.</p>
+<p>추가 수집한 거래소 자료라도 이미 연구에 사용한 기준시장 기간 및 이전 실행 평가 기간과 겹친다. 독립 미사용 검증이 아니다. 예약된 호가 원본·비교 결과를 열지 않았으며 새 예약 평가 시작 이후 가격을 쓰지 않았다. 실거래 전략 교체나 수익성 입증으로 해석하지 않는다.</p><h2>extended</h2><table><tr><th>전략</th><th>비용</th><th>순손익 USDPR</th><th>수익률</th><th>Q</th><th>기간 변동성</th><th>MDD</th><th>완료 페어</th><th>수수료</th><th>펀딩</th><th>잔여 명목액</th></tr><tr><td>first_strategy</td><td>base</td><td>-186.308684</td><td>-0.018631%</td><td>0.09870246</td><td>0.031399%</td><td>0.050176%</td><td>0</td><td>14.143817</td><td>+18.632013</td><td>8237.4542</td></tr><tr><td>first_strategy</td><td>stress</td><td>-111.163880</td><td>-0.011116%</td><td>0.09930956</td><td>0.015764%</td><td>0.025585%</td><td>0</td><td>9.360077</td><td>+0.363797</td><td>4065.6440</td></tr><tr><td>second_strategy</td><td>base</td><td>-186.308684</td><td>-0.018631%</td><td>0.09870246</td><td>0.031399%</td><td>0.050176%</td><td>0</td><td>14.143817</td><td>+18.632013</td><td>8237.4542</td></tr><tr><td>second_strategy</td><td>stress</td><td>-111.163880</td><td>-0.011116%</td><td>0.09930956</td><td>0.015764%</td><td>0.025585%</td><td>0</td><td>9.360077</td><td>+0.363797</td><td>4065.6440</td></tr><tr><td>first_dense_hourlyhedge_direct_24</td><td>base</td><td>-230.903347</td><td>-0.023090%</td><td>0.09857128</td><td>0.032921%</td><td>0.050172%</td><td>0</td><td>20.060588</td><td>+24.049342</td><td>10315.4237</td></tr><tr><td>first_dense_hourlyhedge_direct_24</td><td>stress</td><td>-111.163880</td><td>-0.011116%</td><td>0.09930956</td><td>0.015764%</td><td>0.025585%</td><td>0</td><td>9.360077</td><td>+0.363797</td><td>4065.6440</td></tr><tr><td>first_dense_hourlyhedge_cmix_24</td><td>base</td><td>-186.268366</td><td>-0.018627%</td><td>0.09870259</td><td>0.031398%</td><td>0.050172%</td><td>0</td><td>14.209517</td><td>+18.630351</td><td>8237.4542</td></tr><tr><td>first_dense_hourlyhedge_cmix_24</td><td>stress</td><td>-111.163880</td><td>-0.011116%</td><td>0.09930956</td><td>0.015764%</td><td>0.025585%</td><td>0</td><td>9.360077</td><td>+0.363797</td><td>4065.6440</td></tr></table><h2>appended_day_flat_start</h2><table><tr><th>전략</th><th>비용</th><th>순손익 USDPR</th><th>수익률</th><th>Q</th><th>기간 변동성</th><th>MDD</th><th>완료 페어</th><th>수수료</th><th>펀딩</th><th>잔여 명목액</th></tr><tr><td>first_strategy</td><td>base</td><td>-6.808615</td><td>-0.000681%</td><td>산출 불가</td><td>산출 불가</td><td>0.000690%</td><td>0</td><td>0.283698</td><td>+0.460463</td><td>308.2347</td></tr><tr><td>first_strategy</td><td>stress</td><td>-3.612898</td><td>-0.000361%</td><td>산출 불가</td><td>산출 불가</td><td>0.000361%</td><td>0</td><td>0.173576</td><td>+0.101789</td><td>141.1057</td></tr><tr><td>second_strategy</td><td>base</td><td>-6.808615</td><td>-0.000681%</td><td>산출 불가</td><td>산출 불가</td><td>0.000690%</td><td>0</td><td>0.283698</td><td>+0.460463</td><td>308.2347</td></tr><tr><td>second_strategy</td><td>stress</td><td>-3.612898</td><td>-0.000361%</td><td>산출 불가</td><td>산출 불가</td><td>0.000361%</td><td>0</td><td>0.173576</td><td>+0.101789</td><td>141.1057</td></tr><tr><td>first_dense_hourlyhedge_direct_24</td><td>base</td><td>-51.443596</td><td>-0.005144%</td><td>산출 불가</td><td>산출 불가</td><td>0.007488%</td><td>0</td><td>6.134770</td><td>+5.879454</td><td>2386.2042</td></tr><tr><td>first_dense_hourlyhedge_direct_24</td><td>stress</td><td>-3.612898</td><td>-0.000361%</td><td>산출 불가</td><td>산출 불가</td><td>0.000361%</td><td>0</td><td>0.173576</td><td>+0.101789</td><td>141.1057</td></tr><tr><td>first_dense_hourlyhedge_cmix_24</td><td>base</td><td>-6.808615</td><td>-0.000681%</td><td>산출 불가</td><td>산출 불가</td><td>0.000690%</td><td>0</td><td>0.283698</td><td>+0.460463</td><td>308.2347</td></tr><tr><td>first_dense_hourlyhedge_cmix_24</td><td>stress</td><td>-3.612898</td><td>-0.000361%</td><td>산출 불가</td><td>산출 불가</td><td>0.000361%</td><td>0</td><td>0.173576</td><td>+0.101789</td><td>141.1057</td></tr></table><h2>연속 계좌의 추가 하루 변화</h2><pre>[
+  {
+    &quot;arm&quot;: &quot;first_strategy&quot;,
+    &quot;scenario&quot;: &quot;base&quot;,
+    &quot;start_equity&quot;: 999912.0670992974,
+    &quot;end_equity&quot;: 999813.6913156058,
+    &quot;marked_pnl&quot;: -98.3757836916484,
+    &quot;return_fraction&quot;: -9.83844349203844e-05
+  },
+  {
+    &quot;arm&quot;: &quot;first_strategy&quot;,
+    &quot;scenario&quot;: &quot;stress&quot;,
+    &quot;start_equity&quot;: 999942.1625727272,
+    &quot;end_equity&quot;: 999888.8361198681,
+    &quot;marked_pnl&quot;: -53.3264528590953,
+    &quot;return_fraction&quot;: -5.332953730230461e-05
+  },
+  {
+    &quot;arm&quot;: &quot;second_strategy&quot;,
+    &quot;scenario&quot;: &quot;base&quot;,
+    &quot;start_equity&quot;: 999912.0670992974,
+    &quot;end_equity&quot;: 999813.6913156058,
+    &quot;marked_pnl&quot;: -98.3757836916484,
+    &quot;return_fraction&quot;: -9.83844349203844e-05
+  },
+  {
+    &quot;arm&quot;: &quot;second_strategy&quot;,
+    &quot;scenario&quot;: &quot;stress&quot;,
+    &quot;start_equity&quot;: 999942.1625727272,
+    &quot;end_equity&quot;: 999888.8361198681,
+    &quot;marked_pnl&quot;: -53.3264528590953,
+    &quot;return_fraction&quot;: -5.332953730230461e-05
+  },
+  {
+    &quot;arm&quot;: &quot;first_dense_hourlyhedge_direct_24&quot;,
+    &quot;scenario&quot;: &quot;base&quot;,
+    &quot;start_equity&quot;: 999912.1074180581,
+    &quot;end_equity&quot;: 999769.0966531425,
+    &quot;marked_pnl&quot;: -143.01076491561253,
+    &quot;return_fraction&quot;: -0.0001430233356058963
+  },
+  {
+    &quot;arm&quot;: &quot;first_dense_hourlyhedge_direct_24&quot;,
+    &quot;scenario&quot;: &quot;stress&quot;,
+    &quot;start_equity&quot;: 999942.1625727272,
+    &quot;end_equity&quot;: 999888.8361198681,
+    &quot;marked_pnl&quot;: -53.3264528590953,
+    &quot;return_fraction&quot;: -5.332953730230461e-05
+  },
+  {
+    &quot;arm&quot;: &quot;first_dense_hourlyhedge_cmix_24&quot;,
+    &quot;scenario&quot;: &quot;base&quot;,
+    &quot;start_equity&quot;: 999912.1074180581,
+    &quot;end_equity&quot;: 999813.7316343664,
+    &quot;marked_pnl&quot;: -98.3757836916484,
+    &quot;return_fraction&quot;: -9.838443095333549e-05
+  },
+  {
+    &quot;arm&quot;: &quot;first_dense_hourlyhedge_cmix_24&quot;,
+    &quot;scenario&quot;: &quot;stress&quot;,
+    &quot;start_equity&quot;: 999942.1625727272,
+    &quot;end_equity&quot;: 999888.8361198681,
+    &quot;marked_pnl&quot;: -53.3264528590953,
+    &quot;return_fraction&quot;: -5.332953730230461e-05
+  }
+]</pre><p>원본: artifacts_v3/results.json, inputs.npz, data_audit.json, model_audit.json, frozen.json. 주문 전송 0.</p><h2>추가 하루 결과와 원인</h2><p><b>기존 첫째·둘째 전략: −6.808615 USDPR, 회귀 페어 추가: −51.443596 USDPR, 보정 혼합 추가: −6.808615 USDPR</b> (base, 각 1M·빈 계좌 출발). 회귀 후보의 기존 대비 차이는 −44.634981 USDPR다. stress에서는 모두 −3.612898 USDPR로 같다. 이 값은 실제 지갑 손익이 아니다.</p><p>회귀 후보는 10월 16일 21:30 KST에 BTC 매수·HYPE 매도 목표를 생성했고, 21:35 BTC 0.0524만 체결됐다. HYPE 완성 주문도 실패하여 21:40 청산 상태로 들어갔지만, 관측 거래량 제약으로 헤지 없는 상태가 330분 이어졌다. 17일 03:05 남은 BTC 0.0255의 소유권이 기본 전략으로 내부 이전되며 페어 장부가 닫혔다. 이는 거래소에서 전체 계좌가 청산됐다는 뜻이 아니다. 페어 귀속 손익은 −58.162214 USDPR이며, 전체 계좌 차이는 기본 전략과의 상호작용 때문에 다르다.</p><p>보정 혼합 후보는 추가 하루에 페어 주문이 없어 기존과 같은 결과다. 연장 전체 구간에서 보이는 +0.0403 USDPR 차이는 추가 하루 이전부터 있었으므로 개선 근거로 보지 않는다. 어느 후보도 완료한 정상 페어가 없어 현 시점 교체 근거는 없다.</p><p>검증: 기존 기간 8개 계좌 결과 정확 재현, 추가 16개 계좌 정상 종료, 정산 경계·보유 수량·물리 계좌 기준 펀딩 배분 테스트 6개 통과. 초기 데이터 어댑터의 두 번의 중단은 결과 계산 전에 발생했으며 원본과 오류 이유를 보존했다.</p>

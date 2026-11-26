@@ -1,0 +1,13 @@
+# This is a transient unit file, created programmatically via the systemd API. Do not edit.
+[Unit]
+Description=ICAIF PAS all-market core execution
+
+[Service]
+WorkingDirectory=/home/ssd-990/soobeenkim/icaif_competition_2026
+Restart=no
+UMask=0000000000000000000000000000000000000077
+StandardOutput=append:/home/ssd-990/soobeenkim/icaif_competition_2026/.runtime/pas_budget_lifecycle/worker.log
+StandardError=inherit
+Environment="OPENBLAS_NUM_THREADS=1" "OMP_NUM_THREADS=1"
+ExecStart=
+ExecStart="/home/ssd-990/soobeenkim/icaif_competition_2026/.venv/bin/python" "-m" "candidate_handoff.runner" "--directory" "/home/ssd-990/soobeenkim/icaif_competition_2026/.runtime/pas_budget_lifecycle" "--execute"

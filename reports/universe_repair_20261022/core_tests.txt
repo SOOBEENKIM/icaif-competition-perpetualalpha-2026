@@ -1,0 +1,10 @@
+test_all_ten_assets_have_core_signal_and_matching_signed_targets (universe_repair.test_core.UniverseTests.test_all_ten_assets_have_core_signal_and_matching_signed_targets) ... ok
+test_appended_future_does_not_change_any_past_target (universe_repair.test_core.UniverseTests.test_appended_future_does_not_change_any_past_target) ... ok
+test_symbol_permutation_cannot_privilege_crypto (universe_repair.test_core.UniverseTests.test_symbol_permutation_cannot_privilege_crypto) ... ok
+test_ten_core_targets_reach_live_allocation_without_pair_membership_filter (universe_repair.test_core.UniverseTests.test_ten_core_targets_reach_live_allocation_without_pair_membership_filter) ... ok
+test_zero_signal_does_not_force_a_diversified_portfolio (universe_repair.test_core.UniverseTests.test_zero_signal_does_not_force_a_diversified_portfolio) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.306s
+
+OK

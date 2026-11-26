@@ -1,0 +1,115 @@
+"""Official checksummed BTC/ETH bars and funding; no credentials or orders."""
+import csv,hashlib,io,json,urllib.request,zipfile,time
+from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime,timezone
+import numpy as np
+from experiments.older_reference_data_20261017.collect import parse_archive
+
+ROOT=Path(__file__).resolve().parents[1]
+OUT=ROOT/'reports/fresh_test_2022_20261023'
+BASE='https://data.binance.vision/data/futures/um/monthly'
+
+
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def read(p):return json.loads(Path(p).read_text())
+def save(p,v):
+    p=Path(p);p.parent.mkdir(parents=True,exist_ok=True)
+    p.write_text(json.dumps(v,indent=2,allow_nan=False,ensure_ascii=False,default=lambda x:x.tolist())+'\n')
+
+
+def verify():
+    for p,h in read(OUT/'frozen_strategy.json').items():assert sha(ROOT/p)==h,p
+
+
+def get(url,maximum):
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(url,timeout=25) as r:body=r.read(maximum+1)
+            if len(body)>maximum:raise ValueError('Archive byte limit')
+            return body
+        except Exception:
+            if attempt==2:raise
+            time.sleep(attempt+1)
+
+
+def one(job):
+    symbol,month,kind=job
+    if kind=='klines':name=f'{symbol}-1h-{month}.zip';url=f'{BASE}/klines/{symbol}/1h/{name}'
+    else:name=f'{symbol}-fundingRate-{month}.zip';url=f'{BASE}/fundingRate/{symbol}/{name}'
+    path=OUT/'raw'/name
+    if path.exists():raise FileExistsError('Outcome archive already exists; audit before reuse')
+    body=get(url,2000000);checksum=get(url+'.CHECKSUM',4096)
+    digest=hashlib.sha256(body).hexdigest()
+    if checksum.decode().split()[0]!=digest:raise ValueError('Official checksum mismatch')
+    path.write_bytes(body);path.with_suffix('.zip.CHECKSUM').write_bytes(checksum)
+    return dict(symbol=symbol,month=month,kind=kind,url=url,sha256=digest,bytes=len(body),received_utc=datetime.now(timezone.utc).isoformat())
+
+
+def collect():
+    verify();p=read(OUT/'protocol.json');raw=OUT/'raw';raw.mkdir(exist_ok=True)
+    if any(raw.iterdir()):raise FileExistsError('Use existing receipts; do not replace outcomes')
+    save(OUT/'download_freeze.json',dict(at_utc=datetime.now(timezone.utc).isoformat(),collector_sha256=sha(__file__),protocol_sha256=sha(OUT/'protocol.json')))
+    jobs=[(s,m,k) for s in p['exchange_symbols'] for m in p['download_months'] for k in ['klines','fundingRate']]
+    rows=[]
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        for r in pool.map(one,jobs):
+            rows.append(r);save(OUT/'receipts.partial.json',rows)
+            print('verified',r['symbol'],r['month'],r['kind'],flush=True)
+    save(OUT/'receipts.json',rows);verify()
+
+
+def funding_archive(body,symbol,month):
+    expected=f'{symbol}-fundingRate-{month}.csv'
+    with zipfile.ZipFile(io.BytesIO(body)) as z:
+        if z.namelist()!=[expected] or z.getinfo(expected).file_size>1000000:raise ValueError('Unexpected funding ZIP')
+        reader=csv.DictReader(io.StringIO(z.read(expected).decode()))
+        rows=list(reader)
+    required={'calc_time','funding_interval_hours','last_funding_rate'}
+    if not rows or set(rows[0])!=required:raise ValueError('Unknown funding schema:'+str(reader.fieldnames))
+    ts=np.array([int(r['calc_time']) for r in rows]);hours=np.array([float(r['funding_interval_hours']) for r in rows]);rates=np.array([float(r['last_funding_rate']) for r in rows])
+    if np.any(ts%3600000>=1000) or np.any(np.diff(ts)<=0) or not np.isfinite(rates).all() or np.any(hours<=0):raise ValueError('Invalid funding events')
+    return dict(times=ts//3600000*3600,original_times_ms=ts,hours=hours,rates=rates)
+
+
+def assemble():
+    verify();p=read(OUT/'protocol.json');receipts=read(OUT/'receipts.json');bars={};funds={};audit=[]
+    for symbol in p['exchange_symbols']:
+        bb=[];ff=[]
+        for month in p['download_months']:
+            for kind in ['klines','fundingRate']:
+                row=next(x for x in receipts if (x['symbol'],x['month'],x['kind'])==(symbol,month,kind));path=OUT/'raw'/Path(row['url']).name
+                assert sha(path)==row['sha256']
+                if kind=='klines':values,stats=parse_archive(path.read_bytes(),symbol,month);bb.append(values);audit.append(dict(symbol=symbol,month=month,**stats))
+                else:ff.append(funding_archive(path.read_bytes(),symbol,month))
+        bars[symbol]={k:np.concatenate([x[k] for x in bb]) for k in bb[0]}
+        funds[symbol]={k:np.concatenate([x[k] for x in ff]) for k in ff[0]}
+        b=bars[symbol];f=funds[symbol]
+        assert np.all(np.diff(b['market_times'])==3600),'missing hourly candles'
+        assert np.all(np.diff(f['times'])==f['hours'][1:]*3600),'missing/misaligned funding settlement'
+        # Validate no settlement missing between data endpoints. First close
+        # follows initial00UTC settlement; last candle can precede next payment.
+        assert f['times'][0]<=b['market_times'][0] and b['market_times'][-1]-f['times'][-1]<=f['hours'][-1]*3600
+    t=bars[p['exchange_symbols'][0]]['market_times']
+    assert all(np.array_equal(b['market_times'],t) for b in bars.values())
+    raw={'market_times':t,'times':t,'symbols':np.array(p['symbols'])}
+    for k in ['open','high','low','close','volume','trades']:raw[k]=np.column_stack([bars[s][k] for s in p['exchange_symbols']])
+    settled=np.zeros((len(t),2));known=settled.copy();observed=np.ones_like(settled,bool);event=np.zeros_like(observed)
+    for j,symbol in enumerate(p['exchange_symbols']):
+        f=funds[symbol];ii=np.searchsorted(t,f['times']);valid=(ii<len(t))&(t[np.minimum(ii,len(t)-1)]==f['times'])
+        settled[ii[valid],j]=f['rates'][valid];event[ii[valid],j]=True
+        past=np.searchsorted(f['times'],t,side='left')-1
+        assert np.all(past>=0)
+        known[:,j]=f['rates'][past]/f['hours'][past]
+        np.savez_compressed(OUT/f'{symbol}_funding_events.npz',**f)
+    # Zero between verified scheduled settlements is a known no-payment,
+    # not an imputed funding rate. Keep the event mask for independent audit.
+    raw.update(funding=settled,funding_observed=observed,known_hourly_funding=known,funding_event_mask=event)
+    np.savez_compressed(OUT/'raw_inputs.npz',**raw)
+    save(OUT/'data_audit.json',dict(rows=len(t),symbols=p['symbols'],first=int(t[0]),last=int(t[-1]),archive_count=len(receipts),official_checksums_pass=True,missing_hours=0,missing_scheduled_funding=0,funding_events=event.sum(0),raw_sha256=sha(OUT/'raw_inputs.npz'),monthly_bar_validation=audit,full_ten_asset=False))
+    print('Assembled two real assets, no synthetic unavailable markets; metadata only',flush=True)
+
+
+if __name__=='__main__':
+    import sys
+    globals()[sys.argv[1]]()

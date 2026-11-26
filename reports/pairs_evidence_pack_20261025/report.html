@@ -1,0 +1,620 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SFINX 페어트레이딩: 논문 근거와 실제 결과 자료집</title><style>body{font:16px/1.75 system-ui,sans-serif;color:#17283b;max-width:1250px;margin:40px auto;padding:0 24px;background:#fbfcfe}h1{font-size:30px;line-height:1.3}h2{font-size:23px;margin-top:48px;border-bottom:2px solid #dbe5ef;padding-bottom:8px}h3{font-size:18px}p{max-width:1080px}article{padding:10px 22px;margin:18px 0;border:1px solid #d4dfeb;border-radius:10px;background:white}article p{margin:9px 0}.meta{color:#52677f;font-size:14px}table{border-collapse:collapse;width:100%;font-size:13px;background:white}th,td{border:1px solid #dce3ec;padding:9px;text-align:left;vertical-align:top}th{background:#edf3f9}.tablewrap{overflow-x:auto}img{width:100%;max-width:1120px;border:1px solid #ddd;background:white}a{color:#086cb7}code{font-size:13px;background:#edf1f6;padding:2px 5px}nav{padding:20px;background:#edf3f9}li{margin:5px 0}@media print{body{margin:0;font-size:11px}h2{break-before:page}article,img,table{break-inside:avoid}nav{display:none}}</style><h1>SFINX 페어트레이딩: 논문 근거와 실제 결과 자료집</h1>
+<p>기준일: 2026-10-25T23:51:12+09:00. 논문 원문에서 확인한 이론·평가 방식과 저장된 프로젝트 결과를 연결한다. <b>새로운 성능 개선 실험이나 현재 순위 보고서가 아니다.</b></p>
+<nav><a href="figures.pdf">그림 PDF</a> · <a href="README.md">설명 Markdown</a> · <a href="manifest.json">출처·해시</a> · <a href="tables/01_papers_and_evidence.csv">논문 근거 CSV</a></nav>
+<h2>논문은 무엇으로 성능을 검증했는가</h2>
+<article><h3>P1. <a href="https://arxiv.org/html/2606.04574v2">Dynamic Multi-Pair Trading Strategy in Cryptocurrency Markets with Deep Reinforcement Learning</a></h3><p class="meta">2026-06, arXiv v2 · 암호화폐 페어트레이딩</p><p><b>이론</b> 관계를 선별·순위화하고 적응형 평균과 고정 위험 규칙 위에 PPO–LSTM 실행 계층을 결합한다.</p><p><b>표·그림</b> 표 7·그림 11: 2025년 비용 차감 성과·누적수익. 표 8–9·그림 27–36: 민감도·구성요소 제거. 표 15: 블록 부트스트랩. 표 16: 분기 비교.</p><p><b>결과</b> 동일 10배 레버리지에서 CAGR 30.40%→199.45%, Sharpe 0.4921→2.8220. MDD는 34.13%→35.27%로 증가했다.</p><p><b>해석 범위</b> Sharpe 차이 p=0.0603, 95% 구간은 0 포함. Q3에는 기준판보다 부진. 수수료·시장·레버리지가 PAS와 다르다.</p><p><b>우리 구현과의 관계</b> 초기 연구의 적응형 관계·위험/실행 분리 참고. 현재 코드가 PPO–LSTM이나 논문 전체를 재현한 것은 아니다.</p></article><article><h3>P2. <a href="https://arxiv.org/html/2610.25802v2">Amortized Neural Filtering for Calibrated Posteriors in Statistical Arbitrage</a></h3><p class="meta">2026-10, ICAIF 원고/arXiv v2 · 관련 통계적 차익거래; 2종목 페어 전용 아님</p><p><b>이론</b> 평균회귀 상태·속도의 불확실성을 추정하고 포지션 크기에 반영한다.</p><p><b>표·그림</b> 표 1: 비용 차감 성과. 그림 2: 동일 위험 수익곡선·확률 보정. 표 2: 예측–실현 격차. 그림 3: 상태 표현.</p><p><b>결과</b> KRX 평가에서 AFM/NFE Sharpe 1.45/1.49. 논문 자체가 이 작은 차이를 잡음 범위로 판단한다.</p><p><b>해석 범위</b> 다른 기간에는 우위가 없고, 표본 종목 선정 편향이 있다. 격차 감소는 주로 예측 축소 효과이며 새 알파 입증이 아니다.</p><p><b>우리 구현과의 관계</b> 평가·불확실성 설명 참고. NFE는 현재 실거래 모델에 구현되어 있지 않다.</p></article><article><h3>P3. <a href="https://onlinelibrary.wiley.com/doi/10.1155/cplx/1155228">Cost-Aware Multiwindow Ensemble Decision Support for Nonstationary Foreign Exchange Markets</a></h3><p class="meta">2026-08, Complexity · FX 예측·앙상블; 통화쌍을 거래하는 연구</p><p><b>이론</b> 서로 다른 기간의 회귀 전문가를 비용 차감 효용으로 결합하고 변동성·최소 보유 규칙을 둔다.</p><p><b>표·그림</b> 표 1: 워크포워드 분할. 표 3·그림 7: 기준모형 비교. 표 4: 기간 민감도. 표 5: 제거·비용 실험. 표 6·그림 8: 가중치 해석.</p><p><b>결과</b> 평균 Sharpe 1.085 대 ridge 0.607. 순이익은 312.3 대 306.7 pips로, 높은 Sharpe가 큰 순이익 차이를 뜻하지 않는다.</p><p><b>해석 범위</b> 비용 2배에서는 −24.6 pips. 16개 currency pairs는 우리가 말하는 두 자산 롱·숏 페어 조합과 다르다.</p><p><b>우리 구현과의 관계</b> 비용 인지 예측·평가 참고. 현재 전략을 이 논문의 다중창 앙상블 재현이라고 부를 수 없다.</p></article><article><h3>P4. <a href="https://arxiv.org/html/1911.10450v1">A singular stochastic control approach for optimal pairs trading with proportional transaction costs</a></h3><p class="meta">2019, 기초 이론 · 거래비용을 포함한 페어 최적제어</p><p><b>이론</b> 공적분·평균회귀 가정 아래 거래 시점과 수량을 함께 최적화하고 매수·매도·대기 영역을 도출한다.</p><p><b>표·그림</b> 그림 1–3: 거래 경계. 그림 4–12: 비용 등 민감도. 표 4: 6개 주식 페어의 표본 외 손익·거래횟수.</p><p><b>결과</b> 비용 때문에 가격 괴리가 있어도 대기하는 영역이 생긴다는 이론적 근거다.</p><p><b>해석 범위</b> 특정 확률과정·효용 가정에서의 최적성이다. PAS의 관계 안정성이나 수익 보장을 증명하지 않는다.</p><p><b>우리 구현과의 관계</b> 비용 대비 진입 이익·대기 판단의 배경. 우리 코드는 이 HJB 최적제어 문제를 풀지 않는다.</p></article><article><h3>P5. <a href="https://arxiv.org/html/1710.08005v5">Smart “Predict, then Optimize”</a></h3><p class="meta">2017 초고 / 2020 v5, 기초 방법 · 의사결정 중심 학습; 페어 실거래 논문 아님</p><p><b>이론</b> 예측 오차 대신 예측이 유도한 의사결정 손실을 학습하고 SPO+ 볼록 대리손실을 제안한다.</p><p><b>표·그림</b> 그림 4: 합성 포트폴리오 문제의 테스트 SPO 손실 비교. 조건부 일관성 정리.</p><p><b>결과</b> 예측 정확도와 의사결정 품질이 서로 다른 평가 대상임을 설명한다.</p><p><b>해석 범위</b> 합성 최적화 손실 감소는 PAS 순손익 검증과 다르다.</p><p><b>우리 구현과의 관계</b> 현재 페어 신규진입의 롱/숏/대기 비용 민감 게이트에 독립적으로 유도한 3행동 손실을 사용한다.</p></article><article><h3>P6. <a href="https://arxiv.org/html/2609.33472v1">Geometric Identification in Predict-Then-Optimize Learning</a></h3><p class="meta">2026-09, arXiv v1 · 의사결정 학습 이론·진단</p><p><b>이론</b> 같은 최적 행동을 만드는 예측값이 여러 개일 수 있어, 행동 일치만으로 평균 예측을 식별할 수 없음을 설명한다.</p><p><b>표·그림</b> 그림 1–2: 식별·경계 기하. 부록 I: 포트폴리오 등의 예측오차·문제 변경 후 regret. 부록 J: 알려진 생성과정 실험.</p><p><b>결과</b> 의사결정 점수를 예상 가격 수익률로 재사용하는 데 별도 근거가 필요하다.</p><p><b>해석 범위</b> 유한표본 성능·일반적인 전이 이익을 보장하지 않는다.</p><p><b>우리 구현과의 관계</b> 현재 게이트 점수와 가격 수익률 예측을 분리하는 설계 근거. 수익률 재현 주장은 하지 않는다.</p></article>
+<h2>현재 전략을 정확하게 설명하는 문장</h2>
+<p><b>“SFINX는 다자산 추세·되돌림 코어에, 상대수익을 예측하는 비용 인지 페어트레이딩 모듈을 결합한 전략이다. 페어 예측과 롱·숏·대기 게이트를 분리하고, PAS에서 실제 체결 가능한 가격과 비용을 고려해 주문한다.”</b></p><p>순수 시장중립 페어 전략으로 계좌 전체를 설명하면 부정확하다. 아래의 과거 실험은 현재 전체 실행 파일과 동일한 버전이 아니며, 각 실험이 검증한 변경만 설명한다. 표의 소스 경로는 저장소 기준 상대 경로다.</p>
+<div class="tablewrap"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>구성</th>
+      <th>현재 확인 내용</th>
+      <th>근거</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>운용 환경</td>
+      <td>Hyperliquid Testnet PAS / USDP; 팀 초기 100,000, 우리 배정 50,000</td>
+      <td>competition_live/config.json</td>
+    </tr>
+    <tr>
+      <td>전략 형태</td>
+      <td>10종목 방향성 코어 + 비용 인지 페어 오버레이 + 주문·위험 관리</td>
+      <td>core_revision=all_market_signed_core_v1</td>
+    </tr>
+    <tr>
+      <td>방향성 코어</td>
+      <td>10종목의 추세·7일 되돌림, 위험·경제성 배분. 롱·숏 판단 가능</td>
+      <td>universe_repair/core.py; pas_economic_allocation/model.py</td>
+    </tr>
+    <tr>
+      <td>현재 페어 후보</td>
+      <td>BTC–ETH, BTC–HYPE; 전 45개 자동선정판은 실거래 적용 아님</td>
+      <td>signal.body.retained_pair_universe</td>
+    </tr>
+    <tr>
+      <td>페어 예측</td>
+      <td>고정 시점 헤지비율로 24시간 상대수익 예측; 과거 90일 가중 ridge, 일별 재적합</td>
+      <td>experiments/rolling_feature_pairs_20261017/model.py</td>
+    </tr>
+    <tr>
+      <td>진입 게이트</td>
+      <td>SPO+에서 유도한 비용 민감 롱/숏/대기 분류. 점수를 예상수익으로 사용하지 않음</td>
+      <td>experiments/decision_gate_pairs_20261017/model.py</td>
+    </tr>
+    <tr>
+      <td>PAS 연결</td>
+      <td>현재 실행가능 가격·비용·펀딩·수량·위험으로 진입가치 재검사; 두 다리 개별 체결 및 잔여 헤지 관리</td>
+      <td>competition_live/candidate.py; competition_live/config.json</td>
+    </tr>
+    <tr>
+      <td>진입 실행 조건</td>
+      <td>pullback_any3; 현재 검증 후보 quote_inputs와 구분</td>
+      <td>execution_policy=pullback_any3</td>
+    </tr>
+    <tr>
+      <td>연구와 구분</td>
+      <td>PPO–LSTM, NFE, 전체 45페어 자동선정의 실거래 재현이라고 기술할 수 없음</td>
+      <td>아래 실험별 버전 표 참조</td>
+    </tr>
+  </tbody>
+</table></div>
+<h2>페어 가설과 검증 대상</h2>
+<p>두 자산의 가격 관계가 안정적이라면 상대적으로 비싼 쪽을 매도하고 싼 쪽을 매수해 관계 정상화에서 이익을 기대할 수 있다. 그러나 상관관계만으로 정상화가 보장되지는 않는다. 현재 구현의 직접 예측 목표는 <code>g(t,24h) = [r_A(t,24h) − β_t r_B(t,24h)] / (1 + β_t)</code>를 과거 변동성으로 표준화한 값이다. β는 판단 시점의 값으로 고정한다. 가격 예측과 별개로 게이트는 학습용 대리 보상 <code>a·y − C·|a|, a∈{−1,0,1}</code>를 사용한다.</p><p>학습용 고정 비용 대리 문제에는 실제 지연·펀딩·부분체결·보유 연장이 없다. 이 조건은 계좌 재생에서 별도로 반영한다. 따라서 정확한 주장은 “이론적으로 항상 회귀한다”가 아니라 “상대수익 예측과 비용 판단이 기준 전략보다 실제 순손익을 개선했는가”이다. 과거 공적분·평균회귀 아이디어를 참고했더라도 현재판에 모든 페어의 공적분이 증명됐다고 쓰지 않는다.</p>
+<h2>표 1. 기존 두 전략과 페어 구성의 비교 — 과거 연구판</h2>
+<p>2026-09-01 12:00~10-15 12:00 UTC, 기준시장 재생, 초기 1,000,000. 같은 기간·자본·비용 시나리오의 저장 결과다. 모든 기간은 반복 사용한 개발 자료이며 PAS 실거래 또는 독립 테스트 성과가 아니다. 기본 조건에서 페어 게이트 추가판은 순손익이 높지만 MDD도 크다. 스트레스 조건에서는 게이트가 없는 직접예측판과 결과가 같다. 완료 페어가 기본 3건, 스트레스 1건이므로 우위를 일반화할 표본은 부족하다.</p><p><code>base/stress</code>는 해당 실험의 사전 정의 실행 시나리오다. 비용 증가가 거래를 막아 경로도 바꾸므로 일부 stress 손익이 높아질 수 있다. 모든 실험에서 stress가 같은 수치의 비용을 뜻하지는 않는다. 전체 48행에는 초기 비교 구간과 PAR 평가도 함께 보존했다.</p>
+<div class="tablewrap"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>전략</th>
+      <th>비용</th>
+      <th>순손익</th>
+      <th>수익률(%)</th>
+      <th>기간변동성(%)</th>
+      <th>MDD(%)</th>
+      <th>저장된 Q</th>
+      <th>완료 페어</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>당시 첫 전략</td>
+      <td>base</td>
+      <td>459.527839</td>
+      <td>0.045953</td>
+      <td>0.583993</td>
+      <td>0.654526</td>
+      <td>0.092192</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>당시 첫 전략</td>
+      <td>stress</td>
+      <td>-457.099703</td>
+      <td>-0.045710</td>
+      <td>0.587032</td>
+      <td>0.700679</td>
+      <td>0.084370</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>당시 두 번째 전략</td>
+      <td>base</td>
+      <td>572.877845</td>
+      <td>0.057288</td>
+      <td>0.534327</td>
+      <td>0.586612</td>
+      <td>0.095120</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>당시 두 번째 전략</td>
+      <td>stress</td>
+      <td>-492.972811</td>
+      <td>-0.049297</td>
+      <td>0.537032</td>
+      <td>0.631876</td>
+      <td>0.085399</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>직접예측 페어 추가</td>
+      <td>base</td>
+      <td>3,422.161238</td>
+      <td>0.342216</td>
+      <td>0.955481</td>
+      <td>1.183937</td>
+      <td>0.124304</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>직접예측 페어 추가</td>
+      <td>stress</td>
+      <td>3,305.712471</td>
+      <td>0.330571</td>
+      <td>0.894984</td>
+      <td>0.962490</td>
+      <td>0.124467</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>비용 게이트 페어 추가</td>
+      <td>base</td>
+      <td>3,852.763577</td>
+      <td>0.385276</td>
+      <td>0.941440</td>
+      <td>1.232809</td>
+      <td>0.130237</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>비용 게이트 페어 추가</td>
+      <td>stress</td>
+      <td>3,305.712471</td>
+      <td>0.330571</td>
+      <td>0.894984</td>
+      <td>0.962490</td>
+      <td>0.124467</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table></div>
+<h2>그림 1. 누적 수익률과 낙폭</h2>
+<p>마지막 수익률 한 숫자 대신 전체 경로를 표시했다. 이 그림만으로 현재 운용판의 성과나 독립적 예측력을 주장할 수 없다.</p>
+<figure><img src="figures/01_equity_and_drawdown.png" alt="그림 1. 누적 수익률과 낙폭"><figcaption>원자료는 tables/ CSV에 포함. PNG·SVG·통합 PDF 제공.</figcaption></figure>
+<h2>그림 2. 페어 모듈이 실제로 보탠 순손익</h2>
+<p>전체 계좌의 방향성 코어 이익과 페어 기여를 구분했다. 같은 과거 비교에서 페어 순손익은 직접예측판 +2,978.02, 게이트판 +3,407.79였다. 게이트판의 체결 비용과 수수료도 더 컸다. 이 금액은 현재 PAS 지갑의 손익이 아니다. 에피소드 CSV는 종료·미종료를 모두 보존하며, 에피소드 수와 엔진의 완료 페어 집계는 정의가 달라 혼용하지 않는다.</p>
+<figure><img src="figures/02_pair_cost_attribution.png" alt="그림 2. 페어 모듈이 실제로 보탠 순손익"><figcaption>원자료는 tables/ CSV에 포함. PNG·SVG·통합 PDF 제공.</figcaption></figure>
+<h2>표 2·그림 3. 전체 45개 페어로 확장한 연구 결과</h2>
+<p>10/23 저장 비교, 2026-08-01~10-15의 연속 기준시장 구간. 우리 배정 50k + 유휴 50k를 포함한 팀 100k 계좌. 수익률의 분모는 100k다. 같은 10종목 코어와 실행·위험 조건에서 페어 선정만 바꾼 비교이며, 기준판을 재구현한 통제군도 원 결과와 일치했다. 비교 표의 8월·후속·연속 구간은 겹치므로 세 독립 테스트로 셀 수 없다.</p><p>자동선정 후보는 이 비교에서 수익성이 나빠졌고 실거래에 배포하지 않았다. 이는 “45페어 접근은 불가능하다”는 증명이 아니라 해당 선별·예측·실행 조합의 부정적 결과다.</p>
+<div class="tablewrap"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>전략</th>
+      <th>비용</th>
+      <th>순손익</th>
+      <th>청산비용 반영 손익</th>
+      <th>수익률(팀 100k 기준 %)</th>
+      <th>기간변동성(%)</th>
+      <th>저장된 Q</th>
+      <th>완료 페어</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>10/23 기준판: 고정 2페어</td>
+      <td>base</td>
+      <td>529.074078</td>
+      <td>497.708871</td>
+      <td>0.529074</td>
+      <td>0.850808</td>
+      <td>0.151217</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>45페어 자동선정 후보</td>
+      <td>base</td>
+      <td>-2,104.927823</td>
+      <td>-2,134.983414</td>
+      <td>-2.104928</td>
+      <td>1.255268</td>
+      <td>0.055631</td>
+      <td>28</td>
+    </tr>
+    <tr>
+      <td>10/23 기준판: 고정 2페어</td>
+      <td>stress</td>
+      <td>299.829712</td>
+      <td>247.007617</td>
+      <td>0.299830</td>
+      <td>0.792985</td>
+      <td>0.123253</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>45페어 자동선정 후보</td>
+      <td>stress</td>
+      <td>-864.507877</td>
+      <td>-916.056536</td>
+      <td>-0.864508</td>
+      <td>0.823962</td>
+      <td>0.070418</td>
+      <td>19</td>
+    </tr>
+  </tbody>
+</table></div>
+<figure><img src="figures/03_auto45_comparison.png" alt="표 2·그림 3. 전체 45개 페어로 확장한 연구 결과"><figcaption>원자료는 tables/ CSV에 포함. PNG·SVG·통합 PDF 제공.</figcaption></figure>
+<h2>표 3·그림 4. 예측력이 실제로 있었는가</h2>
+<p>과거에 저장된 직접 수익률 예측과 만기가 지난 정답을 재집계했다. 9/1 12:00 UTC부터 24시간 간격을 고정하여 동일 페어 안의 목표 구간 겹침을 줄였다. 두 페어는 BTC를 공유하므로 독립 표본으로 합산하지 않는다. 게이트 점수는 예상수익이 아니므로 이 그래프의 예측값에 사용하지 않았다.</p><p><b>이 집계에서는 두 페어 모두 0 예측보다 MAE와 RMSE가 낮지 않았다.</b> BTC–ETH MAE는 38.36bp 대 38.33bp, BTC–HYPE는 77.99bp 대 72.89bp였다. 따라서 과거 계좌 손익의 개선만으로 모든 시점의 가격 예측력이 개선됐다고 결론 내릴 수 없다. 모든 시점 예측과 비용을 넘는 일부 거래의 선택 성과도 서로 다른 대상이다. 이 그림은 기준시장 상대수익 예측 진단이며, 현재 PAS 호가에서의 수익·게이트 효과·새로운 독립 테스트를 입증하지 않는다.</p>
+<div class="tablewrap"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>pair</th>
+      <th>n</th>
+      <th>MAE_bp</th>
+      <th>zero_MAE_bp</th>
+      <th>RMSE_bp</th>
+      <th>zero_RMSE_bp</th>
+      <th>forecast_bias_bp</th>
+      <th>directional_accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>BTC–ETH</td>
+      <td>44</td>
+      <td>38.364873</td>
+      <td>38.327374</td>
+      <td>49.410204</td>
+      <td>48.252446</td>
+      <td>-15.410992</td>
+      <td>0.613636</td>
+    </tr>
+    <tr>
+      <td>BTC–HYPE</td>
+      <td>44</td>
+      <td>77.991356</td>
+      <td>72.890677</td>
+      <td>104.853592</td>
+      <td>103.612478</td>
+      <td>0.440871</td>
+      <td>0.500000</td>
+    </tr>
+  </tbody>
+</table></div>
+<figure><img src="figures/04_prediction_calibration.png" alt="표 3·그림 4. 예측력이 실제로 있었는가"><figcaption>원자료는 tables/ CSV에 포함. PNG·SVG·통합 PDF 제공.</figcaption></figure>
+<h2>표 4·그림 5. 시장 상황에 맞았는가</h2>
+<p>동일 44일 구간을 실제 BTC 상승일과 하락·보합일로 나누고 모든 날짜를 포함했다. 이 구분은 사후 설명용이며 거래 알고리즘의 입력이나 미래를 안다는 가정이 아니다. <b>게이트 페어 추가판도 BTC 상승일 평균 +9.85bp, 하락·보합일 평균 −8.08bp였다.</b> 이 과거 혼합 전략은 하락일의 손실을 제거하지 못했다. 상승일·하락일 평균만으로 시장중립성 또는 여러 레짐에서의 우수성을 증명할 수 없다. 관계 붕괴·유동성·변동성 조건별 검증은 별도로 필요하며, 이 팩에서는 없는 결과를 채우지 않았다.</p>
+<div class="tablewrap"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>전략</th>
+      <th>사후 구간</th>
+      <th>일수</th>
+      <th>평균 일수익(bp)</th>
+      <th>양의 일수익 비율(%)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>당시 첫 전략</td>
+      <td>BTC 하락·보합일</td>
+      <td>22</td>
+      <td>-6.445536</td>
+      <td>4.545455</td>
+    </tr>
+    <tr>
+      <td>당시 첫 전략</td>
+      <td>BTC 상승일</td>
+      <td>22</td>
+      <td>6.661939</td>
+      <td>90.909091</td>
+    </tr>
+    <tr>
+      <td>당시 두 번째 전략</td>
+      <td>BTC 하락·보합일</td>
+      <td>22</td>
+      <td>-5.792890</td>
+      <td>4.545455</td>
+    </tr>
+    <tr>
+      <td>당시 두 번째 전략</td>
+      <td>BTC 상승일</td>
+      <td>22</td>
+      <td>6.059556</td>
+      <td>90.909091</td>
+    </tr>
+    <tr>
+      <td>직접예측 페어 추가</td>
+      <td>BTC 하락·보합일</td>
+      <td>22</td>
+      <td>-7.966912</td>
+      <td>4.545455</td>
+    </tr>
+    <tr>
+      <td>직접예측 페어 추가</td>
+      <td>BTC 상승일</td>
+      <td>22</td>
+      <td>9.540097</td>
+      <td>95.454545</td>
+    </tr>
+    <tr>
+      <td>비용 게이트 페어 추가</td>
+      <td>BTC 하락·보합일</td>
+      <td>22</td>
+      <td>-8.077997</td>
+      <td>4.545455</td>
+    </tr>
+    <tr>
+      <td>비용 게이트 페어 추가</td>
+      <td>BTC 상승일</td>
+      <td>22</td>
+      <td>9.845625</td>
+      <td>95.454545</td>
+    </tr>
+  </tbody>
+</table></div>
+<figure><img src="figures/05_market_context.png" alt="표 4·그림 5. 시장 상황에 맞았는가"><figcaption>원자료는 tables/ CSV에 포함. PNG·SVG·통합 PDF 제공.</figcaption></figure>
+<h2>표 5·그림 6. PAS 실거래 기록 — 과거 저장 시점</h2>
+<p><b>현재 실시간 잔고가 아니다.</b> 10/24 21:11:23 KST에 저장한 내부 소유권 장부다. 우리 배정 손익은 +69.074609 USDP, 50,000 기준 +0.138149%다. 팀원 손익은 별도 행에 있다. 이 장부는 포지션 시점과 체결 소유권 기록을 대조했으며 잔고·수량 오차도 원본에 저장되어 있다.</p><p>우리 행에도 방향성 코어와 페어, 이전 변경분의 효과가 섞여 있으므로 전액을 현재 페어 모듈의 성과라고 주장하지 않는다. 표의 수익률은 배정 자본으로 나눈 장부 비율이며, 공식 팀 리더보드의 현금흐름 보정 R 또는 현재 등수가 아니다.</p>
+<div class="tablewrap"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>owner</th>
+      <th>capital</th>
+      <th>realized</th>
+      <th>fees</th>
+      <th>funding</th>
+      <th>unrealized</th>
+      <th>pnl</th>
+      <th>gross</th>
+      <th>snapshot_kst</th>
+      <th>pnl_div_50000_pct</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ours</td>
+      <td>50,000.000000</td>
+      <td>-0.911437</td>
+      <td>11.401510</td>
+      <td>11.485952</td>
+      <td>69.901604</td>
+      <td>69.074609</td>
+      <td>9,981.617640</td>
+      <td>2026-10-24T21:11:23.988135+09:00</td>
+      <td>0.138149</td>
+    </tr>
+    <tr>
+      <td>teammate</td>
+      <td>50,000.000000</td>
+      <td>219.481690</td>
+      <td>47.550660</td>
+      <td>-60.630567</td>
+      <td>51.416401</td>
+      <td>162.716863</td>
+      <td>3,183.757501</td>
+      <td>2026-10-24T21:11:23.988135+09:00</td>
+      <td>0.325434</td>
+    </tr>
+  </tbody>
+</table></div>
+<figure><img src="figures/06_actual_owner_pnl.png" alt="표 5·그림 6. PAS 실거래 기록 — 과거 저장 시점"><figcaption>원자료는 tables/ CSV에 포함. PNG·SVG·통합 PDF 제공.</figcaption></figure>
+<h2>표 6·그림 7. 실행 후보의 이미 종료된 짧은 PAS 재생</h2>
+<p>quote_inputs는 동일 페어 예측을 유지하고 진입 판단에 사용하는 가격 이력·실행 조건을 바꾸는 후보다. 10/25 15:00–17:05 KST 구간에서 평가가격 손익은 기존판보다 높았지만, 종료 청산비용 반영 후에는 모두 손실이었다. 관측 공백도 있어 당시 교체 기준을 통과하지 못했다. 이 표는 실제 주문을 보낸 결과가 아니다.</p><p>이 구간은 여러 후보의 개발·선정에 사용되었으므로 독립 검증이라고 부를 수 없다. 같은 경로의 0/45초 및 기본/스트레스 설정도 네 독립 시장 표본이 아니다. 그 이후 고정 검증 구간의 결과는 별도 보고서가 완료된 뒤에만 사용할 수 있다.</p>
+<div class="tablewrap"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>phase</th>
+      <th>scenario</th>
+      <th>arm</th>
+      <th>net_pnl</th>
+      <th>net_after_terminal_exit</th>
+      <th>price_pnl</th>
+      <th>fees</th>
+      <th>funding</th>
+      <th>valid</th>
+      <th>start_utc</th>
+      <th>end_utc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>realistic_phase0</td>
+      <td>base</td>
+      <td>incumbent</td>
+      <td>1.337019</td>
+      <td>-15.290895</td>
+      <td>3.719318</td>
+      <td>2.200015</td>
+      <td>-0.182284</td>
+      <td>False</td>
+      <td>2026-10-25T06:00:00+00:00</td>
+      <td>2026-10-25T08:05:00+00:00</td>
+    </tr>
+    <tr>
+      <td>realistic_phase0</td>
+      <td>base</td>
+      <td>quote_inputs</td>
+      <td>2.271165</td>
+      <td>-13.327522</td>
+      <td>4.045548</td>
+      <td>1.583533</td>
+      <td>-0.190850</td>
+      <td>False</td>
+      <td>2026-10-25T06:00:00+00:00</td>
+      <td>2026-10-25T08:05:00+00:00</td>
+    </tr>
+    <tr>
+      <td>realistic_phase0</td>
+      <td>stress</td>
+      <td>incumbent</td>
+      <td>-0.122530</td>
+      <td>-20.691808</td>
+      <td>3.371118</td>
+      <td>2.932935</td>
+      <td>-0.560713</td>
+      <td>False</td>
+      <td>2026-10-25T06:00:00+00:00</td>
+      <td>2026-10-25T08:05:00+00:00</td>
+    </tr>
+    <tr>
+      <td>realistic_phase0</td>
+      <td>stress</td>
+      <td>quote_inputs</td>
+      <td>1.199379</td>
+      <td>-18.134957</td>
+      <td>3.875548</td>
+      <td>2.111173</td>
+      <td>-0.564996</td>
+      <td>False</td>
+      <td>2026-10-25T06:00:00+00:00</td>
+      <td>2026-10-25T08:05:00+00:00</td>
+    </tr>
+    <tr>
+      <td>realistic_phase45</td>
+      <td>base</td>
+      <td>incumbent</td>
+      <td>1.114480</td>
+      <td>-15.513434</td>
+      <td>3.496578</td>
+      <td>2.199814</td>
+      <td>-0.182284</td>
+      <td>False</td>
+      <td>2026-10-25T06:00:00+00:00</td>
+      <td>2026-10-25T08:05:00+00:00</td>
+    </tr>
+    <tr>
+      <td>realistic_phase45</td>
+      <td>base</td>
+      <td>quote_inputs</td>
+      <td>2.271165</td>
+      <td>-13.327522</td>
+      <td>4.045548</td>
+      <td>1.583533</td>
+      <td>-0.190850</td>
+      <td>False</td>
+      <td>2026-10-25T06:00:00+00:00</td>
+      <td>2026-10-25T08:05:00+00:00</td>
+    </tr>
+    <tr>
+      <td>realistic_phase45</td>
+      <td>stress</td>
+      <td>incumbent</td>
+      <td>-0.625896</td>
+      <td>-21.181227</td>
+      <td>2.856968</td>
+      <td>2.923177</td>
+      <td>-0.559687</td>
+      <td>False</td>
+      <td>2026-10-25T06:00:00+00:00</td>
+      <td>2026-10-25T08:05:00+00:00</td>
+    </tr>
+    <tr>
+      <td>realistic_phase45</td>
+      <td>stress</td>
+      <td>quote_inputs</td>
+      <td>0.859467</td>
+      <td>-18.460922</td>
+      <td>3.525048</td>
+      <td>2.101611</td>
+      <td>-0.563970</td>
+      <td>False</td>
+      <td>2026-10-25T06:00:00+00:00</td>
+      <td>2026-10-25T08:05:00+00:00</td>
+    </tr>
+  </tbody>
+</table></div>
+<figure><img src="figures/07_completed_short_replay.png" alt="표 6·그림 7. 실행 후보의 이미 종료된 짧은 PAS 재생"><figcaption>원자료는 tables/ CSV에 포함. PNG·SVG·통합 PDF 제공.</figcaption></figure>
+<h2>진행 중인 고정 검증의 취급</h2>
+<p>별도로 고정해 진행하던 구간은 10/25 18:00~10/26 00:05 KST다. 이 보고서 작성기는 그 구간의 원자료·중간 손익·검증 결과를 열지 않는다. 완료 후 감사 결과가 있는 별도 보고서를 확인해야 한다. 논문 팩 생성 때문에 새 전략 탐색·학습·주문·운용 교체를 실행하지 않았다.</p>
+<h2>발표·모델 페이퍼에서 주장할 수 있는 범위</h2>
+<p>좋은 수익률 표만 남기지 않고 비용 실험·부정적 결과·모듈 제거 비교를 함께 보존했다. 현재 결과로는 “비용을 고려한 페어 모듈을 구현했고 특정 과거 구간에서 개선을 관측했다”까지 설명할 수 있다. “모든 시장에서 우월하다”, “전 45페어를 실거래한다”, “논문 모델을 그대로 재현했다”는 설명은 이 자료와 맞지 않는다.</p>
+<div class="tablewrap"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>검토할 주장</th>
+      <th>현재 증거</th>
+      <th>가능한 판단</th>
+      <th>추가로 필요한 증거</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>페어 구성으로 과거 순손익 개선</td>
+      <td>표 1·그림 1–2</td>
+      <td>관측됨, 과거 개발 기간에 한정</td>
+      <td>동일 자본의 독립 시계열 구간에서 반복 확인</td>
+    </tr>
+    <tr>
+      <td>게이트가 항상 성능 개선</td>
+      <td>표 1의 stress 동일 결과</td>
+      <td>지원하지 않음</td>
+      <td>후속 독립 비교 및 비용·지연 민감도</td>
+    </tr>
+    <tr>
+      <td>시장 방향과 무관한 수익</td>
+      <td>표 4·그림 5</td>
+      <td>44일의 설명용 진단만 있음</td>
+      <td>고정 기준의 시장·관계 레짐별 평가, 위험 노출 비교</td>
+    </tr>
+    <tr>
+      <td>현재 PAS 페어 모듈의 알파</td>
+      <td>표 5·그림 6</td>
+      <td>전체 우리 장부만으로 식별 불가</td>
+      <td>실거래 모듈별 소유권 손익과 동시 기준 전략</td>
+    </tr>
+    <tr>
+      <td>전체 45페어 후보가 우수</td>
+      <td>표 2·그림 3</td>
+      <td>해당 비교에서 반대 결과</td>
+      <td>새 선별 규칙은 별도 사전 고정 및 독립 평가</td>
+    </tr>
+    <tr>
+      <td>예측오차 감소가 거래이익 개선</td>
+      <td>표 3·그림 4 및 실제 비용 분해</td>
+      <td>이 진단에서는 두 페어 MAE/RMSE 모두 0 예측보다 나쁘거나 비슷함</td>
+      <td>실행가능 호가 기준 예측·실현 순이익 보정</td>
+    </tr>
+    <tr>
+      <td>논문 PPO–LSTM/NFE 재현</td>
+      <td>현재 전략 구성표</td>
+      <td>구현하지 않음</td>
+      <td>재현을 주장하려면 해당 모델·프로토콜·결과의 별도 대조</td>
+    </tr>
+    <tr>
+      <td>현재판의 통계적으로 유의한 우위</td>
+      <td>전체 자료</td>
+      <td>아직 주장할 수 없음</td>
+      <td>충분한 독립 기간·블록 기반 구간추정·선택 이력 보정</td>
+    </tr>
+  </tbody>
+</table></div>
+<h2>지표·재현 방법</h2>
+<p>공식 순위는 12:00 UTC 일별 샘플을 쓰며 실시간 Top 10 그래프와 다를 수 있다. <a href="https://perpetual-alpha26.github.io/leaderboard">공식 리더보드 설명</a>. Q 수식은 이 프로젝트에 제공된 대회 공지 기준이며, 표의 Q는 저장된 실험 계산값이다. 현재 공식 점수를 재조회하거나 모든 과거 Q를 새로 인증한 것은 아니다.</p><p>실행: <code>/usr/bin/python3 reports/pairs_evidence_pack_20261025/build_report.py</code>. 저장된 계좌·예측 기록만 읽어 표와 그림을 만든다. 모델을 재학습하거나 백테스트 경로를 새로 선택하지 않는다. CSV 전체 행·그림 원자료·소스 SHA-256은 함께 저장했다. HTML은 오프라인 열람 가능하고 PDF에는 7개 그림이 들어 있다.</p>
+<div class="tablewrap"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>지표</th>
+      <th>정의·주의</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>순손익</td>
+      <td>실현 가격손익 + 미실현 가격손익 − 수수료 + 순펀딩; 모의실험에서는 체결 가격에 반영된 비용을 중복 차감하지 않음</td>
+    </tr>
+    <tr>
+      <td>R</td>
+      <td>공식 계좌 현금흐름 보정 일수익을 연결한 누적 수익률. 단순 배정 자본 대비 비율과 구분</td>
+    </tr>
+    <tr>
+      <td>일별 표준편차 s</td>
+      <td>완료된 일수익 n개의 표본 표준편차(ddof=1). 1일만으로 산출 불가</td>
+    </tr>
+    <tr>
+      <td>기간 변동성 σ</td>
+      <td>대회 설명 기준 s×sqrt(n); 연율 변동성과 다름. 결측일 수익은 공식 보정 규칙 적용</td>
+    </tr>
+    <tr>
+      <td>Q</td>
+      <td>(max(R,0)+0.005)/(abs(R)+1.5×σ+0.05). R과 σ는 백분율 숫자가 아닌 소수</td>
+    </tr>
+    <tr>
+      <td>총점</td>
+      <td>0.8×Q+0.2×J. J 미평가 시 0이며 로컬 백테스트로 공식 등수·심사 점수를 정할 수 없음</td>
+    </tr>
+    <tr>
+      <td>MDD</td>
+      <td>자산곡선의 이전 고점 대비 최대 하락률. 일별 σ와 다른 위험 지표</td>
+    </tr>
+    <tr>
+      <td>짧은 구간</td>
+      <td>몇 시간 재생의 수익을 연율화한 Sharpe/CAGR, 공식 Q·σ로 과장하지 않음</td>
+    </tr>
+  </tbody>
+</table></div>
+</html>

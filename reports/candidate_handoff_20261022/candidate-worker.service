@@ -1,0 +1,10 @@
+[Unit]
+Description=SFINX budget lifecycle staged worker
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ssd-990/soobeenkim/icaif_competition_2026
+ExecStart=/home/ssd-990/soobeenkim/icaif_competition_2026/.venv/bin/python -m candidate_handoff.runner --directory /home/ssd-990/soobeenkim/icaif_competition_2026/.runtime/pas_budget_lifecycle --execute
+Restart=no
+UMask=0077
+NoNewPrivileges=true

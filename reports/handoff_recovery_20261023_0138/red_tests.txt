@@ -1,0 +1,19 @@
+test_recovery (unittest.loader._FailedTest.test_recovery) ... ERROR
+
+======================================================================
+ERROR: test_recovery (unittest.loader._FailedTest.test_recovery)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_recovery
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/.tools/python/cpython-3.11.17-linux-x86_64-gnu/lib/python3.11/unittest/loader.py", line 162, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/candidate_handoff/test_recovery.py", line 5, in <module>
+    from .recovery import recover_confirmed
+ModuleNotFoundError: No module named 'candidate_handoff.recovery'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

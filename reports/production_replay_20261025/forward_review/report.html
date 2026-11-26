@@ -1,0 +1,27 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><title>PAS 고정 후보 비교</title>
+<style>body{font:16px/1.6 system-ui;max-width:1200px;margin:40px auto;padding:0 20px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;padding:8px;text-align:right}th:first-child,td:first-child{text-align:left}small{color:#555}</style>
+<h1>PAS 고정 후보 비교</h1><p>실제 수신한 호가·신호로 계산한 조건부 모의 결과입니다. 실제 주문은 0건이며 현재 운용 전략을 변경하지 않았습니다. 동일 보유분·자본·평가 시각에서 비용과 청산 가능성을 대조했습니다.</p>
+<p>짧은 기간이므로 공식 일별 변동성과 Q는 계산하지 않습니다. 겹치는 기간의 여러 후보 비교를 서로 독립된 검증으로 취급하지 않습니다.</p>
+<h2>entry_lifetime</h2><p>짧은 모의 비교 기준: 미통과</p>
+<table><tr><th>후보</th><th>조건</th><th>순손익 USDP</th><th>종료 청산 반영</th><th>자료·실행 검사</th></tr>
+<tr><td>incumbent</td><td>base</td><td>0.610564</td><td>-16.017350</td><td>불완전 자료 또는 검사 실패</td></tr>
+<tr><td>fixed_entry_1h</td><td>base</td><td>0.610564</td><td>-16.017350</td><td>불완전 자료 또는 검사 실패</td></tr>
+<tr><td>incumbent</td><td>stress</td><td>-1.053519</td><td>-21.608849</td><td>불완전 자료 또는 검사 실패</td></tr>
+<tr><td>fixed_entry_1h</td><td>stress</td><td>-0.000933</td><td>-19.440503</td><td>불완전 자료 또는 검사 실패</td></tr>
+</table>
+<h2>capital_usage</h2><p>짧은 모의 비교 기준: 미통과</p>
+<table><tr><th>후보</th><th>조건</th><th>순손익 USDP</th><th>종료 청산 반영</th><th>자료·실행 검사</th></tr>
+<tr><td>incumbent</td><td>base</td><td>4.661733</td><td>-11.966181</td><td>불완전 자료 또는 검사 실패</td></tr>
+<tr><td>size_only_2</td><td>base</td><td>3.743202</td><td>-14.545892</td><td>불완전 자료 또는 검사 실패</td></tr>
+<tr><td>incumbent</td><td>stress</td><td>2.997650</td><td>-17.557680</td><td>불완전 자료 또는 검사 실패</td></tr>
+<tr><td>size_only_2</td><td>stress</td><td>1.605119</td><td>-20.994903</td><td>불완전 자료 또는 검사 실패</td></tr>
+</table>
+<h2>schedule_recovery</h2><p>짧은 모의 비교 기준: 미통과</p>
+<table><tr><th>후보</th><th>조건</th><th>순손익 USDP</th><th>종료 청산 반영</th><th>자료·실행 검사</th></tr>
+<tr><td>incumbent</td><td>base</td><td>7.764249</td><td>-8.863665</td><td>불완전 자료 또는 검사 실패</td></tr>
+<tr><td>fresh_block_catchup</td><td>base</td><td>7.764249</td><td>-8.863665</td><td>불완전 자료 또는 검사 실패</td></tr>
+<tr><td>incumbent</td><td>stress</td><td>6.255193</td><td>-14.300137</td><td>불완전 자료 또는 검사 실패</td></tr>
+<tr><td>fresh_block_catchup</td><td>stress</td><td>7.307779</td><td>-12.131791</td><td>불완전 자료 또는 검사 실패</td></tr>
+</table>
+<p>펀딩 대조는 <a href="https://hyperliquid.gitbook.io/hyperliquid-docs/trading/funding">공식 결제 방식</a>에 따라 공개 계좌의 실제 지급액을 사용합니다. 고정 거래 경로에 대한 금액 민감도이며, 결제금 변경에 따른 정책 재실행은 아닙니다.</p>
+<p>이 보고서는 자동 교체 승인이 아닙니다. 통과하더라도 긴 기간의 성과 보장이나 실제 체결 보장으로 해석할 수 없습니다. 전체 상세 결과는 <a href="results.json">JSON</a>에 남깁니다.</p></html>

@@ -1,0 +1,68 @@
+"""Readable index of evidence, including failed and invalidated experiments."""
+import html,json
+from datetime import datetime,timezone
+from .protocol import OUT,ROOT,save,sha
+
+
+def main():
+    sections=[
+        ('실행 기간과 가격 제한','development/results.json'),
+        ('시간별 새 판단','hourly_fresh/results.json'),
+        ('지연 신호 복구 — 연결 수정 후','catchup/historical_corrected/results.json'),
+        ('최초 호가 기준 제한 — 연결 수정 후','quote_anchor/historical_corrected/results.json'),
+        ('PAS 펀딩 입력','venue_funding_production/results.json'),
+        ('45개 페어 공동 부분 공적분','joint_partial/results.json'),
+        ('동일 한도 내 자본 배분','reference_budget/results.json'),
+        ('코어·페어 공동 1.5배','whole_budget/results.json'),
+        ('펀딩 중립 포트폴리오','neutral_carry/results.json'),
+        ('목표 수량에 대한 지정가 실행','target_execution_v2/results.json'),
+        ('확장 8시간 — 정확한 호가 없음','reserved_eight_hours/results.json'),
+    ]
+    registry=[]
+    for title,path in sections:
+        f=OUT/path
+        if f.exists():registry.append(dict(title=title,file=path,sha256=sha(f),rows=json.loads(f.read_text())))
+    save(OUT/'trial_registry.json',dict(at=datetime.now(timezone.utc).isoformat(),studies=registry,
+        note='Raw results retained. Different venue/execution assumptions must not be pooled into a single leaderboard. All retrospective windows are exposed development.',orders_sent=0))
+    lines=['<!doctype html><html lang="ko"><meta charset="utf-8"><title>SFINX 개선 실험 근거</title>',
+        '<style>body{font:16px/1.65 system-ui;max-width:1100px;margin:40px auto;padding:0 20px;color:#182830}table{border-collapse:collapse;width:100%;margin:20px 0}td,th{border:1px solid #ddd;padding:9px}small{color:#555}a{color:#1565c0}</style>',
+        '<h1>SFINX 개선 실험 근거</h1><p>생성: '+datetime.now(timezone.utc).isoformat()+'</p>',
+        '<p>실거래 전략·지갑·팀원 포지션은 변경하지 않았습니다. 후보의 구현, 과거 비교, 같은 보유분 인계, 고정된 이후 기간 평가를 연구 폴더에서 진행합니다.</p>',
+        '<h2>이번에 확인하고 처리한 사항</h2><ul>',
+        '<li>경계 시점 신호가 15분보다 늦거나 누락되면 다음 6시간 경계까지 정상 판단을 건너뛰는 경로를 재현했습니다. 같은 6시간 구간의 첫 유효한 새 신호를 쓰는 후보를 구현했습니다.</li>',
+        '<li>일부 새 과거 실험의 후보 복사 과정에서 모의 거래소 시계와 연결도 복사된 결함을 수정했습니다. 원래 결과를 지우지 않고 무효 표시한 뒤 다시 계산했습니다. 이후 기간의 호가 실행기는 원래부터 연결을 다시 설정하며, 실거래 실행자에는 이 변경을 적용하지 않았습니다.</li>',
+        '<li>최초 마크 가격에 고정한 진입 제한과 최초 실제 매수·매도 호가에 고정한 제한을 비교합니다. 슬리피지 한도는 10bp이며, 후속 시도에서 기준을 다시 올리거나 내리지 않습니다.</li>',
+        '<li>저장된 릿지 계수·중심·척도·보정값을 원래 학습 구간으로 재현했습니다. 보정 구간 이후 입력을 변조해도 값이 바뀌지 않았습니다. 이는 해당 검사 범위의 미래 정보 누출 검사이며, 모든 종류의 과적합이 없다는 뜻은 아닙니다.</li>',
+        '<li>실거래와 연구의 핵심 모듈 내용이 같은지 대조했습니다. 읽는 파일 경로가 다른 한 모듈도 파일 내용 해시는 같았습니다.</li></ul>',
+        '<p>연결 검사에서는 기존 재연결 함수가 새 후보의 계좌 클래스를 기본 클래스로 바꾸는 것을 재현했습니다. 후보의 가격 제한을 유지하는 별도 연결 모듈을 구현했고, 각 후보를 두 번 재연결해도 유지되는지 확인했습니다. 현재 실거래 함수와 서비스는 변경하지 않았습니다. <a href="staged_rehearsal.json">서명 없는 인계·재연결 검사</a></p>',
+        '<h2>실제 주문 기록에서 찾은 제한</h2>',
+        '<p>10월 24일 15:04 KST 판단에서 SP500 숏 목표가 생성됐지만 이후 7번의 시도가 가격 제한으로 차단됐습니다. 같은 판단의 ETH·BRENT·GOLD·EUR 계열 입력은 마지막 체결이 한 시간 이상 지난 상태였습니다. 최근 거래가 없다는 사실과 현재 주문장이 없다는 사실을 구분해야 합니다.</p>',
+        '<p>새 후보는 원래의 방향 신호·위험 한도를 유지하면서 3시간 또는 24시간 되돌림 필터에 당시 수신한 PAS 호가 중간값을 사용합니다. 없는 24시간 이력은 없는 상태로 남기며, 미래 호가나 외부 시장 가격으로 채우지 않습니다. <a href="live_execution_attribution.json">과거 판단·주문 제한 근거</a> · <a href="quote_history/protocol.json">호가 이력 후보의 사전 고정 조건</a></p>',
+        '<h2>체결 모형을 해석할 때의 한계</h2>',
+        '<p>기존 120시간 재생은 지난 체결 캔들과 분당 거래량으로 만든 보수적인 호가 가정입니다. 실제 과거 주문장이 아닙니다. 낮은 거래량 때문에 체결을 지나치게 적게 추정할 수 있어, 이 수익을 실제 PAS 수익이나 거래 가능 자금의 증거로 쓰지 않습니다.</p>']
+    probe=OUT/'historical_quote_probe/results.json'
+    if probe.exists():
+        lines.append('<p>10월 20~21일의 짧은 실제 PAS 호가 기록에서 전 종목·양방향으로 1,000 USDP 주문을 별도로 탐침했습니다. 서로 겹치는 주문 탐침이며, 합산한 전략 수익률이 아닙니다.</p><table><tr><th>조건</th><th>가격 제한</th><th>탐침 수</th><th>평균 체결 비율</th><th>마크 대비 평균 불리한 가격</th></tr>')
+        for r in json.loads(probe.read_text())['summary']:
+            lines.append(f"<tr><td>{r['scenario']}</td><td>{r['policy']}</td><td>{r['probes']}</td><td>{100*r['mean_fill_fraction']:.2f}%</td><td>{r['mean_paid_mark_deviation_bps']:.3f}bp</td></tr>")
+        lines.append('</table><p>체결 증가 자체를 PnL 개선으로 인정하지 않습니다. 추가 노출의 손익과 비용은 별도의 고정 기간에서 비교합니다.</p>')
+    lines += ['<h2>고정한 이후 기간 비교</h2>',
+        '<p><a href="qualification_review/report.html">비용·실행 주기·거래소 한도·실제 기존판 대조를 합친 최종 비교</a> · <a href="qualification_review/protocol.json">종합 확인 기준</a></p>',
+        '<p>최종 수치는 <a href="lot_exact_forward_review/phase_0/report.html">최소 주문 수량 단위로 재계산한 0초 시작</a>와 <a href="lot_exact_forward_review/phase_45/report.html">45초 시작</a>를 사용합니다. 원래 모의 체결에서 0.230 주문이 0.23000000000000004로 합산돼 엄격한 체결 대조 검사가 멈추는 산술 오류를 재현했습니다. 이 수정은 손익 열람 후 발견한 평가기 수리이며, 전략·기간·수수료·지연·자료 공백의 실패 기준을 바꾸지 않고 모든 후보와 비교군을 다시 계산했습니다. <a href="simulation_receipt_mismatch_reproduction.json">오류 재현</a> · <a href="lot_exact_forward_review/protocol.json">수정 범위</a></p>',
+        '<p>10월 25일 08:05 UTC(한국 17:05)까지 실제로 수신한 PAS 호가와 발표 신호만 사용합니다. 후보별 고정 시점과 평가 시작은 각 프로토콜에 기록했습니다. 평가 기간을 결과에 맞춰 바꾸지 않습니다. 자기 자금 50,000 USDP와 동일한 보유분에서 비교하며 팀원 손익은 제외합니다.</p>',
+        '<p><a href="exact_forward_review/report.html">초기 미반영 펀딩·실제 정산 시각까지 보완한 전체 비교</a> · <a href="complete_forward_review/report.html">이전 정각 정산 가정의 비교</a> · <a href="incumbent_real_execution_audit/comparison.json">기존판의 실제 체결 장부와 모의 경로 대조</a> · <a href="quote_anchor/future/results.json">최초 호가 제한 비교</a> · <a href="quote_history/results.json">호가 이력 비교</a> · <a href="forward_contract.json">최초 평가 계약</a></p>',
+        '<p>평가 초기화에서 발견한 펀딩 누락은 결과 열람 전에 별도 수정 기록으로 고정했습니다. 직전 장부 이후 평가 시작 전의 정산을 먼저 반영하고, 지급 시각을 정각으로 반올림하지 않습니다. 원래 결과는 보존해 차이도 확인할 수 있게 했습니다. <a href="exact_forward_review/protocol.json">정산 수정 기록</a></p>',
+        '<p>실제 실행자 상태 갱신 간격이 약 88초로 관측돼 90초 실행 주기를 추가했습니다. 시작 위치가 0초와 45초인 두 경우를 모두 비교하고 유리한 경우만 고르지 않습니다. 각 평가 기간의 실제 자기 장부와 모의 기존판도 같은 마크와 종료 청산 조건으로 대조합니다. <a href="paced_forward_review/phase_0/report.html">90초·0초 시작</a> · <a href="paced_forward_review/phase_45/report.html">90초·45초 시작</a></p>',
+        '<p>후속 시간 기록 대조에서 최근 실제 첫 체결은 판단 후 약 80~112초, 여러 종목의 마지막 체결은 최대 약 355초 뒤였습니다. 최종 비교는 주문 전 처리에 기본 90초·불리한 조건 120초를 적용하고, 그 작업이 끝난 뒤 다음 반복까지 90초를 둡니다. 대기 중 만료된 주문은 보내지 않습니다. <a href="historical_execution_delay.json">평가 시작 전 실제 체결 시간 근거</a></p>',
+        '<p>결과 열람 전 입력 품질 점검에서 수집기 재연결에 따른 짧은 호가 공백도 확인했습니다. 최종 평가기는 이때 판단·주문을 멈추고 보유분과 펀딩 장부를 유지합니다. 빈 가격은 보간하지 않으며, 공백을 앞뒤 관측으로 90초 이내에 한정할 수 없으면 실패입니다. 관측 사이의 순간 위험을 확인했다는 뜻은 아닙니다. 원래 공백 오류를 기록한 계산도 보존했습니다. <a href="data_aware_forward_review/phase_0/report.html">최종 실제 처리 지연·자료 대기 반영 0초 시작</a> · <a href="data_aware_forward_review/phase_45/report.html">45초 시작</a> · <a href="qualification_review/protocol.json">손익 열람 전 평가기 수정 기록</a></p>',
+        '<p>실제 잔여 호가 수량으로 청산할 수 없는 경우, 누락 펀딩, 공통 시각의 평가 불가, 장부·위험 위반은 통과로 처리하지 않습니다. 몇 시간의 자료로 공식 일별 변동성이나 Q를 만들지 않습니다. 짧은 조건부 모의 개선이 장기 성과 보장이나 자동 교체 승인이 되는 것은 아닙니다.</p>',
+        '<h2>전체 과거 실험</h2><p>다음은 모두 이미 검토한 과거 자료를 이용한 개발 실험입니다. 각 파일에서 조건·기간·전체 결과와 실패 사례를 확인할 수 있습니다. 서로 다른 체결 모형의 수익을 한 순위표로 합치지 않습니다.</p><ul>']
+    for r in registry:lines.append('<li><a href="'+r['file']+'">'+html.escape(r['title'])+'</a></li>')
+    lines += ['</ul><h2>검증 기록</h2><ul>']
+    for title,path in [('자동 검사 결과','validation_tests.json'),('원래 모델 재현·미래 입력 변조 검사','retained_model_audit.json'),('실행 코드 내용 대조','import_order_audit.json'),('실거래 코드 보존','live_immutability_audit.json'),('실제 과거 수수료 대조','historical_fee_audit.json'),('무효화된 지연 복구 실험','catchup/historical_INVALIDATED.json'),('무효화된 호가 제한 실험','quote_anchor/historical_INVALIDATED.json')]:
+        lines.append(f'<li><a href="{path}">{title}</a></li>')
+    lines += ['</ul><p>평가 기준은 <a href="https://perpetual-alpha26.github.io/leaderboard">대회 공식 리더보드</a>, 결제 방식은 <a href="https://hyperliquid.gitbook.io/hyperliquid-docs/trading/funding">Hyperliquid 공식 펀딩 문서</a>를 참조합니다.</p></html>']
+    (OUT/'report.html').write_text('\n'.join(lines))
+
+
+if __name__=='__main__':main()

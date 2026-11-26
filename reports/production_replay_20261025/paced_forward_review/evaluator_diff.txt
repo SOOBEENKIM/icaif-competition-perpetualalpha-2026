@@ -1,0 +1,31 @@
+--- original_frozen_evaluator
++++ cadence_stress_evaluator
+@@ -1,4 +1,4 @@
+-def run_book(streams,source,profile,scenario,start,end,seed,arm,funding):
++def run_book_paced(streams,source,profile,scenario,start,end,seed,arm,funding):
+     p=copy.deepcopy(seed)
+     transform=None
+     if arm=='fixed_entry_1h':p=adopt(p)
+@@ -9,7 +9,7 @@
+         from .hourly_portfolio import adopt as adopt_hourly
+         p=adopt_hourly(p)
+     elif arm!='incumbent':raise ValueError(arm)
+-    v=BookVenue(streams,profile,scenario,start,end,funding);v.account=p.account
++    v=original.BookVenue(streams,profile,scenario,start,end,funding);v.account=p.account
+     a=p.account;a.executor=v;a.checkpoint=v.checkpoint;a.collect_fills=v.collect;a.refresh_market=v.refresh
+     p.settlement=v.settle;p.sc['fee_bps']=scenario['fee_bps'];p.sc['depth_fraction']=scenario['depth_fraction']
+     if p.pair is not None:raise ValueError('Active specialist needs its own forward renewal audit')
+@@ -36,8 +36,11 @@
+                     fees=a.physical.fees-initial_fees,funding=a.physical.funding-initial_funding))
+             else:missing.append(now)
+             if now>=end:break
+-            p.step_candidate(now,streams,packet,profile)
+-            v.now=min(end,max(now+15,math.ceil(v.now)+1))
++            if now>=start+PHASE_SECONDS:
++                p.step_candidate(now,streams,packet,profile)
++                v.now=min(end,max(now+LOOP_SECONDS,math.ceil(v.now)+1))
++            else:
++                v.now=min(end,start+PHASE_SECONDS)
+     if not snapshots:raise ValueError('No valid mark snapshots')
+     first,last=snapshots[0],snapshots[-1];pnl=last['equity']-first['equity']
+     return dict(arm=arm,net_pnl=pnl,fee_increment=last['fees'],funding_increment=last['funding'],

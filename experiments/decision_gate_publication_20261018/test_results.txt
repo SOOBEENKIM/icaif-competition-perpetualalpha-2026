@@ -1,0 +1,15 @@
+test_duplicates_revisions_and_future_snapshots (experiments.decision_gate_publication_20261018.test_adapter.PublicationTests.test_duplicates_revisions_and_future_snapshots) ... ok
+test_missing_midnight_and_later_revision_cannot_backfill_gate (experiments.decision_gate_publication_20261018.test_adapter.PublicationTests.test_missing_midnight_and_later_revision_cannot_backfill_gate) ... ok
+test_received_prefix_reproduces_frozen_gate_and_means_without_score_substitution (experiments.decision_gate_publication_20261018.test_adapter.PublicationTests.test_received_prefix_reproduces_frozen_gate_and_means_without_score_substitution) ... ADAPTER_INFERENCE_SECONDS [0.09239180386066437, 0.04477548971772194, 0.0451085171662271]
+ok
+test_unavailable_gate_keeps_direct_holding_forecast (experiments.decision_gate_publication_20261018.test_adapter.PublicationTests.test_unavailable_gate_keeps_direct_holding_forecast) ... ok
+test_allowed_direction_preserves_actual_entries_and_opposite_or_missing_blocks (experiments.decision_gate_publication_20261018.test_adapter.PortfolioTests.test_allowed_direction_preserves_actual_entries_and_opposite_or_missing_blocks) ... ok
+test_flat_gate_does_not_block_paid_terminal_exit (experiments.decision_gate_publication_20261018.test_adapter.PortfolioTests.test_flat_gate_does_not_block_paid_terminal_exit) ... ok
+test_flat_gate_does_not_cancel_current_forecast_renewal (experiments.decision_gate_publication_20261018.test_adapter.PortfolioTests.test_flat_gate_does_not_cancel_current_forecast_renewal) ... ok
+test_forward_release_guard_precedes_file_or_network_access (experiments.decision_gate_publication_20261018.test_adapter.PortfolioTests.test_forward_release_guard_precedes_file_or_network_access) ... ok
+test_native_and_ungated_accounts_exactly_match_original_with_shared_base_fills (experiments.decision_gate_publication_20261018.test_adapter.PortfolioTests.test_native_and_ungated_accounts_exactly_match_original_with_shared_base_fills) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.622s
+
+OK

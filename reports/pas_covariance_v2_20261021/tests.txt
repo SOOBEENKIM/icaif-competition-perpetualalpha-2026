@@ -1,0 +1,13 @@
+test_diagonal_covariance_does_not_invent_hedges (pas_adaptive_development.test_contracts.CovarianceContracts.test_diagonal_covariance_does_not_invent_hedges) ... ok
+test_future_prices_and_targets_cannot_change_past_allocation (pas_adaptive_development.test_contracts.CovarianceContracts.test_future_prices_and_targets_cannot_change_past_allocation) ... ok
+test_hedge_is_two_sided_on_every_asset_and_reduces_risk (pas_adaptive_development.test_contracts.CovarianceContracts.test_hedge_is_two_sided_on_every_asset_and_reduces_risk) ... ok
+test_original_size_change_and_exit_are_not_deferred (pas_adaptive_development.test_contracts.CovarianceContracts.test_original_size_change_and_exit_are_not_deferred) ... ok
+test_real_history_is_causal_and_respects_caps (pas_adaptive_development.test_contracts.CovarianceContracts.test_real_history_is_causal_and_respects_caps) ... ok
+test_ioc_limit_rejects_adverse_future_price (pas_adaptive_development.test_contracts.ExecutionContracts.test_ioc_limit_rejects_adverse_future_price) ... ok
+test_ioc_reserves_depth_and_pays_spread_on_round_trip (pas_adaptive_development.test_contracts.ExecutionContracts.test_ioc_reserves_depth_and_pays_spread_on_round_trip) ... ok
+test_purged_fitting_calibration_and_features_ignore_future (pas_adaptive_development.test_contracts.ForecastContracts.test_purged_fitting_calibration_and_features_ignore_future) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.128s
+
+OK

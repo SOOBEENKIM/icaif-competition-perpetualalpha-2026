@@ -1,0 +1,13 @@
+test_control_is_exact_and_constant_unit_is_equivalent (experiments.raw_return_pairs_20261017.test_raw.RawTargetTests.test_control_is_exact_and_constant_unit_is_equivalent) ... ok
+test_current_volatility_does_not_multiply_raw_forecast (experiments.raw_return_pairs_20261017.test_raw.RawTargetTests.test_current_volatility_does_not_multiply_raw_forecast) ... ok
+test_future_features_labels_and_activity_do_not_change_past_forecasts (experiments.raw_return_pairs_20261017.test_raw.RawTargetTests.test_future_features_labels_and_activity_do_not_change_past_forecasts) ... ok
+test_inactive_terminal_rows_excluded_only_when_training (experiments.raw_return_pairs_20261017.test_raw.RawTargetTests.test_inactive_terminal_rows_excluded_only_when_training) ... ok
+test_insufficient_training_and_wrong_horizon (experiments.raw_return_pairs_20261017.test_raw.RawTargetTests.test_insufficient_training_and_wrong_horizon) ... ok
+test_maturity_and_nonpositive_unit_are_rejected (experiments.raw_return_pairs_20261017.test_raw.RawTargetTests.test_maturity_and_nonpositive_unit_are_rejected) ... ok
+test_pair_fits_independent (experiments.raw_return_pairs_20261017.test_raw.RawTargetTests.test_pair_fits_independent) ... ok
+test_raw_fit_matches_cash_return_augmented_least_squares (experiments.raw_return_pairs_20261017.test_raw.RawTargetTests.test_raw_fit_matches_cash_return_augmented_least_squares) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.219s
+
+OK

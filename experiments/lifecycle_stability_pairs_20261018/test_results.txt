@@ -1,0 +1,13 @@
+test_cross_boundary_episode_and_closing_boundary_are_purged (experiments.lifecycle_stability_pairs_20261018.test_model.StabilityTests.test_cross_boundary_episode_and_closing_boundary_are_purged) ... ok
+test_every_negative_value_vetoes (experiments.lifecycle_stability_pairs_20261018.test_model.StabilityTests.test_every_negative_value_vetoes) ... ok
+test_future_labels_do_not_change_blocks_or_models (experiments.lifecycle_stability_pairs_20261018.test_model.StabilityTests.test_future_labels_do_not_change_blocks_or_models) ... ok
+test_future_model_is_rejected (experiments.lifecycle_stability_pairs_20261018.test_model.StabilityTests.test_future_model_is_rejected) ... ok
+test_incomplete_bundles_never_invent_confidence (experiments.lifecycle_stability_pairs_20261018.test_model.StabilityTests.test_incomplete_bundles_never_invent_confidence) ... ok
+test_one_positive_deleted_week_preserves_entry (experiments.lifecycle_stability_pairs_20261018.test_model.StabilityTests.test_one_positive_deleted_week_preserves_entry) ... ok
+test_original_execution_and_holding_body_unchanged (experiments.lifecycle_stability_pairs_20261018.test_model.StabilityTests.test_original_execution_and_holding_body_unchanged) ... ok
+test_zero_is_not_evidence_of_negative_opportunity (experiments.lifecycle_stability_pairs_20261018.test_model.StabilityTests.test_zero_is_not_evidence_of_negative_opportunity) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.008s
+
+OK

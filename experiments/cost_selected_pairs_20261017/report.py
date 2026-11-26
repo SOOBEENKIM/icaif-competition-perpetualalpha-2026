@@ -1,0 +1,148 @@
+"""Evidence report for the failed cost-based selector, retaining all comparisons."""
+import json
+from collections import Counter
+from pathlib import Path
+from experiments.complementary_alpha_20261017.research import protected
+from experiments.dense_history_pairs_20261017.report import grid
+from experiments.netted_shadow_pairs_20261017.report import document, export_csv
+from experiments.par_direct_forecast_20261017.data import ROOT, save, sha
+
+HERE = Path(__file__).resolve().parent
+ART = HERE/'artifacts'
+
+
+def main():
+    result = json.loads((ART/'results.json').read_text())
+    proxy = json.loads((ART/'proxy_diagnostics.json').read_text())
+    attribution = json.loads((ART/'attribution.json').read_text())['rows']
+    book = json.loads((ART/'books/results.json').read_text())
+    for file in [ART/'frozen.json', ART/'books/frozen.json']:
+        for rel, digest in json.loads(file.read_text())['sources'].items():
+            assert sha(ROOT/rel) == digest, rel
+    guards = protected()
+    rows = result['rows']; assert len(rows) == 160
+    lookup = {(r['venue'], r['phase'], r['arm'], r['scenario']): r for r in rows}
+    account = []
+    arms = [('first_strategy', '기존 첫째'), ('second_strategy', '기존 둘째'),
+            ('first_dense_hourlyhedge_bias_24', '첫째＋이전 bias 페어'),
+            ('first_dense_hourlyhedge_select_24', '첫째＋전체 성적 선택'),
+            ('first_dense_hourlyhedge_directional_24', '첫째＋같은 방향 성적 선택')]
+    for phase in ['validation', 'comparison']:
+        for scenario in ['base', 'stress']:
+            for arm, label in arms:
+                m = lookup['reference', phase, arm, scenario]['metrics']
+                account.append([phase, scenario, label, f"{m['net_pnl']:+,.2f}",
+                    f"{100*m['return_fraction']:+.5f}%", f"{m['financial_score']:.8f}",
+                    f"{100*m['volatility_horizon']:.5f}%", m.get('completed_pairs', '—')])
+    costs = []
+    for row in attribution:
+        if row['phase'] == 'comparison' and row['arm'].startswith('first'):
+            totals = {k: sum(e[k] for e in row['episodes']) for k in ['price_move', 'execution_cost', 'fees', 'funding', 'net_pnl']}
+            costs.append([row['arm'], row['scenario'], *[f'{v:+,.2f}' for v in totals.values()]])
+    samples = []
+    for row in proxy['rows']:
+        if row['phase'] == 'comparison' and row['pair'] == ['BTC', 'HYPE']:
+            samples.append([row['model'], row['nonoverlap_opportunities'], row['active_proxy_trades'],
+                            row['profitable_proxy_trades'], row['losing_proxy_trades'], str(row['selected_experts'])])
+    reasons = []
+    for kind in ['select', 'directional']:
+        for scenario in ['base', 'stress']:
+            counts = Counter()
+            for row in book['summaries']:
+                if row['model'] == kind and row['scenario'] == scenario:
+                    counts.update(row['counts'])
+            reasons.append([kind, scenario, counts['scheduled_decisions'], counts['source_not_valid'],
+                            counts['edge_below_full_cost'], counts['lot_imbalance'], counts['visible_depth_below_minimum']])
+    body = '''<h1>비용 차감 성적으로 페어 모델을 선택한 결과</h1>
+<p class="note"><strong>이번 두 선택기는 기존 페어 후보보다 성과가 나빠 교체 대상으로 채택하지 않는다.</strong>
+새 계좌 백테스트 32개, 기존 계좌 정확 대조 4개, 기존 예측 상태 정확 대조 8개, 구현 검사 8개를 완료했다.
+비용을 학습에 넣었다는 사실만으로 개선되지 않았다. 선택 점수의 이후 성적도 나빴고 실제 계좌 비용도 크게 발생했다.</p>
+<h2>무엇을 바꿨는가</h2>
+<p>예측 평균을 내는 대신 ridge·편향 보정·기울기 보정·최근 평균 중 하나를 선택했다.
+선택된 예측값은 원래 값 그대로 사용하며, 새 배수로 키우지 않는다.
+전체 과거 의사결정 성적으로 선택하는 방식과 현재와 같은 매매 방향의 과거 성적으로 선택하는 방식을 나눴다.
+모든 점수가 양수가 아니면 신호 자체를 끈다. 예측값만 0으로 바꿔 다른 가격 괴리 주문이 실수로 나가게 하지 않았다.</p>
+<p>선택기 학습에는 최근 90일의 겹치지 않는 24시간 표본, 반감기 30일,
+제로 성적으로의 사전 표본 강도 12, 최소 공통 표본 12개와 활성 거래 3개를 적용했다.
+각 표본은 당시 예측·헤지 비율·가격·직전 알려진 펀딩으로 방향과 거래 여부를 먼저 정한다.
+진입 예상 수익이 진입·청산 비용과 5bp 여유를 넘어야 활성 거래로 취급한다.</p>
+<p>결과 성적은 다음 시간봉 진입, 원래 신호에서 24시간 뒤 청산, 고정 수량, 진입·청산 수수료와 가격 불이익,
+진입 후 청산까지의 알려진 과거 펀딩을 반영한다. 만기가 현재 시각보다 엄격히 이전인 표본만 선택 점수에 넣는다.
+펀딩 또는 필요한 가격 관측이 빠진 결과를 손익 0으로 채우지 않는다.</p>
+<p><strong>이는 기준시장 자료의 모델 선택용 근사 성적이다.</strong> 주문 수량 반올림·호가 깊이·부분 체결·손절·보유 연장을 포함한 실제 거래 원장이 아니다.
+최종 계좌 평가는 기존과 같은 독립 양쪽 체결·실제 수량·유료 청산·보유 연장·위험 한도 모형에서 다시 실행했다.
+학습의 9bp 수수료·10bp 가격 불이익 가정은 기본/stress 평가에서 동일하게 유지했다.</p>
+<h2>동일 자본의 계좌 성과</h2>
+<p>초기 자본 1,000,000. validation: 2026-08-01 12:00~09-01 12:00 UTC.
+comparison: 09-01 12:00~10-15 12:00 UTC. 기본 조건 편도 수수료·가격 불이익 9bp·10bp,
+stress 12bp·20bp와 더 작은 체결 가능 수량 및 펀딩 수령액 절반이다.
+Q=(max(R,0)+0.005)/(|R|+1.5σ+0.05), σ=완료된 일별 수익률의 표본 표준편차×√n이다.</p>
+<p>계좌 손익은 기존 전략과 페어를 합친 값이다. 같은 과거 기간을 반복 사용한 개발 결과로,
+선택 파일을 이후 기간 실행 전에 고정했더라도 독립적인 미래 검증으로 간주하지 않는다.</p>'''
+    body += grid(['기간', '조건', '전략', '순손익', '수익률', 'Q', '기간 변동성 σ', '완료 페어'], account)
+    body += '''<p>전체 성적 선택의 이후 기본 순손익은 −6,864.14로 이전 페어 후보 +1,491.90보다 8,356.04 낮았다.
+같은 방향 선택도 −729.55로 더 나빴다. 같은 방향 선택의 stress 결과 +1,031.14는 이전 후보와 같았다.
+8월 stress에서는 새 두 방식 모두 기존 첫째 전략 대비 추가 손익이 없었다.</p>
+<p>사전에 정한 선택 기준을 통과한 후보는 없다. 진단용 고정 선택은 first_dense_hourlyhedge_directional_24,
+eligible=false다. 이 값은 연구 후보 기준이며 대회 점수 집계 자격을 뜻하지 않는다.</p>
+<h2>손실 원인을 분리</h2>
+<p>아래는 이후 기간의 페어 부분만 분해한 값이다. 전체 계좌 원전략 부분과 구분했다.
+순손익=가격 변화 손익−체결 가격 불이익−수수료+펀딩이다.</p>'''
+    body += grid(['선택기', '조건', '가격 변화', '체결 불이익 비용', '수수료', '펀딩', '페어 순손익'], costs)
+    body += '''<p>전체 성적 선택의 기본 조건은 가격 변화부터 −1,350.09였고,
+체결 불이익 3,108.16·수수료 2,776.78·펀딩 손실 158.73을 더해 페어 순손익 −7,393.76이 됐다.
+완료 페어는 이전 4개에서 9개로 늘었다. 따라서 이번 손실을 거래하지 않은 탓으로 설명할 수 없다.</p>
+<p>같은 방향 선택은 가격 변화 손익 +1,138.03이 있었지만 비용과 펀딩을 감당하지 못했다.
+이 결과는 실행 비용과 신호 품질을 함께 고쳐야 함을 보여주며, 수수료만 없애면 모든 후보가 수익이라는 뜻도 아니다.</p>
+<h2>학습 목적과 실제 운용의 차이</h2>
+<p>보유 연장이 있는 계좌와 고정 24시간 학습 성적 사이에는 구조적 차이가 있다.
+그러나 이번 실패를 그 차이만의 탓으로 돌릴 근거는 없다. 아래처럼 같은 고정 24시간 근사 기준에서도
+선택기가 이후 기간의 좋은 거래를 고르지 못했다. 표본은 실제 계좌 체결 수가 아니다.</p>'''
+    body += grid(['모델', '겹치지 않는 판단 기회', '활성 근사 거래', '이익 거래', '손실 거래', '선택 모델 분포'], samples)
+    body += '''<p>BTC/HYPE의 이후 43개 공통 기회 중 전체 성적 선택은 활성 거래 11개에서 8개 손실,
+같은 방향 선택은 8개에서 7개 손실이었다. 최근 평균 모델은 이 표본에서 비용을 넘는 활성 거래가 없었다.
+모델을 고르는 층만 복잡하게 만드는 것으로 기초 예측의 약점을 해결했다고 볼 수 없다.</p>
+<h2>실제 par 호가 점검</h2>
+<p>기존 허용 호가 기록 5개에서 각 후보·조건당 17개 시점을 점검했다. 승인된 신규 진입 계획은 0개였다.
+전체 성적 선택은 이 시점들의 모든 페어 신호를 껐다.
+같은 방향 선택은 일부 신호가 남았지만 비용·주문 단위·표시 수량 조건에서 제외됐다.</p>'''
+    body += grid(['선택기', '조건', '시점 수', '신호 비활성 페어', '비용 미달 방향', '수량 단위 불균형', '최소 깊이 미달'], reasons)
+    body += '''<p>par 캔들·펀딩 계좌에서도 새로운 완료 페어는 없었다.
+따라서 실제 par에서 수익성을 개선했다고 주장하지 않으며 미래 청산 유동성을 만들어 넣지 않았다.</p>
+<h2>연구 참고와 다음 작업</h2>
+<p><a href="https://onlinelibrary.wiley.com/doi/10.1155/cplx/1155228">2026년 8월 비용 기반 FX 다중 모델 연구</a>의
+예측 오차와 경제적 성적을 구분하는 감독 구조를 참고했다.
+이번 방식은 기존 페어 모델의 단일 선택기이며 논문의 다중 기간 회귀·임계값 탐색·softmax 구현을 복제한 것은 아니다.
+해당 연구의 중간호가와 고정 비용 평가도 실제 par 체결 검증을 대신하지 않는다.</p>
+<p>다음 작업은 같은 고정 예측기의 선택 규칙을 다시 튜닝하기 전에,
+기존 월별 학습·기준시장 재학습 실험과 현재 모델의 차이를 점검하는 것이다.
+현재 네 예측은 오래된 고정 회귀와 그 출력 보정이 중심이다.
+최근 자료에서 입력 특성과 미래 페어 수익의 관계 자체를 갱신하는 후보가 이미 시험됐는지 확인하고,
+새로 시험한다면 기존 매시간 bias 후보와 같은 실행 조건에서 분리 비교한다.
+새 재학습 후보가 개선됐다는 결과는 아직 없다.</p>'''
+    body += f"<p>실제 주문 0개, 실거래 교체 없음. 활성 파일 {guards['active_protected_sources']}개와 예약 의존 파일 {guards['reserved_dependencies']}개의 해시가 그대로다.</p>"
+    out = ROOT/'reports/cost_selected_pairs_20261017'; out.mkdir(exist_ok=True)
+    (out/'report.html').write_text(document('페어 비용 기반 모델 선택 검증', body))
+    export_csv(out/'comparison.csv', rows)
+    summary = dict(selection=result['selection'], new_account_replays=32, exact_control_replays=4,
+        exact_expert_states=8, tests_passed=8, actual_book_accepted_entries=0, orders_sent=0,
+        historical_independence=False, protected=guards, automatic_live_replacement=False)
+    save(out/'summary.json', summary)
+    save(HERE/'work_state.json', dict(**summary,
+        status='progress_costed_selection_32_accounts_8_tests_proxy_and_account_failure_identified',
+        previous_goal_turn='progress_causal_experts_48_accounts_actual_book_failure_completed',
+        report=str((out/'report.html').relative_to(ROOT)), live_strategy_changed=False,
+        findings=[
+            'Both costed selectors fail August eligibility; first select later base -6864.14 and directional -729.55 versus hourly bias24 +1491.90.',
+            'Select later base pair price contribution -1350.09 plus impact 3108.16, fees 2776.78 and funding loss 158.73; completed pairs increase 4 to 9. Failure is not just undertrading.',
+            'On the same fixed-horizon proxy target, later BTC/HYPE select loses 8 of 11 active trades and directional loses 7 of 8. Holding-renewal mismatch alone cannot explain failure.',
+            'Actual-book select suppresses all signals; directional has some valid sources but fails cost/lot/depth. Zero accepted entries, no actual par full lifecycle established.',
+        ],
+        next='Audit existing pairs_forecast monthly pooled models, reference_anchor, historical_par and incumbent_pairs before any new rolling fit. Distinguish past model families from the current old-source per-pair frozen ridge plus output-only calibration. If distinct, implement causal recent per-pair feature-level refit or residual model, fixing window/regularization and retaining hourly bias24 control; avoid another selector sweep or hindsight forecast multiplier. Validate all fits use strictly matured labels and keep new source-level model evaluation separate from actual par execution.',
+        remaining=['No robust incremental PnL/Q improvement beyond hourly bias24',
+                   'Full actual par profitable lifecycle and independent prospective validation absent']))
+    print(out/'report.html')
+
+
+if __name__ == '__main__':
+    main()

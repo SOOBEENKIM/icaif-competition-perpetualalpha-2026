@@ -1,0 +1,10 @@
+test_future_outcomes_do_not_change_fit (experiments.book_execution_value_20261018.test_model.ExecutionModelTests.test_future_outcomes_do_not_change_fit) ... ok
+test_model_rejects_future_inference (experiments.book_execution_value_20261018.test_model.ExecutionModelTests.test_model_rejects_future_inference) ... ok
+test_score_does_not_add_full_profit_to_zero_fill (experiments.book_execution_value_20261018.test_model.ExecutionModelTests.test_score_does_not_add_full_profit_to_zero_fill) ... ok
+test_source_replicas_share_weight (experiments.book_execution_value_20261018.test_model.ExecutionModelTests.test_source_replicas_share_weight) ... ok
+test_unresolved_cash_is_not_trained_as_zero (experiments.book_execution_value_20261018.test_model.ExecutionModelTests.test_unresolved_cash_is_not_trained_as_zero) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.102s
+
+OK

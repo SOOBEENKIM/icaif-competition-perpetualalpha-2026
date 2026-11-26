@@ -1,0 +1,8 @@
+test_reversion_is_subject_to_final_jm_and_chronos_filters (strategy_final_risk.test_final_risk.FinalRiskTests.test_reversion_is_subject_to_final_jm_and_chronos_filters) ... ok
+test_small_cut_bypasses_buffer_and_rebalance_window_without_repeated_drift (strategy_final_risk.test_final_risk.FinalRiskTests.test_small_cut_bypasses_buffer_and_rebalance_window_without_repeated_drift) ... ok
+test_wire_digest_and_execution_targets_are_both_verified (strategy_final_risk.test_final_risk.FinalRiskTests.test_wire_digest_and_execution_targets_are_both_verified) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.044s
+
+OK

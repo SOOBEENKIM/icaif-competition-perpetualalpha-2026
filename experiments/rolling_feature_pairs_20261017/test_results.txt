@@ -1,0 +1,13 @@
+test_fit_matches_augmented_least_squares_and_uses_train_scaler (experiments.rolling_feature_pairs_20261017.test_model.RollingFeatureTests.test_fit_matches_augmented_least_squares_and_uses_train_scaler) ... ok
+test_fits_are_daily_sources_are_hourly_and_use_strictly_mature_labels (experiments.rolling_feature_pairs_20261017.test_model.RollingFeatureTests.test_fits_are_daily_sources_are_hourly_and_use_strictly_mature_labels) ... ok
+test_future_data_and_labels_do_not_change_existing_fits (experiments.rolling_feature_pairs_20261017.test_model.RollingFeatureTests.test_future_data_and_labels_do_not_change_existing_fits) ... ok
+test_original_controls_exact_and_current_source_not_fit_time (experiments.rolling_feature_pairs_20261017.test_model.RollingFeatureTests.test_original_controls_exact_and_current_source_not_fit_time) ... ok
+test_pairs_are_fitted_independently (experiments.rolling_feature_pairs_20261017.test_model.RollingFeatureTests.test_pairs_are_fitted_independently) ... ok
+test_scalar_ablation_has_no_feature_slopes (experiments.rolling_feature_pairs_20261017.test_model.RollingFeatureTests.test_scalar_ablation_has_no_feature_slopes) ... ok
+test_terminal_freshness_excludes_training_row (experiments.rolling_feature_pairs_20261017.test_model.RollingFeatureTests.test_terminal_freshness_excludes_training_row) ... ok
+test_unmatured_label_is_rejected_and_insufficient_fit_stays_missing (experiments.rolling_feature_pairs_20261017.test_model.RollingFeatureTests.test_unmatured_label_is_rejected_and_insufficient_fit_stays_missing) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.981s
+
+OK

@@ -1,0 +1,64 @@
+urllib3.exceptions.ResponseError: too many 429 error responses
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/.venv/lib/python3.11/site-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/.venv/lib/python3.11/site-packages/urllib3/connectionpool.py", line 974, in urlopen
+    return self.urlopen(
+           ^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/.venv/lib/python3.11/site-packages/urllib3/connectionpool.py", line 974, in urlopen
+    return self.urlopen(
+           ^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/.venv/lib/python3.11/site-packages/urllib3/connectionpool.py", line 964, in urlopen
+    retries = retries.increment(method, url, response=response, _pool=self)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/.venv/lib/python3.11/site-packages/urllib3/util/retry.py", line 555, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='api.hyperliquid-testnet.xyz', port=443): Max retries exceeded with url: /info (Caused by ResponseError('too many 429 error responses'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<stdin>", line 3, in <module>
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/candidate_handoff/rehearsal.py", line 58, in main
+    one.submit_baseline(time.time(),single,streams,marks,np.array(frame['sigma']),False)
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/strategy_repairs/candidate.py", line 48, in submit_baseline
+    return super().submit_baseline(now,target,streams,marks,sigma,forced or cut)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/competition_live/coordinator.py", line 61, in submit_baseline
+    result=self.account.execute_books(packet,streams,marks,sigma,self.p,self.sc,self.cfg,on_time=self.settlement)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/competition_live/live_account.py", line 113, in execute_books
+    response=self.executor.submit(order)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/candidate_handoff/bridge.py", line 153, in submit
+    try:book,plan,marks=self.plan(order)
+                        ^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/candidate_handoff/bridge.py", line 139, in plan
+    b=self.bridge.refresh();checked=self.bridge.reconcile_exchange(b)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/candidate_handoff/bridge.py", line 60, in reconcile_exchange
+    meta,ctx=self.public.market();marks=np.array([float(x['markPx']) for x in ctx])
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/competition_live/venue.py", line 36, in market
+    return self.post({'type':'metaAndAssetCtxs','dex':'pas'})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/competition_live/venue.py", line 31, in post
+    response=self.session.post(self.profile['rest_url']+'/info',json=payload,timeout=15)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/.venv/lib/python3.11/site-packages/requests/sessions.py", line 712, in post
+    return self.request("POST", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/.venv/lib/python3.11/site-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/.venv/lib/python3.11/site-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/.venv/lib/python3.11/site-packages/requests/adapters.py", line 720, in send
+    raise RetryError(e, request=request)
+requests.exceptions.RetryError: HTTPSConnectionPool(host='api.hyperliquid-testnet.xyz', port=443): Max retries exceeded with url: /info (Caused by ResponseError('too many 429 error responses'))

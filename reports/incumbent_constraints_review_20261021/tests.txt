@@ -1,0 +1,18 @@
+test_diagonal_covariance_does_not_invent_hedges (pas_adaptive_development.test_contracts.CovarianceContracts.test_diagonal_covariance_does_not_invent_hedges) ... ok
+test_future_prices_and_targets_cannot_change_past_allocation (pas_adaptive_development.test_contracts.CovarianceContracts.test_future_prices_and_targets_cannot_change_past_allocation) ... ok
+test_hedge_is_two_sided_on_every_asset_and_reduces_risk (pas_adaptive_development.test_contracts.CovarianceContracts.test_hedge_is_two_sided_on_every_asset_and_reduces_risk) ... ok
+test_original_size_change_and_exit_are_not_deferred (pas_adaptive_development.test_contracts.CovarianceContracts.test_original_size_change_and_exit_are_not_deferred) ... ok
+test_real_history_is_causal_and_respects_caps (pas_adaptive_development.test_contracts.CovarianceContracts.test_real_history_is_causal_and_respects_caps) ... ok
+test_ioc_limit_rejects_adverse_future_price (pas_adaptive_development.test_contracts.ExecutionContracts.test_ioc_limit_rejects_adverse_future_price) ... ok
+test_ioc_reserves_depth_and_pays_spread_on_round_trip (pas_adaptive_development.test_contracts.ExecutionContracts.test_ioc_reserves_depth_and_pays_spread_on_round_trip) ... ok
+test_purged_fitting_calibration_and_features_ignore_future (pas_adaptive_development.test_contracts.ForecastContracts.test_purged_fitting_calibration_and_features_ignore_future) ... ok
+test_one_leg_trim_failure_requests_paid_unwind_in_actual_engine (pas_adaptive_development.test_repairs.RiskRepairContracts.test_one_leg_trim_failure_requests_paid_unwind_in_actual_engine) ... ok
+test_paid_reduction_preserves_episode_loss_and_stop_anchor (pas_adaptive_development.test_repairs.RiskRepairContracts.test_paid_reduction_preserves_episode_loss_and_stop_anchor) ... ok
+test_shared_capacity_is_reserved_and_reductions_are_retained (pas_adaptive_development.test_repairs.RiskRepairContracts.test_shared_capacity_is_reserved_and_reductions_are_retained) ... ok
+test_directional_rule_reaches_all_assets_without_identity_bias (pas_adaptive_development.test_repairs.UniverseContracts.test_directional_rule_reaches_all_assets_without_identity_bias) ... ok
+test_future_or_removed_rows_cannot_change_earlier_targets (pas_adaptive_development.test_repairs.UniverseContracts.test_future_or_removed_rows_cannot_change_earlier_targets) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 3.639s
+
+OK

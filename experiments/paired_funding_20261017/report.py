@@ -1,0 +1,77 @@
+import html
+import json
+from pathlib import Path
+from datetime import datetime,timezone
+from zoneinfo import ZoneInfo
+
+HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1];OUT=HERE/'artifacts'
+DEST=ROOT/'reports/paired_funding_20261017'
+
+
+def kst(epoch):return datetime.fromtimestamp(epoch,ZoneInfo('Asia/Seoul')).strftime('%Y-%m-%d %H:%M:%S KST')
+def table(headers,rows):
+    return '<div class="scroll"><table><thead><tr>'+''.join('<th>'+html.escape(str(h))+'</th>' for h in headers)+'</tr></thead><tbody>'+''.join('<tr>'+''.join('<td>'+html.escape(str(c))+'</td>' for c in r)+'</tr>' for r in rows)+'</tbody></table></div>'
+
+
+def main():
+    results=json.loads((OUT/'results.json').read_text());current_path=sorted(OUT.glob('current_*.json'))[-1]
+    current=json.loads(current_path.read_text());plan=json.loads((HERE/'forward_probe/plan.json').read_text())
+    additive=json.loads((OUT/'additive_risk_diagnostic.json').read_text())
+    model_names={'zero':'0 예측','persistence':'직전 정산률 유지','mean24':'24시간 평균','ar1':'일별 갱신 AR(1)','ridge':'일별 갱신 릿지'}
+    body='''<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SFINX par 페어 펀딩 검증</title><style>body{font:16px/1.65 system-ui,sans-serif;max-width:1250px;margin:38px auto;padding:0 24px;color:#172b39;background:#fafcfd}.box{padding:18px;background:#fff2d5;border-left:5px solid #b77200}h1,h2{line-height:1.3}h2{margin-top:36px}.scroll{overflow:auto}table{border-collapse:collapse;width:100%;font-size:14px;margin:18px 0}th,td{padding:10px;border-bottom:1px solid #cbd5df;text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}th{background:#eaf1f5}a{color:#05629c}li{margin-bottom:8px}</style><h1>SFINX: 실제 par 펀딩 차이와 현재 호가 검증</h1>'''
+    body+=f'<p>생성 {kst(datetime.now(timezone.utc).timestamp())} · 수집 자료 {results["history_hours"]}시간 · 연구 실주문 0건</p>'
+    body+='''<div class="box"><b>기존 첫째·둘째 전략보다 PnL과 Q가 높다는 입증은 아직 없습니다.</b> 이번 결과는 펀딩률 예측과 현재 호가에서의 기대 손익입니다. 계좌 수익률이나 실현 수익으로 바꾸어 표시하지 않았습니다. 포착한 EWY–SP500 기회는 새 자료를 사용하는 별도 72시간 모의 체결 시험으로 검증합니다.</div>
+    <h2>무엇을 확인했는가</h2><p>10개 종목의 실제 정산 펀딩 자료와 여섯 페어를 사용했습니다. 24·72시간 뒤 누적 펀딩 차이를 예측하고, 후보 선정 후 다음 구간에서 평가했습니다. 헤지 비율은 당시까지의 168시간 기준시장 수익률로 계산했으며, 두 종목의 비율을 미래 결과에 맞춰 바꾸지 않았습니다.</p>
+    <p>후보 선정: 10월 7일 09시~10월 10일 09시 KST의 판단. 선정에 사용한 결과는 10월 13일 09시 이전에 정산됐습니다. 이후 비교: 10월 13일 09시~10월 16일 09시 KST의 판단 중 실제 만기가 도래한 결과만 사용했습니다. 원자료는 앞선 연구에서 이미 사용됐으므로 독립 검증이라고 주장하지 않습니다.</p>'''
+    body+='<h2>이후 구간의 펀딩 예측 오차</h2>'
+    rows=[]
+    for r in results['comparison']:
+        h=r['horizon'];chosen=results['selected'][str(h)]['model']==r['model']
+        rows.append([f'{h}시간',model_names[r['model']]+(' · 사전 선택' if chosen else ''),
+            f'{r["mae_bps"]:.3f}',r['observations'],r['distinct_decision_times'],r['nonoverlapping_time_blocks']])
+    body+=table(['기간','모델','MAE (bp)','페어×판단 관측','판단 시점 수','비중첩 시간 구간 수'],rows)
+    body+='''<p>72시간은 앞 구간에서 릿지를 선택했지만, 이후에는 유지 가정보다 오차가 컸습니다. 24시간·72시간의 비중첩 비교 구간은 각각 3개·1개입니다. 서로 겹치는 6시간 간격 예측이나 같은 시장을 공유하는 페어를 독립적인 표본으로 세지 않았습니다.</p>
+    <p>학습은 과거 168시간 내 만기 도래 라벨만 사용해 매일 갱신합니다. 라벨은 이미 지급된 현재 펀딩을 제외하고 다음 24·72회 정산을 합산합니다. 미래 정산값을 바꿔도 이전 모델과 입력이 달라지지 않는지 검사했습니다. 원자료에 없는 정산은 0으로 채우지 않습니다. 과거에는 매시 정각 1초 뒤 정산 정보를 사용할 수 있었다고 가정했으며, 당시 API 응답 수신 시각까지 입증한 것은 아닙니다. 새 모의 체결 시험은 실제 수신 시각으로 판단합니다.</p>
+    <h2>수수료만 넘는 펀딩이 실제 있었는가</h2>'''
+    rows=[]
+    for r in results['comparison']:
+        if r['model'] not in ('persistence','ridge'):continue
+        b=r['base'];avg=b['average_active_fee_only_net_bps']
+        rows.append([r['horizon'],model_names[r['model']],b['active_predictions'],b['positive_realized_carry_after_fees'],
+                     '해당 없음' if avg is None else f'{avg:+.3f}'])
+    body+=table(['기간 (시간)','예측','예상 펀딩이 23bp를 넘은 관측','정산 펀딩이 18bp를 넘은 관측','18bp 차감 평균 (bp)'],rows)
+    body+='''<p><b>이 표는 거래 수익이 아닙니다.</b> 가격 변화·호가 차이·슬리피지·정산 시점별 오라클 변동을 제외한 고정 명목금액 진단입니다. 관측끼리 겹치므로 합계 bp를 계좌 수익률로 사용할 수 없습니다. 실제 펀딩 현금액은 보유 수량 × 매 정산 시점 오라클 가격 × 정산률로 별도 계산해야 합니다.</p>'''
+    body+=f'<h2>현재 호가 대조 — {kst(current["at_ms"]/1000)}</h2><p>아래는 EWY 숏·SP500 롱, 72시간, 예상 펀딩 수입을 50%로 줄인 경우입니다. 현재 보이는 양쪽 진입·청산 호가 수량을 함께 적용해 규모를 제한했습니다. 스트레스는 수수료를 편도 9bp에서 12bp로 높이고 사용 가능한 호가 수량을 절반으로 줄였습니다.</p>'
+    rows=[]
+    for r in current['rows']:
+        q=r['proposal']
+        if q['coins']!=['par:EWY','par:SP500'] or q['horizon_hours']!=72 or r['model'] not in ('published_current_persistence','ridge'):continue
+        name='현재 공개 예상률 유지' if r['model']=='published_current_persistence' else '사전 선택 릿지'
+        rows.append([r['scenario'],name,f'{q["gross_notional"]:,.2f}',f'{q["predicted_funding"]:+.2f}',
+            f'{q["predicted_price_pnl"]:+.2f}',f'{q["predicted_fees"]:.2f}',f'{q["predicted_net_pnl"]:+.2f}',f'{q["predicted_net_bps"]:+.3f}'])
+    body+=table(['조건','펀딩 예측','총 명목금액 ($)','예상 펀딩 ($)','예상 가격손익 ($)','예상 수수료 ($)','예상 순손익 ($)','예상 순손익 (bp)'],rows)
+    body+='''<p>정산 이력의 마지막 지급률과 activeAssetCtx의 현재 공개 예상률은 구분했습니다. 앞의 역사적 예측 검증은 정산 이력을 사용하므로 과거에 수집하지 않은 activeAssetCtx 예측을 검증한 것으로 볼 수 없습니다. 현재 공개 예상률을 유지하면 기본 +38.20달러, 스트레스 +9.90달러지만, 선택한 릿지는 두 조건 모두 음수입니다.</p>
+    <p>오라클 쪽으로 가격 괴리가 절반 줄어든다는 가정과 미래 청산 유동성은 아직 검증되지 않았습니다. 현재 호가를 걸었다고 표시하거나 오라클 가격으로 청산된 것처럼 처리하지 않습니다. 72시간 오차 허용폭도 비중첩 표본이 부족해 산출하지 않았습니다.</p>'''
+    body+=f'''<h2>등록한 72시간 모의 체결 시험</h2><p><b>{kst(plan['paper_start_unix'])} 시작 → {kst(plan['capture_end_unix'])} 종료·평가.</b> 72시간 보유와 진입·청산 여유 시간을 포함한 일정입니다. 공개 호가·오라클·마크·전략 위험 입력을 별도 서비스에서 수집하고, 종료 후 사전 고정한 코드로 재현합니다. 중간 성과를 보고 규칙을 바꾸지 않습니다.</p>'''
+    body+='''<ul><li>고정 페어·방향: EWY 숏, SP500 롱. 시작 후 10분 동안 기본·스트레스 모두 예상 순이익 5bp와 위험 한도를 충족할 때 한 번만 진입을 시도합니다.</li>
+    <li>주문 도착 후 새로 받은 호가로만 모의 체결합니다. 두 종목은 독립적으로 부분 체결될 수 있으며 불균형은 비용을 내고 줄이거나 청산합니다. 미체결 뒤 재진입하지 않습니다.</li>
+    <li>정산된 실제 펀딩률과 정산 직전 관측 오라클로 비용·수입을 계산합니다. 72시간 뒤 양쪽 청산을 확인합니다. 누락 자료나 잔여 보유가 있으면 성공 판정을 하지 않습니다.</li>
+    <li>이 시험은 한 기회의 진입·청산 검증입니다. 기존 두 전략 대비 우위나 공식 Q를 증명하는 시험으로 대체하지 않습니다. 기존 7일간 세 전략 비교도 그대로 진행하며, 두 시험의 관측 기간이 겹치므로 별개의 독립 반복 실험으로 세지 않습니다.</li></ul>
+    <h2>다음 개발: 기존 전략과의 결합</h2>
+    <p>현재 두 번째 전략의 목표 비중에 이 펀딩 페어를 추가하는 경우도 계산했습니다. 총 명목 노출은 계좌의 약 4.54%에서 7.61%로, 기준시장 공분산으로 예상한 일별 표준편차는 약 0.0755%에서 0.0786%로 바뀌었습니다. 설정된 계좌 위험 한도 위반은 없었습니다. 이는 실제 보유·실현 변동성이 아닌 목표 비중 진단입니다. 추가 노출이 있으므로 같은 위험의 성과 개선으로 주장하지 않습니다.</p>
+    <p>이 결과는 현재 전략의 수익원을 유지하면서 페어를 추가하는 후보를 시험할 이유가 됩니다. 구현 시 두 전략의 목표를 단일 계좌 원장·주문 실행자로 합치고, 위험 감축과 청산이 다른 전략의 주문에 의해 취소되지 않도록 검증해야 합니다. 기존 전략의 규모만 같은 예상 위험만큼 늘린 비교군도 필요합니다.</p>
+    <h2>논문·공식 규칙과의 관계</h2>
+    <p><a href="https://arxiv.org/html/2506.08573v1">Kim·Park (2025)</a>는 가격과 경로 의존적 펀딩의 관계를 이론적으로 다룹니다. 이를 특정 시장에서 펀딩이 계속 유지되거나 거래 수익이 보장된다는 근거로 사용하지 않았습니다.</p>
+    <p><a href="https://link.springer.com/article/10.1007/s42521-026-00213-3">Pindza (2026)</a>는 펀딩·베이시스 위험, 체결과 유동성, 운용 위험을 함께 분해합니다. 주요 실험의 DEX 펀딩은 합성 자료이며 일부 실제 자료 대조가 포함됩니다. 보고 수익률을 par에서 달성 가능한 수치로 옮기지 않았습니다.</p>
+    <p><a href="https://perpetual-alpha26.github.io/docs/">대회 문서</a> 및 <a href="https://hyperliquid.gitbook.io/hyperliquid-docs/trading/funding">Hyperliquid 정산 규칙</a>에 따라 시간별 펀딩, 지급 방향, 오라클 기준 현금액을 구현했습니다. 계좌 평가에는 마크 가격을 별도로 사용합니다.</p><h2>증거 파일</h2><ul>'''
+    paths=[(HERE/'protocol.json','예측 연구 사전 규칙'),(OUT/'selection.json','후보 선정 기록'),(OUT/'results.json','예측·정산 원결과'),
+           (current_path,'현재 호가·펀딩 API 원응답'),(OUT/'frozen.json','원자료·코드 해시와 콘솔 출력 수정 기록'),
+           (HERE/'verification.log','예측 관련 10개 테스트'),(HERE/'quote_verification.log','현금 펀딩 2개 테스트'),
+           (HERE/'probe_verification.log','모의 체결 통합 4개 테스트'),(HERE/'forward_probe/plan.json','72시간 시험 등록'),
+           (OUT/'additive_risk_diagnostic.json','추가 편입의 목표 위험 진단'),
+           (ROOT/'experiments/paired_venue_20261017/artifacts/forward/plan.json','별도 7일 세 전략 비교 등록')]
+    body+=''.join(f'<li><a href="{p}">{label}</a></li>' for p,label in paths)+'</ul></html>'
+    DEST.mkdir(exist_ok=True);(DEST/'report.html').write_text(body);print(DEST/'report.html')
+
+
+if __name__=='__main__':main()

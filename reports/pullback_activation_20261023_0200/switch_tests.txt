@@ -1,0 +1,6 @@
+test_switch_and_rollback_use_latest_book_and_preserve_fills (candidate_handoff.test_switch_policy.SwitchTests.test_switch_and_rollback_use_latest_book_and_preserve_fills) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.481s
+
+OK

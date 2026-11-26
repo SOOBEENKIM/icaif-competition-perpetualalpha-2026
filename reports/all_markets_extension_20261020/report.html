@@ -1,0 +1,27 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><title>전 종목 전략 적용 검토</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:40px auto;padding:0 20px;color:#18232c}table{border-collapse:collapse;width:100%;margin:16px 0}td,th{border:1px solid #d8dfe3;padding:8px;text-align:right}th:first-child,td:first-child{text-align:left}code{background:#edf1f4;padding:2px 5px}.note{background:#fff4d7;padding:16px}</style>
+<h1>전 종목 추세·되돌림 적용판</h1><p>BTC·ETH·HYPE에 한정했던 EMA 추세, 채널 추세, 7일 되돌림 판단을 10개 시장 모두에 동일하게 적용했다. 조건을 통과하지 않은 시장은 목표 비중 0이다. 기존 신호 임계값, 위험 보정 계수, 5만 USDP 운용 예산과 5만 USDP 팀원 현금, 수수료·체결·펀딩 가정은 유지했다. 페어 오버레이는 기존 두 쌍을 그대로 유지했다.</p>
+<p class="note"><strong>실거래 교체 보류.</strong> 구현 검사는 통과했지만 모든 비교 구간에서 기존판보다 PnL과 Q가 낮았다. 현재 자동매매는 기존판이며 이번 작업에서 추가 주문을 보내지 않았다. 아래는 과거 기준시장 자료를 이용한 모의 결과로 PAS 실제 체결 성과나 새로운 독립 검증이 아니다.</p>
+<h2>동일 조건 비교</h2><p>팀 전체 100,000 USDP 중 사용자 전략 50,000 USDP, 팀원 현금 50,000 USDP. 12:00 UTC 평가액으로 계산한 팀 수익률·기간 변동성·Q. Q=(max(R,0)+0.005)/(|R|+1.5σ+0.05). J=0이면 점수는 0.8Q다. σ는 일별 표본 표준편차에 √n을 곱한 기간 변동성이다.</p>
+<table><tr><th>기간</th><th>조건</th><th>버전</th><th>순손익</th><th>팀 수익률</th><th>기간 변동성</th><th>Q</th><th>완료 페어</th></tr>
+<tr><td>8/1–9/1</td><td>base</td><td>incumbent</td><td>+1105.65</td><td>+1.10565%</td><td>0.65299%</td><td>0.226622</td><td>2</td></tr>
+<tr><td>8/1–9/1</td><td>base</td><td>all_markets</td><td>+663.75</td><td>+0.66375%</td><td>0.50213%</td><td>0.181356</td><td>2</td></tr>
+<tr><td>8/1–9/1</td><td>stress</td><td>incumbent</td><td>+1039.53</td><td>+1.03953%</td><td>0.64102%</td><td>0.219899</td><td>2</td></tr>
+<tr><td>8/1–9/1</td><td>stress</td><td>all_markets</td><td>+603.91</td><td>+0.60391%</td><td>0.48243%</td><td>0.174461</td><td>2</td></tr>
+<tr><td>9/1–10/15</td><td>base</td><td>incumbent</td><td>+191.34</td><td>+0.19134%</td><td>0.47211%</td><td>0.117186</td><td>3</td></tr>
+<tr><td>9/1–10/15</td><td>base</td><td>all_markets</td><td>-21.99</td><td>-0.02199%</td><td>0.44788%</td><td>0.087815</td><td>3</td></tr>
+<tr><td>9/1–10/15</td><td>stress</td><td>incumbent</td><td>+161.56</td><td>+0.16156%</td><td>0.44799%</td><td>0.113406</td><td>1</td></tr>
+<tr><td>9/1–10/15</td><td>stress</td><td>all_markets</td><td>-89.64</td><td>-0.08964%</td><td>0.42085%</td><td>0.087399</td><td>1</td></tr>
+</table><h2>9/1–10/15 기본 조건의 종목별 순손익</h2><table><tr><th>종목</th><th>기존판</th><th>전 종목판</th></tr>
+<tr><td>BTC</td><td>+93.78</td><td>+82.22</td></tr>
+<tr><td>ETH</td><td>+5.85</td><td>-13.80</td></tr>
+<tr><td>HYPE</td><td>+49.10</td><td>+56.97</td></tr>
+<tr><td>SP500</td><td>+0.00</td><td>-31.53</td></tr>
+<tr><td>EWY</td><td>+0.00</td><td>-42.70</td></tr>
+<tr><td>EWJ</td><td>+0.00</td><td>-27.69</td></tr>
+<tr><td>BRENT</td><td>+42.61</td><td>+57.23</td></tr>
+<tr><td>GOLD</td><td>+0.00</td><td>-59.91</td></tr>
+<tr><td>USDEUR</td><td>+0.00</td><td>-16.33</td></tr>
+<tr><td>USDJPY</td><td>+0.00</td><td>-26.45</td></tr>
+</table><p>페어 오버레이 소유 손익은 두 버전 모두 +168.90으로 동일했다. 기본 전략 소유 손익은 +22.44에서 −190.89로 감소했다. 전 종목판은 SP500·EWY·EWJ·GOLD·USDEUR·USDJPY에서 손실을 기록했고, 체결 수는 75→199, 수수료는 53.83→88.47로 증가했다. 공통 위험 예산 재배분으로 기존 암호화폐 포지션의 크기도 변했다.</p>
+<h2>구현 검증</h2><ul><li>기존 3종 범위로 실행하면 과거 전체 목표 비중이 원본과 일치한다(최대 오차 6.94×10⁻¹⁸).</li><li>미래 자료를 추가해도 과거 목표 비중이 바뀌지 않는다.</li><li>종목 열 순서를 바꾸면 결과도 같은 순서로만 바뀐다.</li><li>같은 진입 조건을 주면 10개 열 모두 거래 대상이 된다.</li><li>가격이 평평하고 거래가 없으면 일괄 매수하지 않는다.</li><li>8개 계좌 재생 모두 회계 대조 통과 및 위험 한도 위반 0.</li><li>기존 실행 파일 20개와 동결 연구 번들의 해시가 그대로다.</li></ul>
+<h2>파일과 재현</h2><p>신호: <a href="../../all_market_strategy/signals.py">signals.py</a>, 비교: <a href="../../all_market_strategy/evaluate.py">evaluate.py</a>, 검사: <a href="../../all_market_strategy/test_signals.py">test_signals.py</a></p><p><code>OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python -m all_market_strategy.inspect</code>는 최신 검증 자료에서 전 종목 후보를 산출하며 주문을 보내지 않는다.</p><p><a href="comparison.json">원시 비교 수치</a> · <a href="attribution.json">종목별 손익</a> · <a href="latest_signal.json">최신 신호</a> · <a href="manifest.json">검증 기록</a></p></html>

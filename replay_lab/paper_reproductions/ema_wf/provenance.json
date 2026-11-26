@@ -1,0 +1,32 @@
+{
+  "repositories": {
+    "trading": {
+      "commit": "8be3ecf0019e991962f6f59bf9938cfa56411350",
+      "unmodified": true
+    },
+    "analysis": {
+      "commit": "a9b4d8d09da162c970253c0b8cb5e5b3f2400444",
+      "unmodified": true
+    }
+  },
+  "data_archives": {
+    "data/reference.zip": "2bb40a7860733ba073a089c82b3424f4551d101d061fb31f4e9f51da978a81fd",
+    "data/raw.zip": "108fa0efebbe802258b638cf264c8941a311d6141bbe59d6d45a9907fbd6d378"
+  },
+  "implementation": {
+    "reproduce.R": "e29b45d4a57a3c35705ddaebd5fde25542f9d781f827c42ef5c1526163cc5ccf",
+    "audit.py": "829a7569995e5fc8ca2f5fedf7e67016226aaddf30d25d58687a6030ed0f53ed",
+    "raw_audit.py": "8ac8623d0ef774d60b3489816e23699a639502e9eb8107c7c050c75a2f776d72",
+    "reporting.py": "a486c63e574c86180d5f265eb35c001b40f4a75f2da009211d56873203ccaf7f",
+    "r-environment.lock": "0ad76c1d647896900f384ff834ab86308be68edf4b83e7cc5ff597e8fe23cbc5",
+    "parity.py": "0af9ac9bdb8a4ba05459488663ed5df35245882d11a0fef93a2c1ffcb1ed47ae",
+    "ui.html": "f3dfe7e025570301b9f38a69bc4e3213ce8b93ca0558cf0fc22ceb265b084d25",
+    "experiment.py": "b6c16d2120351b4b9384945d5bcf798282dacaa4abdd7664fae4bc38a7925cb7",
+    "model.py": "e229232eb61609bee9b22285cae1a4a5f20db7fb4748056faeed55f1439bffab"
+  },
+  "reproduction_scope": "Published hourly 7/28 and 14/10: BTC development plus BTC/ETH/BNB unseen; all 8 intermediate pipelines. Raw input CSV to hourly price verification. Not the full six-frequency grid/bootstrap figures.",
+  "original_scope": "2018-2021 paper data, author accounting",
+  "local_scope": "2026 supplied hourly references, funded common historical broker",
+  "local_identity": "0bd96e40873797ab",
+  "live_orders_sent": 0
+}

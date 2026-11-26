@@ -1,0 +1,12 @@
+test_activity_prefix_does_not_use_future_volume (experiments.venue_hurdle_value_20261018.test_model.HurdleTests.test_activity_prefix_does_not_use_future_volume) ... ok
+test_censored_cash_can_inform_only_observed_initial_state (experiments.venue_hurdle_value_20261018.test_model.HurdleTests.test_censored_cash_can_inform_only_observed_initial_state) ... ok
+test_future_initial_and_cash_labels_do_not_change_fit (experiments.venue_hurdle_value_20261018.test_model.HurdleTests.test_future_initial_and_cash_labels_do_not_change_fit) ... ok
+test_initial_classes_are_not_final_cash_labels (experiments.venue_hurdle_value_20261018.test_model.HurdleTests.test_initial_classes_are_not_final_cash_labels) ... ok
+test_mixture_has_zero_no_fill_value_and_probabilities_sum_to_one (experiments.venue_hurdle_value_20261018.test_model.HurdleTests.test_mixture_has_zero_no_fill_value_and_probabilities_sum_to_one) ... ok
+test_prediction_rejects_future_model (experiments.venue_hurdle_value_20261018.test_model.HurdleTests.test_prediction_rejects_future_model) ... ok
+test_quantity_geometry_is_available_in_features (experiments.venue_hurdle_value_20261018.test_model.HurdleTests.test_quantity_geometry_is_available_in_features) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.104s
+
+OK

@@ -1,0 +1,44 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><title>PAS 전략 교체 확인</title><style>body{font:16px/1.65 system-ui;max-width:1000px;margin:40px auto;padding:0 20px;color:#162532}table{border-collapse:collapse;width:100%;margin:16px 0}td,th{padding:10px;border:1px solid #cdd5de;text-align:left}code{background:#edf2f7;padding:2px 5px}pre{white-space:pre-wrap;background:#edf2f7;padding:16px}small{color:#46586a}</style><h1>PAS 개선 후보 운용 전환 완료</h1>
+<p>2026-10-22T16:18:33+09:00 확인. <code>budget_lifecycle</code> 주문 실행자를 가동했고 기존 주문 실행자는 중지했다. PAS 테스트넷·USDP·팀 자본 100,000·각 전략 50,000 USDP 조건이다.</p>
+<h2>현재 보유 인계</h2><table><tr><th>종목</th><th>우리 내부 장부</th><th>외부/팀원 내부 장부</th><th>거래소 순수량</th></tr><tr><td>BTC</td><td>0.01899</td><td>0.0</td><td>0.01899</td></tr><tr><td>ETH</td><td>0.0</td><td>-0.4064</td><td>-0.4064</td></tr></table>
+<p>기존 진입가, 보유 수량, 실현손익, 수수료, 펀딩, 판단 이력 및 페어 상태를 인계했다. 신규 전략의 전송 주문은 현재 0건. 기존 체결 조각 4건을 초기화하지 않았다. 미체결·미해결 주문은 0건이다.</p>
+<h2>팀원 프로그램 미연동 방식</h2><p>사용자의 명시적 지시에 따라 연동을 활성화의 필수 조건에서 해제했다. 우리 주문 식별자로 확인되는 체결은 우리 몫, 그 밖의 이 지갑 PAS 체결은 외부/팀원 몫으로 분류한다. 우리 목표 수량과 우리 보유 수량의 차이만 주문한다. 같은 종목의 두 내부 수량은 거래소에서는 합산된다. 이 장부는 거래소에 독립 계좌 둘을 만드는 기능이 아니다.</p>
+<p>기존·신규 우리 실행자는 동일한 3개 잠금을 공유한다. 연동하지 않은 외부 프로그램은 이 잠금의 보호를 받지 않는다. 주문 전 확인된 외부 변화는 다시 판단하고, 주문 후 체결은 실제 식별자로 재구성한다. 외부 체결로 우리 내부 수량을 덮어쓰지 않는다. 미확정 전송은 자동 재전송하지 않는다.</p>
+<h2>새 전략과 주문 시각</h2><p>고정된 <code>budget_lifecycle</code> 후보 및 모델을 사용했다. 이 전환에서 모델 재학습이나 계수 재선택은 하지 않았다. 기존 추세·되돌림과 페어 판단을 유지하면서 최종 위험 감축과 비용을 고려한 배분을 연결했다. 10개 종목 모두 롱·숏 주문 경로를 지원하며, 실제 선택은 신호·비용·위험 조건에 따른다. 이번 현시점 후보는 BTC·ETH 롱이며 다른 종목을 억지로 채우지 않는다.</p>
+<p>다음 정규 재배분은 <strong>2026-10-22T21:00:00+09:00</strong>. 지금도 위험 점검과 기존 주기의 페어 판단은 작동한다. 재배분 시점의 신호가 준비된 뒤 최신 호가로 실행 여부를 결정한다.</p>
+<p>다음 표는 2026-10-22T16:10:25.909730+09:00에 ‘지금 재배분한다면’을 검사한 주문 후보다. 실제 제출·체결이나 21시 예약 주문이 아니다.</p><table><tr><th>종목</th><th>우리 수량 변화</th><th>당시 제한 가격</th><th>거래소 reduce-only</th></tr><tr><td>BTC</td><td>+0.02075</td><td>82348.0</td><td>False</td></tr><tr><td>ETH</td><td>+0.30820</td><td>2428.7</td><td>True</td></tr></table>
+<p>ETH 매수는 내부 우리 롱을 만드는 동시에 거래소의 팀 순숏을 줄인다. 팀원 내부 수량 −0.4064는 유지된다. 빈 종목의 기본 레버리지가 20배인 경우 최초 진입 전에 1배 교차마진으로 설정·확인한다. 어느 내부 소유자라도 보유 중이면 레버리지를 임의 변경하지 않는다.</p>
+<h2>검증과 해결한 기동 오류</h2><p>50개 회귀 테스트 통과. 보유 인계, 재시작, 실제 주문 방향, 10종목 양방향, 위험 감축, 외부 동시 체결, 중복 전송 차단, 명시적 주문 거절, 미확정 결과 보존을 확인했다.</p>
+<p>첫 기동 후 통합계좌 잔고와 포지션의 조회 시점 차이를 장부 불일치로 오인하여 정지했다. 새 주문 없이 정지했으며, 조회 전후 포지션 평가액의 관측 범위와 대조하도록 수정했다. 수량·평균 진입가 확인은 유지하고 실제 자금 차이는 차단한다. 재현 테스트와 연속 8회 공개 스냅샷 검사를 통과한 뒤 재기동했다.</p>
+<p>최종 외부 잔고 100018.378010 USDP. 우리 장부 평가액 50010.299973, 팀원 장부 평가액 50008.081718. 조회·평균 진입가 표기 정밀도에 따른 차이는 -0.003681 USDP이며 0.05 USDP 대조 허용 범위 내다. 내부 수량 보존 오차 0, 내부 평가액 보존 오차 1.46e-11.</p>
+<h2>성과 판단의 범위</h2><p>운용 전환 검증을 통과했다. 새 전략의 실제 순이익 개선이 확인되었다는 뜻은 아니다. 앞선 48시간 PAS 재현은 반복 사용한 개발 자료이며 낮은 체결 참여율에서는 기존판과 동일했고, 일부 조건의 개선은 규모를 단순히 두 배로 늘린 대조군을 넘지 못했다. 신규 독립 성과 검증으로 표시하지 않는다.</p>
+<p>두 내부 포지션이 완전히 상쇄되는 시간의 펀딩은 실제 단위당 정산 근거가 필요하다. 해당 근거가 없거나 외부 미체결 주문·미확인 체결 등으로 장부를 확정할 수 없으면 주문을 정지한다. 가상의 손익을 만들지 않는다.</p>
+<h2>실행 위치와 증거</h2><p>실행 경로: <code>/home/ssd-990/soobeenkim/icaif_competition_2026/.runtime/pas_budget_lifecycle</code><br>현재 전략 포인터: <code>/home/ssd-990/soobeenkim/icaif_competition_2026/.runtime/active_pas_strategy.json</code><br>기존 신호 서비스는 원본 모델 입력 제공을 위해 유지하며, 기존 주문 서비스만 중지했다.</p><pre>Restart=no
+MainPID=46124
+Id=icaif-pas-budget-live.service
+ActiveState=active
+SubState=running
+ActiveEnterTimestamp=Thu 2026-10-22 16:15:33 KST
+
+Restart=on-failure
+MainPID=44096
+Id=icaif-pas-budget-signals.service
+ActiveState=active
+SubState=running
+ActiveEnterTimestamp=Thu 2026-10-22 16:11:23 KST
+
+Restart=no
+MainPID=0
+Id=icaif-pas-scored-live.service
+ActiveState=inactive
+SubState=dead
+ActiveEnterTimestamp=
+
+Restart=on-failure
+MainPID=3979427
+Id=icaif-pas-scored-signals.service
+ActiveState=active
+SubState=running
+ActiveEnterTimestamp=Mon 2026-10-19 20:52:22 KST
+</pre>
+<ul><li><a href="decision.json">전환 결과</a></li><li><a href="activation_audit.json">공개 계좌 최종 대조</a></li><li><a href="rehearsal.json">주문 전 후보 검증</a></li><li><a href="tests.txt">50개 테스트 결과</a></li><li><a href="valuation_probe.json">조회 시점 차이 점검</a></li><li><a href="release_manifest.json">검증한 코드·모델 해시</a></li></ul></html>

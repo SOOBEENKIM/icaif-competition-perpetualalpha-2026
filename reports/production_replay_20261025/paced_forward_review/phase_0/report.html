@@ -1,0 +1,45 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><title>PAS 실제 호가·정산 대조</title>
+<style>body{font:16px/1.6 system-ui;max-width:1300px;margin:30px auto;padding:20px}table{border-collapse:collapse;width:100%;margin-bottom:30px}td,th{border:1px solid #ddd;padding:8px;text-align:right}th:first-child,td:first-child{text-align:left}</style>
+<h1>PAS 실제 호가·정산 대조</h1>
+<p>후보를 고정한 뒤 수집한 PAS 호가와 실제 발표 신호로 계산했습니다. 공개 계좌의 펀딩 정산액으로 매 시점의 잔고와 이후 판단을 재실행했습니다. 모두 조건부 모의 체결이며, 실제 주문이나 운용 전략 변경은 없습니다.</p>
+<p>자기 자본 50,000 USDP, 동일 보유분, 동일 위험 한도에서 비교했습니다. 팀원 손익은 제외합니다. 각 실험의 시작 시각은 아래에 표시하며 종료는 2026-10-25 17:05 KST입니다. 서로 겹치는 다섯 비교이며, 다섯 번의 독립 검증이 아닙니다.</p>
+<h2>entry_lifetime</h2><p>시작 UTC 2026-10-25T03:05:00+00:00 · 지정 후보 fixed_entry_1h · 짧은 모의 기준 미통과</p>
+<table><tr><th>후보</th><th>조건</th><th>순손익 USDP</th><th>종료 청산 후 USDP</th><th>가격 손익</th><th>수수료</th><th>펀딩</th><th>체결 수</th><th>유효성</th></tr>
+<tr><td>incumbent</td><td>base</td><td>0.510511</td><td>-16.117403</td><td>2.717938</td><td>2.199994</td><td>-0.007433</td><td>2</td><td>자료·실행 검사 실패</td></tr>
+<tr><td>fixed_entry_1h</td><td>base</td><td>0.510511</td><td>-16.117403</td><td>2.717938</td><td>2.199994</td><td>-0.007433</td><td>2</td><td>자료·실행 검사 실패</td></tr>
+<tr><td>incumbent</td><td>stress</td><td>-1.069098</td><td>-21.638375</td><td>2.564688</td><td>2.933141</td><td>-0.700645</td><td>3</td><td>자료·실행 검사 실패</td></tr>
+<tr><td>fixed_entry_1h</td><td>stress</td><td>0.003543</td><td>-19.436027</td><td>2.814088</td><td>2.193000</td><td>-0.617545</td><td>2</td><td>자료·실행 검사 실패</td></tr>
+</table>
+<h2>capital_usage</h2><p>시작 UTC 2026-10-25T04:00:00+00:00 · 지정 후보 size_only_2 · 짧은 모의 기준 미통과</p>
+<table><tr><th>후보</th><th>조건</th><th>순손익 USDP</th><th>종료 청산 후 USDP</th><th>가격 손익</th><th>수수료</th><th>펀딩</th><th>체결 수</th><th>유효성</th></tr>
+<tr><td>incumbent</td><td>base</td><td>4.661750</td><td>-11.966164</td><td>6.869267</td><td>2.200084</td><td>-0.007433</td><td>2</td><td>자료·실행 검사 실패</td></tr>
+<tr><td>size_only_2</td><td>base</td><td>3.735626</td><td>-14.563930</td><td>6.938737</td><td>3.273036</td><td>0.069925</td><td>4</td><td>자료·실행 검사 실패</td></tr>
+<tr><td>incumbent</td><td>stress</td><td>2.984099</td><td>-17.585178</td><td>6.617887</td><td>2.933144</td><td>-0.700645</td><td>3</td><td>자료·실행 검사 실패</td></tr>
+<tr><td>size_only_2</td><td>stress</td><td>1.619410</td><td>-20.965946</td><td>6.635827</td><td>4.354965</td><td>-0.661451</td><td>5</td><td>자료·실행 검사 실패</td></tr>
+</table>
+<h2>schedule_recovery</h2><p>시작 UTC 2026-10-25T05:00:00+00:00 · 지정 후보 fresh_block_catchup · 짧은 모의 기준 미통과</p>
+<table><tr><th>후보</th><th>조건</th><th>순손익 USDP</th><th>종료 청산 후 USDP</th><th>가격 손익</th><th>수수료</th><th>펀딩</th><th>체결 수</th><th>유효성</th></tr>
+<tr><td>incumbent</td><td>base</td><td>7.664196</td><td>-8.963718</td><td>9.948645</td><td>2.199994</td><td>-0.084455</td><td>2</td><td>자료·실행 검사 실패</td></tr>
+<tr><td>fresh_block_catchup</td><td>base</td><td>7.664196</td><td>-8.963718</td><td>9.948645</td><td>2.199994</td><td>-0.084455</td><td>2</td><td>자료·실행 검사 실패</td></tr>
+<tr><td>incumbent</td><td>stress</td><td>6.239614</td><td>-14.329663</td><td>9.795395</td><td>2.933141</td><td>-0.622640</td><td>3</td><td>자료·실행 검사 실패</td></tr>
+<tr><td>fresh_block_catchup</td><td>stress</td><td>7.312255</td><td>-12.127315</td><td>10.044795</td><td>2.193000</td><td>-0.539540</td><td>2</td><td>자료·실행 검사 실패</td></tr>
+</table>
+<h2>decision_side_quote</h2><p>시작 UTC 2026-10-25T06:00:00+00:00 · 지정 후보 frozen_side_quote · 짧은 모의 기준 미통과</p>
+<table><tr><th>후보</th><th>조건</th><th>순손익 USDP</th><th>종료 청산 후 USDP</th><th>가격 손익</th><th>수수료</th><th>펀딩</th><th>체결 수</th><th>유효성</th></tr>
+<tr><td>incumbent</td><td>base</td><td>1.313790</td><td>-15.314124</td><td>3.696068</td><td>2.199994</td><td>-0.182284</td><td>2</td><td>자료·실행 검사 실패</td></tr>
+<tr><td>fixed_entry_1h</td><td>base</td><td>1.313790</td><td>-15.314124</td><td>3.696068</td><td>2.199994</td><td>-0.182284</td><td>2</td><td>자료·실행 검사 실패</td></tr>
+<tr><td>frozen_side_quote</td><td>base</td><td>1.313790</td><td>-15.314124</td><td>3.696068</td><td>2.199994</td><td>-0.182284</td><td>2</td><td>자료·실행 검사 실패</td></tr>
+<tr><td>incumbent</td><td>stress</td><td>0.048963</td><td>-20.520314</td><td>3.542818</td><td>2.933141</td><td>-0.560713</td><td>3</td><td>자료·실행 검사 실패</td></tr>
+<tr><td>fixed_entry_1h</td><td>stress</td><td>1.121605</td><td>-18.317965</td><td>3.792218</td><td>2.193000</td><td>-0.477613</td><td>2</td><td>자료·실행 검사 실패</td></tr>
+<tr><td>frozen_side_quote</td><td>stress</td><td>0.055456</td><td>-20.513822</td><td>3.549318</td><td>2.933149</td><td>-0.560713</td><td>2</td><td>자료·실행 검사 실패</td></tr>
+</table>
+<h2>quote_history</h2><p>시작 UTC 2026-10-25T06:00:00+00:00 · 지정 후보 quote_inputs · 짧은 모의 기준 미통과</p>
+<table><tr><th>후보</th><th>조건</th><th>순손익 USDP</th><th>종료 청산 후 USDP</th><th>가격 손익</th><th>수수료</th><th>펀딩</th><th>체결 수</th><th>유효성</th></tr>
+<tr><td>incumbent</td><td>base</td><td>1.313790</td><td>-15.314124</td><td>3.696068</td><td>2.199994</td><td>-0.182284</td><td>2</td><td>자료·실행 검사 실패</td></tr>
+<tr><td>frozen_side_quote</td><td>base</td><td>1.313790</td><td>-15.314124</td><td>3.696068</td><td>2.199994</td><td>-0.182284</td><td>2</td><td>자료·실행 검사 실패</td></tr>
+<tr><td>quote_inputs</td><td>base</td><td>2.271165</td><td>-13.327522</td><td>4.045548</td><td>1.583533</td><td>-0.190850</td><td>1</td><td>자료·실행 검사 실패</td></tr>
+<tr><td>incumbent</td><td>stress</td><td>0.048963</td><td>-20.520314</td><td>3.542818</td><td>2.933141</td><td>-0.560713</td><td>3</td><td>자료·실행 검사 실패</td></tr>
+<tr><td>frozen_side_quote</td><td>stress</td><td>0.055456</td><td>-20.513822</td><td>3.549318</td><td>2.933149</td><td>-0.560713</td><td>2</td><td>자료·실행 검사 실패</td></tr>
+<tr><td>quote_inputs</td><td>stress</td><td>1.199379</td><td>-18.134957</td><td>3.875548</td><td>2.111173</td><td>-0.564996</td><td>1</td><td>자료·실행 검사 실패</td></tr>
+</table>
+<p>총 미사용 구간은 몇 시간에 불과합니다. 공식 일별 변동성·Q나 장기 수익성을 추정하지 않습니다. 규모 후보는 더 큰 노출의 효과를 포함하며, 예측력이 향상됐다는 증거로 해석하지 않습니다. 통과 후보를 선택하면 이 자료는 그 선택에 사용된 자료가 됩니다.</p><p><a href="results.json">전체 수치·실패·위험 기록</a> · <a href="protocol.json">결과 열람 전 고정한 기준</a></p></html>

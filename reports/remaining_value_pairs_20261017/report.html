@@ -1,0 +1,354 @@
+<!doctype html><meta charset="utf-8"><title>페어 보유·연장 가치 모델 비교</title>
+<style>body{font:15px system-ui;margin:32px;line-height:1.6}table{border-collapse:collapse;font-size:13px}td,th{padding:7px;border:1px solid #bbb;text-align:right}td:first-child{text-align:left}pre{white-space:pre-wrap;background:#f3f5f7;padding:16px}</style>
+<h1>실제 보유 수량과 남은 만기를 반영한 보유·연장 모델</h1>
+<p>기존 개선판 decisiongate의 진입·원래 예측·수량·위험 한도·부분 체결·수수료·펀딩·청산 실행은 유지했다. 새 모델은 두 종목의 1~24시간 후 수익률을 각각 예측하고 실제 보유 수량의 현금가치로 합산한다. 매일 과거 90일의 엄격히 만기 지난 자료를 사용하여 갱신하고, 원래 20개 페어 특징·릿지 회귀·6시간 표본·30일 가중 반감기를 유지한다. 진입 필터 점수를 미래 가격에 대입하지 않는다.</p>
+<p>renewal 후보: 원래 허용된 연장만 추가 검토하여, 새 모델이 남은 이익으로 비용을 감당하지 못한다고 판단하면 거부한다. 헤지 변경이 필요할 때는 원래 지정가 한도에서의 최악 비용까지 차감하고 실제 체결 도착 후에도 고정된 예측을 다시 대조한다. remaining 후보: 같은 연장 검토에 더해 6시간마다 실제 보유 수량의 현재 승인 만기까지 가치를 계산하여, 지금 청산보다 2bp 넘게 불리하면 청산을 요청한다. 이미 낸 진입 수수료는 다시 청구하지 않는다. 청산 요청과 실제 완료는 구분한다.</p>
+<p>예측이 없으면 원래 동작을 유지하고 그 횟수를 기록한다. 학습·평가는 모두 이미 재사용한 과거 자료다. 외부 기준시장 예측 가격을 미래 par 가격으로 연결하는 기존 가정은 남아 있다. 이 실험은 그 가격 괴리의 미래 수렴을 증명하지 않는다. 캔들 거래량 기반 체결과 실제 L2 호가는 다르다.</p>
+<p><a href="https://arxiv.org/html/2604.02035v1">2026년 연구 Remark 2.2</a>는 페어의 비례 수수료를 정확히 처리하려면 두 자산의 가격을 따로 보아야 한다고 설명한다. 해당 연구의 OU/RL 알고리즘을 재현한 것이 아니라 그 회계 구분을 적용했다. <a href="https://arxiv.org/html/2502.04284v1">2025년 alpha decay 연구</a>는 보유 상태·미래 신호·비용을 함께 고려할 근거이며, 이번 회귀 기반 거부 규칙을 최적 Bellman 정책으로 주장하지 않는다.</p><h2>8월에서 먼저 기록한 후보 선택</h2><pre>{
+  &quot;selected&quot;: null,
+  &quot;ranking&quot;: [
+    {
+      &quot;kind&quot;: &quot;renewal&quot;,
+      &quot;arm&quot;: &quot;first_dense_hourlyhedge_remaining_renewal_24&quot;,
+      &quot;checks&quot;: [
+        {
+          &quot;scenario&quot;: &quot;base&quot;,
+          &quot;pnl_difference&quot;: -2989.0153280888917,
+          &quot;q_difference&quot;: -0.023696553812943,
+          &quot;no_risk_breach&quot;: true,
+          &quot;completed_pairs&quot;: 3
+        },
+        {
+          &quot;scenario&quot;: &quot;stress&quot;,
+          &quot;pnl_difference&quot;: -2726.215525685111,
+          &quot;q_difference&quot;: -0.022238608952330652,
+          &quot;no_risk_breach&quot;: true,
+          &quot;completed_pairs&quot;: 2
+        }
+      ],
+      &quot;promote&quot;: false,
+      &quot;minimum_pnl_advantage&quot;: -2989.0153280888917,
+      &quot;minimum_q_advantage&quot;: -0.023696553812943
+    },
+    {
+      &quot;kind&quot;: &quot;remaining&quot;,
+      &quot;arm&quot;: &quot;first_dense_hourlyhedge_remaining_remaining_24&quot;,
+      &quot;checks&quot;: [
+        {
+          &quot;scenario&quot;: &quot;base&quot;,
+          &quot;pnl_difference&quot;: -2989.0153280888917,
+          &quot;q_difference&quot;: -0.023696553812943,
+          &quot;no_risk_breach&quot;: true,
+          &quot;completed_pairs&quot;: 3
+        },
+        {
+          &quot;scenario&quot;: &quot;stress&quot;,
+          &quot;pnl_difference&quot;: -2378.7186484626727,
+          &quot;q_difference&quot;: -0.018383270121075213,
+          &quot;no_risk_breach&quot;: true,
+          &quot;completed_pairs&quot;: 6
+        }
+      ],
+      &quot;promote&quot;: false,
+      &quot;minimum_pnl_advantage&quot;: -2989.0153280888917,
+      &quot;minimum_q_advantage&quot;: -0.023696553812943
+    }
+  ],
+  &quot;frozen_before_later_replays&quot;: true,
+  &quot;historical_independence&quot;: false,
+  &quot;sample_count_is_not_official_submission_requirement&quot;: true
+}</pre><h2>reference / validation</h2><table><tr><th>전략</th><th>조건</th><th>순손익</th><th>수익률</th><th>기간 σ</th><th>Q</th><th>최대낙폭</th><th>완료 페어</th></tr><tr><td>first_strategy</td><td>base</td><td>+13047.4026</td><td>+1.304740%</td><td>0.809674%</td><td>0.24001593</td><td>0.216323%</td><td>0</td></tr><tr><td>first_strategy</td><td>stress</td><td>+12540.3545</td><td>+1.254035%</td><td>0.802665%</td><td>0.23518742</td><td>0.216328%</td><td>0</td></tr><tr><td>second_strategy</td><td>base</td><td>+11353.0673</td><td>+1.135307%</td><td>0.676897%</td><td>0.22869339</td><td>0.194814%</td><td>0</td></tr><tr><td>second_strategy</td><td>stress</td><td>+10775.0946</td><td>+1.077509%</td><td>0.668960%</td><td>0.22278217</td><td>0.195341%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_cash_direct_24</td><td>base</td><td>+14238.3038</td><td>+1.423830%</td><td>0.777440%</td><td>0.25346939</td><td>0.596333%</td><td>4</td></tr><tr><td>first_dense_hourlyhedge_cash_direct_24</td><td>stress</td><td>+20739.6210</td><td>+2.073962%</td><td>1.278296%</td><td>0.28626912</td><td>0.616835%</td><td>1</td></tr><tr><td>first_dense_hourlyhedge_decisiongate_24</td><td>base</td><td>+22028.9398</td><td>+2.202894%</td><td>1.303028%</td><td>0.29515836</td><td>0.616032%</td><td>2</td></tr><tr><td>first_dense_hourlyhedge_decisiongate_24</td><td>stress</td><td>+20739.6210</td><td>+2.073962%</td><td>1.278296%</td><td>0.28626912</td><td>0.616835%</td><td>1</td></tr><tr><td>first_dense_hourlyhedge_remaining_renewal_24</td><td>base</td><td>+19039.9244</td><td>+1.903992%</td><td>1.301158%</td><td>0.27146181</td><td>0.616032%</td><td>3</td></tr><tr><td>first_dense_hourlyhedge_remaining_renewal_24</td><td>stress</td><td>+18013.4055</td><td>+1.801341%</td><td>1.276567%</td><td>0.26403051</td><td>0.616835%</td><td>2</td></tr><tr><td>first_dense_hourlyhedge_remaining_remaining_24</td><td>base</td><td>+19039.9244</td><td>+1.903992%</td><td>1.301158%</td><td>0.27146181</td><td>0.616032%</td><td>3</td></tr><tr><td>first_dense_hourlyhedge_remaining_remaining_24</td><td>stress</td><td>+18360.9024</td><td>+1.836090%</td><td>1.256252%</td><td>0.26788585</td><td>0.646148%</td><td>6</td></tr></table><h2>reference / comparison</h2><table><tr><th>전략</th><th>조건</th><th>순손익</th><th>수익률</th><th>기간 σ</th><th>Q</th><th>최대낙폭</th><th>완료 페어</th></tr><tr><td>first_strategy</td><td>base</td><td>+459.5278</td><td>+0.045953%</td><td>0.583993%</td><td>0.09219151</td><td>0.654526%</td><td>0</td></tr><tr><td>first_strategy</td><td>stress</td><td>-457.0997</td><td>-0.045710%</td><td>0.587032%</td><td>0.08437028</td><td>0.700679%</td><td>0</td></tr><tr><td>second_strategy</td><td>base</td><td>+572.8778</td><td>+0.057288%</td><td>0.534327%</td><td>0.09512015</td><td>0.586612%</td><td>0</td></tr><tr><td>second_strategy</td><td>stress</td><td>-492.9728</td><td>-0.049297%</td><td>0.537032%</td><td>0.08539936</td><td>0.631876%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_cash_direct_24</td><td>base</td><td>+3422.1612</td><td>+0.342216%</td><td>0.955481%</td><td>0.12430431</td><td>1.183937%</td><td>3</td></tr><tr><td>first_dense_hourlyhedge_cash_direct_24</td><td>stress</td><td>+3305.7125</td><td>+0.330571%</td><td>0.894984%</td><td>0.12446655</td><td>0.962490%</td><td>1</td></tr><tr><td>first_dense_hourlyhedge_decisiongate_24</td><td>base</td><td>+3852.7636</td><td>+0.385276%</td><td>0.941440%</td><td>0.13023681</td><td>1.232809%</td><td>3</td></tr><tr><td>first_dense_hourlyhedge_decisiongate_24</td><td>stress</td><td>+3305.7125</td><td>+0.330571%</td><td>0.894984%</td><td>0.12446655</td><td>0.962490%</td><td>1</td></tr><tr><td>first_dense_hourlyhedge_remaining_renewal_24</td><td>base</td><td>+3701.1718</td><td>+0.370117%</td><td>0.950408%</td><td>0.12803882</td><td>1.247765%</td><td>4</td></tr><tr><td>first_dense_hourlyhedge_remaining_renewal_24</td><td>stress</td><td>+2692.0931</td><td>+0.269209%</td><td>0.906207%</td><td>0.11604541</td><td>1.023061%</td><td>2</td></tr><tr><td>first_dense_hourlyhedge_remaining_remaining_24</td><td>base</td><td>+3129.2758</td><td>+0.312928%</td><td>0.961995%</td><td>0.12032817</td><td>1.247765%</td><td>4</td></tr><tr><td>first_dense_hourlyhedge_remaining_remaining_24</td><td>stress</td><td>+2692.0931</td><td>+0.269209%</td><td>0.906207%</td><td>0.11604541</td><td>1.023061%</td><td>2</td></tr></table><h2>par / validation</h2><table><tr><th>전략</th><th>조건</th><th>순손익</th><th>수익률</th><th>기간 σ</th><th>Q</th><th>최대낙폭</th><th>완료 페어</th></tr><tr><td>first_strategy</td><td>base</td><td>-14.2870</td><td>-0.001429%</td><td>0.001437%</td><td>0.09992838</td><td>0.002024%</td><td>0</td></tr><tr><td>first_strategy</td><td>stress</td><td>-7.1738</td><td>-0.000717%</td><td>0.000704%</td><td>0.09996456</td><td>0.001000%</td><td>0</td></tr><tr><td>second_strategy</td><td>base</td><td>-14.2870</td><td>-0.001429%</td><td>0.001437%</td><td>0.09992838</td><td>0.002024%</td><td>0</td></tr><tr><td>second_strategy</td><td>stress</td><td>-7.1738</td><td>-0.000717%</td><td>0.000704%</td><td>0.09996456</td><td>0.001000%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_cash_direct_24</td><td>base</td><td>-13.9671</td><td>-0.001397%</td><td>0.001415%</td><td>0.09992965</td><td>0.001984%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_cash_direct_24</td><td>stress</td><td>-7.1738</td><td>-0.000717%</td><td>0.000704%</td><td>0.09996456</td><td>0.001000%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_decisiongate_24</td><td>base</td><td>-13.8923</td><td>-0.001389%</td><td>0.001418%</td><td>0.09992972</td><td>0.001984%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_decisiongate_24</td><td>stress</td><td>-7.1738</td><td>-0.000717%</td><td>0.000704%</td><td>0.09996456</td><td>0.001000%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_remaining_renewal_24</td><td>base</td><td>-13.8923</td><td>-0.001389%</td><td>0.001418%</td><td>0.09992972</td><td>0.001984%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_remaining_renewal_24</td><td>stress</td><td>-7.1738</td><td>-0.000717%</td><td>0.000704%</td><td>0.09996456</td><td>0.001000%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_remaining_remaining_24</td><td>base</td><td>-13.8923</td><td>-0.001389%</td><td>0.001418%</td><td>0.09992972</td><td>0.001984%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_remaining_remaining_24</td><td>stress</td><td>-7.1738</td><td>-0.000717%</td><td>0.000704%</td><td>0.09996456</td><td>0.001000%</td><td>0</td></tr></table><h2>par / comparison</h2><table><tr><th>전략</th><th>조건</th><th>순손익</th><th>수익률</th><th>기간 σ</th><th>Q</th><th>최대낙폭</th><th>완료 페어</th></tr><tr><td>first_strategy</td><td>base</td><td>-87.9329</td><td>-0.008793%</td><td>0.030397%</td><td>0.09892394</td><td>0.050176%</td><td>0</td></tr><tr><td>first_strategy</td><td>stress</td><td>-57.8374</td><td>-0.005784%</td><td>0.015194%</td><td>0.09943176</td><td>0.025585%</td><td>0</td></tr><tr><td>second_strategy</td><td>base</td><td>-87.9329</td><td>-0.008793%</td><td>0.030397%</td><td>0.09892394</td><td>0.050176%</td><td>0</td></tr><tr><td>second_strategy</td><td>stress</td><td>-57.8374</td><td>-0.005784%</td><td>0.015194%</td><td>0.09943176</td><td>0.025585%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_cash_direct_24</td><td>base</td><td>-87.8926</td><td>-0.008789%</td><td>0.030395%</td><td>0.09892407</td><td>0.050172%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_cash_direct_24</td><td>stress</td><td>-57.8374</td><td>-0.005784%</td><td>0.015194%</td><td>0.09943176</td><td>0.025585%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_decisiongate_24</td><td>base</td><td>-87.9329</td><td>-0.008793%</td><td>0.030397%</td><td>0.09892394</td><td>0.050176%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_decisiongate_24</td><td>stress</td><td>-57.8374</td><td>-0.005784%</td><td>0.015194%</td><td>0.09943176</td><td>0.025585%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_remaining_renewal_24</td><td>base</td><td>-87.9329</td><td>-0.008793%</td><td>0.030397%</td><td>0.09892394</td><td>0.050176%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_remaining_renewal_24</td><td>stress</td><td>-57.8374</td><td>-0.005784%</td><td>0.015194%</td><td>0.09943176</td><td>0.025585%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_remaining_remaining_24</td><td>base</td><td>-87.9329</td><td>-0.008793%</td><td>0.030397%</td><td>0.09892394</td><td>0.050176%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_remaining_remaining_24</td><td>stress</td><td>-57.8374</td><td>-0.005784%</td><td>0.015194%</td><td>0.09943176</td><td>0.025585%</td><td>0</td></tr></table><h2>par_extended / extended</h2><table><tr><th>전략</th><th>조건</th><th>순손익</th><th>수익률</th><th>기간 σ</th><th>Q</th><th>최대낙폭</th><th>완료 페어</th></tr><tr><td>first_strategy</td><td>base</td><td>-186.3087</td><td>-0.018631%</td><td>0.031399%</td><td>0.09870246</td><td>0.050176%</td><td>0</td></tr><tr><td>first_strategy</td><td>stress</td><td>-111.1639</td><td>-0.011116%</td><td>0.015764%</td><td>0.09930956</td><td>0.025585%</td><td>0</td></tr><tr><td>second_strategy</td><td>base</td><td>-186.3087</td><td>-0.018631%</td><td>0.031399%</td><td>0.09870246</td><td>0.050176%</td><td>0</td></tr><tr><td>second_strategy</td><td>stress</td><td>-111.1639</td><td>-0.011116%</td><td>0.015764%</td><td>0.09930956</td><td>0.025585%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_cash_direct_24</td><td>base</td><td>-229.8418</td><td>-0.022984%</td><td>0.032878%</td><td>0.09857458</td><td>0.050172%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_cash_direct_24</td><td>stress</td><td>-111.1639</td><td>-0.011116%</td><td>0.015764%</td><td>0.09930956</td><td>0.025585%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_decisiongate_24</td><td>base</td><td>-186.3087</td><td>-0.018631%</td><td>0.031399%</td><td>0.09870246</td><td>0.050176%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_decisiongate_24</td><td>stress</td><td>-111.1639</td><td>-0.011116%</td><td>0.015764%</td><td>0.09930956</td><td>0.025585%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_remaining_renewal_24</td><td>base</td><td>-186.3087</td><td>-0.018631%</td><td>0.031399%</td><td>0.09870246</td><td>0.050176%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_remaining_renewal_24</td><td>stress</td><td>-111.1639</td><td>-0.011116%</td><td>0.015764%</td><td>0.09930956</td><td>0.025585%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_remaining_remaining_24</td><td>base</td><td>-186.3087</td><td>-0.018631%</td><td>0.031399%</td><td>0.09870246</td><td>0.050176%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_remaining_remaining_24</td><td>stress</td><td>-111.1639</td><td>-0.011116%</td><td>0.015764%</td><td>0.09930956</td><td>0.025585%</td><td>0</td></tr></table><h2>par_extended / appended_day_flat_start</h2><table><tr><th>전략</th><th>조건</th><th>순손익</th><th>수익률</th><th>기간 σ</th><th>Q</th><th>최대낙폭</th><th>완료 페어</th></tr><tr><td>first_strategy</td><td>base</td><td>-6.8086</td><td>-0.000681%</td><td>—</td><td>—</td><td>0.000690%</td><td>0</td></tr><tr><td>first_strategy</td><td>stress</td><td>-3.6129</td><td>-0.000361%</td><td>—</td><td>—</td><td>0.000361%</td><td>0</td></tr><tr><td>second_strategy</td><td>base</td><td>-6.8086</td><td>-0.000681%</td><td>—</td><td>—</td><td>0.000690%</td><td>0</td></tr><tr><td>second_strategy</td><td>stress</td><td>-3.6129</td><td>-0.000361%</td><td>—</td><td>—</td><td>0.000361%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_cash_direct_24</td><td>base</td><td>-50.3820</td><td>-0.005038%</td><td>—</td><td>—</td><td>0.007382%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_cash_direct_24</td><td>stress</td><td>-3.6129</td><td>-0.000361%</td><td>—</td><td>—</td><td>0.000361%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_decisiongate_24</td><td>base</td><td>-6.8086</td><td>-0.000681%</td><td>—</td><td>—</td><td>0.000690%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_decisiongate_24</td><td>stress</td><td>-3.6129</td><td>-0.000361%</td><td>—</td><td>—</td><td>0.000361%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_remaining_renewal_24</td><td>base</td><td>-6.8086</td><td>-0.000681%</td><td>—</td><td>—</td><td>0.000690%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_remaining_renewal_24</td><td>stress</td><td>-3.6129</td><td>-0.000361%</td><td>—</td><td>—</td><td>0.000361%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_remaining_remaining_24</td><td>base</td><td>-6.8086</td><td>-0.000681%</td><td>—</td><td>—</td><td>0.000690%</td><td>0</td></tr><tr><td>first_dense_hourlyhedge_remaining_remaining_24</td><td>stress</td><td>-3.6129</td><td>-0.000361%</td><td>—</td><td>—</td><td>0.000361%</td><td>0</td></tr></table><h2>보유 판단 기록</h2><pre>[
+  {
+    &quot;venue&quot;: &quot;reference&quot;,
+    &quot;phase&quot;: &quot;validation&quot;,
+    &quot;kind&quot;: &quot;renewal&quot;,
+    &quot;scenario&quot;: &quot;base&quot;,
+    &quot;holding_reviews&quot;: 0,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 3,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;reference&quot;,
+    &quot;phase&quot;: &quot;validation&quot;,
+    &quot;kind&quot;: &quot;renewal&quot;,
+    &quot;scenario&quot;: &quot;stress&quot;,
+    &quot;holding_reviews&quot;: 0,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 2,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;reference&quot;,
+    &quot;phase&quot;: &quot;validation&quot;,
+    &quot;kind&quot;: &quot;remaining&quot;,
+    &quot;scenario&quot;: &quot;base&quot;,
+    &quot;holding_reviews&quot;: 24,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 3,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;reference&quot;,
+    &quot;phase&quot;: &quot;validation&quot;,
+    &quot;kind&quot;: &quot;remaining&quot;,
+    &quot;scenario&quot;: &quot;stress&quot;,
+    &quot;holding_reviews&quot;: 22,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 2,
+    &quot;renewal_vetoes&quot;: 1,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;reference&quot;,
+    &quot;phase&quot;: &quot;comparison&quot;,
+    &quot;kind&quot;: &quot;renewal&quot;,
+    &quot;scenario&quot;: &quot;base&quot;,
+    &quot;holding_reviews&quot;: 0,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 1,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;reference&quot;,
+    &quot;phase&quot;: &quot;comparison&quot;,
+    &quot;kind&quot;: &quot;renewal&quot;,
+    &quot;scenario&quot;: &quot;stress&quot;,
+    &quot;holding_reviews&quot;: 0,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 1,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;reference&quot;,
+    &quot;phase&quot;: &quot;comparison&quot;,
+    &quot;kind&quot;: &quot;remaining&quot;,
+    &quot;scenario&quot;: &quot;base&quot;,
+    &quot;holding_reviews&quot;: 45,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 2,
+    &quot;renewal_vetoes&quot;: 1,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;reference&quot;,
+    &quot;phase&quot;: &quot;comparison&quot;,
+    &quot;kind&quot;: &quot;remaining&quot;,
+    &quot;scenario&quot;: &quot;stress&quot;,
+    &quot;holding_reviews&quot;: 25,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 1,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;par&quot;,
+    &quot;phase&quot;: &quot;validation&quot;,
+    &quot;kind&quot;: &quot;renewal&quot;,
+    &quot;scenario&quot;: &quot;base&quot;,
+    &quot;holding_reviews&quot;: 0,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 0,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;par&quot;,
+    &quot;phase&quot;: &quot;validation&quot;,
+    &quot;kind&quot;: &quot;renewal&quot;,
+    &quot;scenario&quot;: &quot;stress&quot;,
+    &quot;holding_reviews&quot;: 0,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 0,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;par&quot;,
+    &quot;phase&quot;: &quot;validation&quot;,
+    &quot;kind&quot;: &quot;remaining&quot;,
+    &quot;scenario&quot;: &quot;base&quot;,
+    &quot;holding_reviews&quot;: 0,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 0,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;par&quot;,
+    &quot;phase&quot;: &quot;validation&quot;,
+    &quot;kind&quot;: &quot;remaining&quot;,
+    &quot;scenario&quot;: &quot;stress&quot;,
+    &quot;holding_reviews&quot;: 0,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 0,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;par&quot;,
+    &quot;phase&quot;: &quot;comparison&quot;,
+    &quot;kind&quot;: &quot;renewal&quot;,
+    &quot;scenario&quot;: &quot;base&quot;,
+    &quot;holding_reviews&quot;: 0,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 0,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;par&quot;,
+    &quot;phase&quot;: &quot;comparison&quot;,
+    &quot;kind&quot;: &quot;renewal&quot;,
+    &quot;scenario&quot;: &quot;stress&quot;,
+    &quot;holding_reviews&quot;: 0,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 0,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;par&quot;,
+    &quot;phase&quot;: &quot;comparison&quot;,
+    &quot;kind&quot;: &quot;remaining&quot;,
+    &quot;scenario&quot;: &quot;base&quot;,
+    &quot;holding_reviews&quot;: 0,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 0,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;par&quot;,
+    &quot;phase&quot;: &quot;comparison&quot;,
+    &quot;kind&quot;: &quot;remaining&quot;,
+    &quot;scenario&quot;: &quot;stress&quot;,
+    &quot;holding_reviews&quot;: 0,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 0,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;par_extended&quot;,
+    &quot;phase&quot;: &quot;extended&quot;,
+    &quot;kind&quot;: &quot;renewal&quot;,
+    &quot;scenario&quot;: &quot;base&quot;,
+    &quot;holding_reviews&quot;: 0,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 0,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;par_extended&quot;,
+    &quot;phase&quot;: &quot;extended&quot;,
+    &quot;kind&quot;: &quot;renewal&quot;,
+    &quot;scenario&quot;: &quot;stress&quot;,
+    &quot;holding_reviews&quot;: 0,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 0,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;par_extended&quot;,
+    &quot;phase&quot;: &quot;extended&quot;,
+    &quot;kind&quot;: &quot;remaining&quot;,
+    &quot;scenario&quot;: &quot;base&quot;,
+    &quot;holding_reviews&quot;: 0,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 0,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;par_extended&quot;,
+    &quot;phase&quot;: &quot;extended&quot;,
+    &quot;kind&quot;: &quot;remaining&quot;,
+    &quot;scenario&quot;: &quot;stress&quot;,
+    &quot;holding_reviews&quot;: 0,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 0,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;par_extended&quot;,
+    &quot;phase&quot;: &quot;appended_day_flat_start&quot;,
+    &quot;kind&quot;: &quot;renewal&quot;,
+    &quot;scenario&quot;: &quot;base&quot;,
+    &quot;holding_reviews&quot;: 0,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 0,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;par_extended&quot;,
+    &quot;phase&quot;: &quot;appended_day_flat_start&quot;,
+    &quot;kind&quot;: &quot;renewal&quot;,
+    &quot;scenario&quot;: &quot;stress&quot;,
+    &quot;holding_reviews&quot;: 0,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 0,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;par_extended&quot;,
+    &quot;phase&quot;: &quot;appended_day_flat_start&quot;,
+    &quot;kind&quot;: &quot;remaining&quot;,
+    &quot;scenario&quot;: &quot;base&quot;,
+    &quot;holding_reviews&quot;: 0,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 0,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  },
+  {
+    &quot;venue&quot;: &quot;par_extended&quot;,
+    &quot;phase&quot;: &quot;appended_day_flat_start&quot;,
+    &quot;kind&quot;: &quot;remaining&quot;,
+    &quot;scenario&quot;: &quot;stress&quot;,
+    &quot;holding_reviews&quot;: 0,
+    &quot;unavailable_holding&quot;: 0,
+    &quot;early_close_requests&quot;: 0,
+    &quot;renewal_vetoes&quot;: 0,
+    &quot;unavailable_renewal&quot;: 0,
+    &quot;arrival_joint_unwinds&quot;: 0
+  }
+]</pre><p>초기자본 1M, PnL은 기간 말 보유 평가손익을 포함한다. Q 계산은 현재 연구 기준식이며 J를 포함한 공식 확정 순위가 아니다. 실제 운용은 변경하지 않았고 예약된 미래 원시 자료는 열지 않았다.</p><h2>검토 결과: 기존 개선판 유지</h2>
+<p>두 새 후보는 모든 reference 기간·비용 조건에서 decisiongate보다 PnL·Q가 낮았다. 8월에서 어느 것도 승격하지 않았고 이후 결과로 다시 선정하지 않는다. 이전 개선 후보의 성과를 무효로 만드는 결과가 아니다.</p>
+<p>9월 이후 기본 조건에서 연장 거부판은 +3701.1718(Q 0.128039), 조기 청산 추가판은 +3129.2758(Q 0.120328)로 기존 +3852.7636(Q 0.130237)보다 낮다. 불리한 조건은 두 후보 모두 +2692.0931로 기존 +3305.7125보다 낮다.</p>
+<p>연장 거부판의 이후 기본 조건 가격 손익은 기존보다 +316.5271 늘었지만 체결 비용·수수료가 +467.2367 늘고 펀딩이 -0.8821 변해 최종 순손익은 -151.5918 감소했다. 조기 청산판은 가격 손익도 -285.8133 감소했다. 45개 보유 판단의 고정 수량 가격 변화 예측 오차는 96.9774bp로, 가격 변화 없음 94.9011bp보다 컸다. 거래에서 조건부로 선택된 겹치는 표본이므로 일반 예측력 검정이 아니다.</p>
+<p>9월 22일 연장 거부는 새 예측의 예상 보유 현금가치가 양수여도 기존의 넓은 지정가 한도에서의 최악 조정 비용 때문에 발생했다. 이후 청산과 재진입이 늘었다. 이를 해결할 다음 별도 실험은 현재 예상 체결가에서 예산이 유효하면 두 모델의 주문 가격 한도를 교집합으로 좁히는 것이다. 기존 한도를 넓히거나 특정 날짜를 예외 처리하지 않는다.</p>
+<p>새 모델 학습 12,668개, 신규 계좌 24개, 원래 계좌 12개 정확 재현, 검사 10개를 완료했다. par의 보유 판단은 발생하지 않아 성과가 원래와 같았으며 실제 par 수익성을 입증하지 못했다.</p>

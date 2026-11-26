@@ -1,0 +1,9 @@
+test_blocks_preserve_order_wrap_and_seed (experiments.hourly_pairs_robustness_20261017.test_analysis.AnalysisTests.test_blocks_preserve_order_wrap_and_seed) ... ok
+test_closing_fill_at_next_intent_belongs_to_old_episode (experiments.hourly_pairs_robustness_20261017.test_analysis.AnalysisTests.test_closing_fill_at_next_intent_belongs_to_old_episode) ... ok
+test_compounded_return_and_risk_scale (experiments.hourly_pairs_robustness_20261017.test_analysis.AnalysisTests.test_compounded_return_and_risk_scale) ... ok
+test_paired_identical_returns_have_zero_advantage (experiments.hourly_pairs_robustness_20261017.test_analysis.AnalysisTests.test_paired_identical_returns_have_zero_advantage) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.002s
+
+OK

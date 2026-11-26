@@ -1,0 +1,157 @@
+test_actual_funding_and_cost_attribution_reconcile_after_resize (experiments.paid_rehedge_pairs_20261017.test_rehedge.PaidAdjustmentTests.test_actual_funding_and_cost_attribution_reconcile_after_resize) ... ok
+test_added_exposure_uses_original_cumulative_loss_stop (experiments.paid_rehedge_pairs_20261017.test_rehedge.PaidAdjustmentTests.test_added_exposure_uses_original_cumulative_loss_stop) ... ok
+test_adjustment_trades_only_deltas_and_waits_for_actual_fills (experiments.paid_rehedge_pairs_20261017.test_rehedge.PaidAdjustmentTests.test_adjustment_trades_only_deltas_and_waits_for_actual_fills) ... ok
+test_economic_limits_budget_both_independent_legs (experiments.paid_rehedge_pairs_20261017.test_rehedge.PaidAdjustmentTests.test_economic_limits_budget_both_independent_legs) ... ok
+test_future_changes_leave_earlier_fills_and_decisions_invariant (experiments.paid_rehedge_pairs_20261017.test_rehedge.PaidAdjustmentTests.test_future_changes_leave_earlier_fills_and_decisions_invariant) ... ok
+test_independent_leg_risk_checked_even_when_final_pair_is_safe (experiments.paid_rehedge_pairs_20261017.test_rehedge.PaidAdjustmentTests.test_independent_leg_risk_checked_even_when_final_pair_is_safe) ... ok
+test_insufficient_value_does_not_pay_adjustment_cost (experiments.paid_rehedge_pairs_20261017.test_rehedge.PaidAdjustmentTests.test_insufficient_value_does_not_pay_adjustment_cost) ... ok
+test_new_maturity_cannot_bypass_hard_holding_limit (experiments.paid_rehedge_pairs_20261017.test_rehedge.PaidAdjustmentTests.test_new_maturity_cannot_bypass_hard_holding_limit) ... ok
+test_no_adjustment_needed_preserves_previous_renewal (experiments.paid_rehedge_pairs_20261017.test_rehedge.PaidAdjustmentTests.test_no_adjustment_needed_preserves_previous_renewal) ... ok
+test_old_control_paths_reproduce_exactly (experiments.paid_rehedge_pairs_20261017.test_rehedge.PaidAdjustmentTests.test_old_control_paths_reproduce_exactly) ... ok
+test_one_leg_fill_is_retained_and_paid_unwind_is_sticky (experiments.paid_rehedge_pairs_20261017.test_rehedge.PaidAdjustmentTests.test_one_leg_fill_is_retained_and_paid_unwind_is_sticky) ... ok
+test_other_leg_future_price_cannot_retroactively_cancel_fill (experiments.paid_rehedge_pairs_20261017.test_rehedge.PaidAdjustmentTests.test_other_leg_future_price_cannot_retroactively_cancel_fill) ... ok
+test_received_book_depth_partial_adjustment_is_not_atomic (experiments.paid_rehedge_pairs_20261017.test_rehedge.PaidAdjustmentTests.test_received_book_depth_partial_adjustment_is_not_atomic) ... ok
+test_repeat_source_and_tiny_delta_do_not_make_orders (experiments.paid_rehedge_pairs_20261017.test_rehedge.PaidAdjustmentTests.test_repeat_source_and_tiny_delta_do_not_make_orders) ... ok
+test_stop_anchor_includes_realized_resize_losses_without_fees_or_funding_reset (experiments.paid_rehedge_pairs_20261017.test_rehedge.PaidAdjustmentTests.test_stop_anchor_includes_realized_resize_losses_without_fees_or_funding_reset) ... ok
+test_unknown_book_outcome_keeps_pending_state_and_blocks_resubmission (experiments.paid_rehedge_pairs_20261017.test_rehedge.PaidAdjustmentTests.test_unknown_book_outcome_keeps_pending_state_and_blocks_resubmission) ... ok
+test_zero_fills_retain_old_maturity_without_fake_renewal (experiments.paid_rehedge_pairs_20261017.test_rehedge.PaidAdjustmentTests.test_zero_fills_retain_old_maturity_without_fake_renewal) ... ok
+test_busy_inventory_is_not_switched_and_identity_is_checked (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_busy_inventory_is_not_switched_and_identity_is_checked) ... ok
+test_costed_comparison_rejects_unfunded_switch (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_costed_comparison_rejects_unfunded_switch) ... ok
+test_delayed_partial_close_must_finish_before_new_entry (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_delayed_partial_close_must_finish_before_new_entry) ... ERROR
+test_disabled_policy_is_exact_old_engine (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_disabled_policy_is_exact_old_engine) ... ERROR
+test_future_market_and_forecast_values_cannot_change_current_plan (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_future_market_and_forecast_values_cannot_change_current_plan) ... ERROR
+test_missing_source_close_capacity_cannot_be_assumed (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_missing_source_close_capacity_cannot_be_assumed) ... ok
+test_opportunity_can_disappear_during_paid_close (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_opportunity_can_disappear_during_paid_close) ... ERROR
+test_partial_close_risk_can_reject (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_partial_close_risk_can_reject) ... ERROR
+test_stale_held_or_different_maturity_cannot_be_compared (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_stale_held_or_different_maturity_cannot_be_compared) ... ERROR
+
+======================================================================
+ERROR: test_delayed_partial_close_must_finish_before_new_entry (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_delayed_partial_close_must_finish_before_new_entry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/test_switch.py", line 83, in test_delayed_partial_close_must_finish_before_new_entry
+    r=self.run_arm();events=r['events']
+      ^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/test_switch.py", line 42, in run_arm
+    return engine(self.d,self.de,None,self.cfg,self.p,'pair_dense_hourlyhedge_switch_24',
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/portfolio.py", line 140, in replay
+    breach=risk_breaches(ledger.qty,equity,prices,sigma,p['risk'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/replay_lab/common_comparison/engine.py", line 91, in risk_breaches
+    values = risk_values(qty, equity, prices, sigma)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/replay_lab/common_comparison/engine.py", line 87, in risk_values
+    daily_volatility=float(np.sqrt(max(0.0, 24 * weights @ sigma @ weights))))
+                                            ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+ValueError: matmul: Input operand 0 does not have enough dimensions (has 0, gufunc core with signature (n?,k),(k,m?)->(n?,m?) requires 1)
+
+======================================================================
+ERROR: test_disabled_policy_is_exact_old_engine (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_disabled_policy_is_exact_old_engine)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/test_switch.py", line 79, in test_disabled_policy_is_exact_old_engine
+    self.assertEqual(self.run_arm(),self.run_arm(previous_replay))
+                     ^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/test_switch.py", line 42, in run_arm
+    return engine(self.d,self.de,None,self.cfg,self.p,'pair_dense_hourlyhedge_switch_24',
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/portfolio.py", line 140, in replay
+    breach=risk_breaches(ledger.qty,equity,prices,sigma,p['risk'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/replay_lab/common_comparison/engine.py", line 91, in risk_breaches
+    values = risk_values(qty, equity, prices, sigma)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/replay_lab/common_comparison/engine.py", line 87, in risk_values
+    daily_volatility=float(np.sqrt(max(0.0, 24 * weights @ sigma @ weights))))
+                                            ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+ValueError: matmul: Input operand 0 does not have enough dimensions (has 0, gufunc core with signature (n?,k),(k,m?)->(n?,m?) requires 1)
+
+======================================================================
+ERROR: test_future_market_and_forecast_values_cannot_change_current_plan (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_future_market_and_forecast_values_cannot_change_current_plan)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/test_switch.py", line 53, in test_future_market_and_forecast_values_cannot_change_current_plan
+    before=self.plan();self.assertTrue(before['accepted'])
+           ^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/test_switch.py", line 38, in plan
+    return switch_plan(pair,qty,2,self.d,self.de,self.cfg,self.p,self.cfg['scenarios']['base'],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/policy.py", line 55, in switch_plan
+    if risk_breaches(remaining,post_equity,marks,d['sigma'][i],p['risk']):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/replay_lab/common_comparison/engine.py", line 91, in risk_breaches
+    values = risk_values(qty, equity, prices, sigma)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/replay_lab/common_comparison/engine.py", line 87, in risk_values
+    daily_volatility=float(np.sqrt(max(0.0, 24 * weights @ sigma @ weights))))
+                                            ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+ValueError: matmul: Input operand 0 does not have enough dimensions (has 0, gufunc core with signature (n?,k),(k,m?)->(n?,m?) requires 1)
+
+======================================================================
+ERROR: test_opportunity_can_disappear_during_paid_close (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_opportunity_can_disappear_during_paid_close)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/test_switch.py", line 100, in test_opportunity_can_disappear_during_paid_close
+    r=self.run_arm();flat=next(e for e in r['events'] if e['event']=='switch_flat_confirmed')
+      ^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/test_switch.py", line 42, in run_arm
+    return engine(self.d,self.de,None,self.cfg,self.p,'pair_dense_hourlyhedge_switch_24',
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/portfolio.py", line 140, in replay
+    breach=risk_breaches(ledger.qty,equity,prices,sigma,p['risk'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/replay_lab/common_comparison/engine.py", line 91, in risk_breaches
+    values = risk_values(qty, equity, prices, sigma)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/replay_lab/common_comparison/engine.py", line 87, in risk_values
+    daily_volatility=float(np.sqrt(max(0.0, 24 * weights @ sigma @ weights))))
+                                            ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+ValueError: matmul: Input operand 0 does not have enough dimensions (has 0, gufunc core with signature (n?,k),(k,m?)->(n?,m?) requires 1)
+
+======================================================================
+ERROR: test_partial_close_risk_can_reject (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_partial_close_risk_can_reject)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/test_switch.py", line 69, in test_partial_close_risk_can_reject
+    self.assertEqual(self.plan()['reason'],'partial_close_global_risk')
+                     ^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/test_switch.py", line 38, in plan
+    return switch_plan(pair,qty,2,self.d,self.de,self.cfg,self.p,self.cfg['scenarios']['base'],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/policy.py", line 55, in switch_plan
+    if risk_breaches(remaining,post_equity,marks,d['sigma'][i],p['risk']):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/replay_lab/common_comparison/engine.py", line 91, in risk_breaches
+    values = risk_values(qty, equity, prices, sigma)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/replay_lab/common_comparison/engine.py", line 87, in risk_values
+    daily_volatility=float(np.sqrt(max(0.0, 24 * weights @ sigma @ weights))))
+                                            ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+ValueError: matmul: Input operand 0 does not have enough dimensions (has 0, gufunc core with signature (n?,k),(k,m?)->(n?,m?) requires 1)
+
+======================================================================
+ERROR: test_stale_held_or_different_maturity_cannot_be_compared (experiments.opportunity_switch_pairs_20261018.test_switch.SwitchTests.test_stale_held_or_different_maturity_cannot_be_compared)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/test_switch.py", line 61, in test_stale_held_or_different_maturity_cannot_be_compared
+    self.assertEqual(self.plan()['reason'],'no_cost_qualified_alternative')
+                     ^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/test_switch.py", line 38, in plan
+    return switch_plan(pair,qty,2,self.d,self.de,self.cfg,self.p,self.cfg['scenarios']['base'],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/experiments/opportunity_switch_pairs_20261018/policy.py", line 55, in switch_plan
+    if risk_breaches(remaining,post_equity,marks,d['sigma'][i],p['risk']):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/replay_lab/common_comparison/engine.py", line 91, in risk_breaches
+    values = risk_values(qty, equity, prices, sigma)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssd-990/soobeenkim/icaif_competition_2026/replay_lab/common_comparison/engine.py", line 87, in risk_values
+    daily_volatility=float(np.sqrt(max(0.0, 24 * weights @ sigma @ weights))))
+                                            ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+ValueError: matmul: Input operand 0 does not have enough dimensions (has 0, gufunc core with signature (n?,k),(k,m?)->(n?,m?) requires 1)
+
+----------------------------------------------------------------------
+Ran 26 tests in 1.628s
+
+FAILED (errors=6)

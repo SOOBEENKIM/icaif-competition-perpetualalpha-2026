@@ -1,0 +1,159 @@
+{
+  "collected_wallets": 49,
+  "funded_wallets": 47,
+  "funded_trading_wallets": 31,
+  "current_direction_counts": {
+    "숏만": 2,
+    "롱+숏": 13,
+    "롱만": 12,
+    "무포지션": 4
+  },
+  "historical_direction_counts": {
+    "롱+숏 진입": 19,
+    "롱 진입만": 12
+  },
+  "official_generated_at": "2026-10-21T12:09:00.000746167Z",
+  "official_ranked_teams": 31,
+  "sfinx": {
+    "address": "0x125778065a578d598d88bddaa3fdd635280d0e47",
+    "name": "SFINX",
+    "funded_team": true,
+    "single_grant_100k": true,
+    "first_fill": "10/19 21:02:03",
+    "last_fill": "10/21 18:13:52",
+    "snapshot_kst": "2026-10-21T21:27:26.141526+09:00",
+    "history_end_kst": "10/21 21:27:26",
+    "fills": 6,
+    "filled_orders": 4,
+    "trading_days": 2,
+    "markets_traded": [
+      "pas:BTC",
+      "pas:ETH",
+      "pas:HYPE"
+    ],
+    "current": "롱+숏",
+    "historical": "롱+숏 진입",
+    "positions": 2,
+    "long_notional": 1584.86742,
+    "short_notional": 1001.8979199999999,
+    "gross_notional": 2586.76534,
+    "net_notional": 582.9695000000002,
+    "configured_leverages": [
+      1
+    ],
+    "mode": "unifiedAccount",
+    "net_external_funding": 100000.0,
+    "equity": 100025.57376,
+    "equity_source": "unified USDP total, includes PnL",
+    "balance_net_pnl": 25.57375999999931,
+    "trade_net_pnl": 25.57376,
+    "return_pct": 0.025573759999999314,
+    "accounting_snapshot_difference": -6.892264536872972e-13,
+    "gross_equity_pct": 2.5861039759758335,
+    "effective_gross_leverage": 0.025861039759758335,
+    "net_equity_pct": 0.5828204508966569,
+    "margin_used": 2586.76534,
+    "open_orders": 0,
+    "maker_notional_pct": 0.0,
+    "order_types": {
+      "Limit": 4
+    },
+    "order_statuses": {
+      "filled": 4
+    },
+    "historical_orders_returned": 8,
+    "history_issues": [],
+    "closed_pnl": 3.696,
+    "fees": 2.8078250000000002,
+    "funding": 6.123575,
+    "unrealized": 18.56201,
+    "volume": 3119.80913,
+    "open_long_notional": 1840.26031,
+    "open_short_notional": 997.7728200000001,
+    "close_long_notional": 281.776,
+    "close_short_notional": 0.0,
+    "maker_notional": 0.0,
+    "time_in_force": {
+      "Ioc": 4
+    },
+    "historical_unique_orders": 4,
+    "wallet_snapshot_pnl_rank": 9
+  },
+  "sfinx_official": {
+    "name": "SFINX",
+    "ranked": true,
+    "return": 0.00024388400000008303,
+    "volatility": 0.00043422240554931045,
+    "volatility_horizon": 0.0006140832150141051,
+    "rank": 11,
+    "q": 0.10248965300074157,
+    "score": 0.08199172240059327,
+    "eligible": true,
+    "reasons": null,
+    "jury_implied": 0.0
+  },
+  "median_gross_equity_pct": 5.814086990646948,
+  "wallet_history_issues": [
+    {
+      "address": "0x7a25cf5798af0604482fa5d5850e908256eda181",
+      "issues": [
+        "incomplete position chain: pas:BRENT",
+        "incomplete position chain: pas:BTC",
+        "incomplete position chain: pas:ETH",
+        "incomplete position chain: pas:EWJ",
+        "incomplete position chain: pas:EWY",
+        "incomplete position chain: pas:HYPE",
+        "incomplete position chain: pas:SP500",
+        "incomplete position chain: pas:USDJPY",
+        "inventory_mismatch:pas:BRENT",
+        "inventory_mismatch:pas:BTC",
+        "inventory_mismatch:pas:ETH",
+        "inventory_mismatch:pas:EWJ",
+        "inventory_mismatch:pas:EWY",
+        "inventory_mismatch:pas:HYPE",
+        "inventory_mismatch:pas:SP500",
+        "inventory_mismatch:pas:USDJPY",
+        "opening_capital_and_inventory_not_established",
+        "position transition mismatch: pas:BRENT",
+        "position transition mismatch: pas:BTC",
+        "position transition mismatch: pas:ETH",
+        "position transition mismatch: pas:EWJ",
+        "position transition mismatch: pas:EWY",
+        "position transition mismatch: pas:HYPE",
+        "position transition mismatch: pas:SP500",
+        "position transition mismatch: pas:USDJPY"
+      ]
+    },
+    {
+      "address": "0x7a87cd448df409290a0cc9bae68eb66fff24e672",
+      "issues": [
+        "incomplete position chain: pas:BRENT",
+        "incomplete position chain: pas:BTC",
+        "incomplete position chain: pas:ETH",
+        "incomplete position chain: pas:EWJ",
+        "incomplete position chain: pas:EWY",
+        "incomplete position chain: pas:HYPE",
+        "incomplete position chain: pas:SP500",
+        "incomplete position chain: pas:USDJPY",
+        "inventory_mismatch:pas:BRENT",
+        "inventory_mismatch:pas:BTC",
+        "inventory_mismatch:pas:ETH",
+        "inventory_mismatch:pas:EWJ",
+        "inventory_mismatch:pas:EWY",
+        "inventory_mismatch:pas:HYPE",
+        "inventory_mismatch:pas:SP500",
+        "inventory_mismatch:pas:USDJPY",
+        "opening_capital_and_inventory_not_established",
+        "position transition mismatch: pas:BRENT",
+        "position transition mismatch: pas:BTC",
+        "position transition mismatch: pas:ETH",
+        "position transition mismatch: pas:EWJ",
+        "position transition mismatch: pas:EWY",
+        "position transition mismatch: pas:HYPE",
+        "position transition mismatch: pas:SP500",
+        "position transition mismatch: pas:USDJPY"
+      ]
+    }
+  ],
+  "name_mapping_available": false
+}

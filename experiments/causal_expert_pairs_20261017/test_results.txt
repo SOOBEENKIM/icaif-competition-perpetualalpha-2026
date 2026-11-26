@@ -1,0 +1,12 @@
+test_convex_bounds_and_uniform_fallback (experiments.causal_expert_pairs_20261017.test_model.CausalExpertTests.test_convex_bounds_and_uniform_fallback) ... ok
+test_future_prices_and_features_do_not_change_earlier_weights (experiments.causal_expert_pairs_20261017.test_model.CausalExpertTests.test_future_prices_and_features_do_not_change_earlier_weights) ... ok
+test_maturity_boundary_is_strict_and_weights_use_issued_predictions (experiments.causal_expert_pairs_20261017.test_model.CausalExpertTests.test_maturity_boundary_is_strict_and_weights_use_issued_predictions) ... ok
+test_missing_terminal_or_expert_cannot_enter_weight_training (experiments.causal_expert_pairs_20261017.test_model.CausalExpertTests.test_missing_terminal_or_expert_cannot_enter_weight_training) ... ok
+test_original_experts_remain_exact (experiments.causal_expert_pairs_20261017.test_model.CausalExpertTests.test_original_experts_remain_exact) ... ok
+test_reject_wrong_horizon (experiments.causal_expert_pairs_20261017.test_model.CausalExpertTests.test_reject_wrong_horizon) ... ok
+test_simplex_solution_matches_independent_constrained_optimizer (experiments.causal_expert_pairs_20261017.test_model.CausalExpertTests.test_simplex_solution_matches_independent_constrained_optimizer) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 7.590s
+
+OK

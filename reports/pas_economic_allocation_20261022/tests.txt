@@ -1,0 +1,11 @@
+test_cost_creates_no_trade_region_and_funding_payments_are_full (pas_economic_allocation.test_contracts.AllocationTests.test_cost_creates_no_trade_region_and_funding_payments_are_full) ... ok
+test_every_market_can_go_long_or_short_and_zero_liquidity_cannot_open (pas_economic_allocation.test_contracts.AllocationTests.test_every_market_can_go_long_or_short_and_zero_liquidity_cannot_open) ... ok
+test_matches_independent_convex_solver_and_short_symmetry (pas_economic_allocation.test_contracts.AllocationTests.test_matches_independent_convex_solver_and_short_symmetry) ... ok
+test_uses_actual_inventory_and_does_not_restore_quantity_after_cap (pas_economic_allocation.test_contracts.AllocationTests.test_uses_actual_inventory_and_does_not_restore_quantity_after_cap) ... ok
+test_current_funding_settlement_is_not_used_at_same_timestamp (pas_economic_allocation.test_contracts.CausalityTests.test_current_funding_settlement_is_not_used_at_same_timestamp) ... ok
+test_future_poison_and_prefix_cannot_change_fitted_model_or_past_features (pas_economic_allocation.test_contracts.CausalityTests.test_future_poison_and_prefix_cannot_change_fitted_model_or_past_features) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.118s
+
+OK

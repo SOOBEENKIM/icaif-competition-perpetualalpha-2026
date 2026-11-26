@@ -1,0 +1,11 @@
+test_daily_training_strict_maturity_and_weight_mass (experiments.daily_tree_pairs_20261017.test_model.DailyTreeTests.test_daily_training_strict_maturity_and_weight_mass) ... ok
+test_direct_control_is_unchanged (experiments.daily_tree_pairs_20261017.test_model.DailyTreeTests.test_direct_control_is_unchanged) ... ok
+test_fixed_equal_mix_and_risk_inputs (experiments.daily_tree_pairs_20261017.test_model.DailyTreeTests.test_fixed_equal_mix_and_risk_inputs) ... ok
+test_future_mutation_preserves_earlier_predictions_and_tree_hashes (experiments.daily_tree_pairs_20261017.test_model.DailyTreeTests.test_future_mutation_preserves_earlier_predictions_and_tree_hashes) ... ok
+test_insufficient_training_produces_no_model (experiments.daily_tree_pairs_20261017.test_model.DailyTreeTests.test_insufficient_training_produces_no_model) ... ok
+test_roundtrip_saved_model_and_unmatured_label_rejected (experiments.daily_tree_pairs_20261017.test_model.DailyTreeTests.test_roundtrip_saved_model_and_unmatured_label_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 11.636s
+
+OK

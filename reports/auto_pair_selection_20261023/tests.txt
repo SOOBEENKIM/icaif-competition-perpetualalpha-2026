@@ -1,0 +1,18 @@
+test_adapter_rejects_backdated_or_revised_publication (auto_pair_selection.test_selection.SelectionTests.test_adapter_rejects_backdated_or_revised_publication) ... ok
+test_all_45_identities_and_noncrypto_pair_can_pass (auto_pair_selection.test_selection.SelectionTests.test_all_45_identities_and_noncrypto_pair_can_pass) ... ok
+test_deselection_only_blocks_new_entry_not_held_forecast (auto_pair_selection.test_selection.SelectionTests.test_deselection_only_blocks_new_entry_not_held_forecast) ... ok
+test_expansion_does_not_invent_gate_permission (auto_pair_selection.test_selection.SelectionTests.test_expansion_does_not_invent_gate_permission) ... ok
+test_future_prices_cannot_change_selection (auto_pair_selection.test_selection.SelectionTests.test_future_prices_cannot_change_selection) ... ok
+test_midday_restart_does_not_backdate_midnight_model (auto_pair_selection.test_selection.SelectionTests.test_midday_restart_does_not_backdate_midnight_model) ... ok
+test_missing_hour_and_wrong_asset_order_are_errors (auto_pair_selection.test_selection.SelectionTests.test_missing_hour_and_wrong_asset_order_are_errors) ... ok
+test_stale_or_thin_leg_is_rejected_with_reason (auto_pair_selection.test_selection.SelectionTests.test_stale_or_thin_leg_is_rejected_with_reason) ... ok
+test_training_excludes_unmatured_labels (auto_pair_selection.test_selection.SelectionTests.test_training_excludes_unmatured_labels) ... ok
+test_active_pair_blocks_replacement_and_duplicate_forecast_rejected (auto_pair_selection.test_execution.ExecutionCompatibilityTests.test_active_pair_blocks_replacement_and_duplicate_forecast_rejected) ... ok
+test_bad_asset_mapping_is_rejected (auto_pair_selection.test_execution.ExecutionCompatibilityTests.test_bad_asset_mapping_is_rejected) ... ok
+test_noncrypto_entry_preview_and_current_book_veto (auto_pair_selection.test_execution.ExecutionCompatibilityTests.test_noncrypto_entry_preview_and_current_book_veto) ... ok
+test_noncrypto_pair_enters_both_legs_and_pays_exit_without_touching_base (auto_pair_selection.test_execution.ExecutionCompatibilityTests.test_noncrypto_pair_enters_both_legs_and_pays_exit_without_touching_base) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.811s
+
+OK

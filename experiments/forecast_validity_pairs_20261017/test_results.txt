@@ -1,0 +1,13 @@
+test_control_account_paths_remain_exact (experiments.forecast_validity_pairs_20261017.test_validity.ValidityTests.test_control_account_paths_remain_exact) ... ok
+test_expanded_validity_does_not_make_stale_price_profitable (experiments.forecast_validity_pairs_20261017.test_validity.ValidityTests.test_expanded_validity_does_not_make_stale_price_profitable) ... ok
+test_future_sources_or_new_validity_beyond_refresh_are_rejected (experiments.forecast_validity_pairs_20261017.test_validity.ValidityTests.test_future_sources_or_new_validity_beyond_refresh_are_rejected) ... ok
+test_invalid_new_source_cannot_reuse_previous_forecast (experiments.forecast_validity_pairs_20261017.test_validity.ValidityTests.test_invalid_new_source_cannot_reuse_previous_forecast) ... ok
+test_later_economic_entry_retains_original_terminal_and_maturity (experiments.forecast_validity_pairs_20261017.test_validity.ValidityTests.test_later_economic_entry_retains_original_terminal_and_maturity) ... ok
+test_no_valid_source_seen_does_not_invent_history (experiments.forecast_validity_pairs_20261017.test_validity.ValidityTests.test_no_valid_source_seen_does_not_invent_history) ... ok
+test_one_hour_mapping_and_all_forecast_values_are_unchanged (experiments.forecast_validity_pairs_20261017.test_validity.ValidityTests.test_one_hour_mapping_and_all_forecast_values_are_unchanged) ... ok
+test_prefix_invariance_when_future_source_is_changed (experiments.forecast_validity_pairs_20261017.test_validity.ValidityTests.test_prefix_invariance_when_future_source_is_changed) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.457s
+
+OK

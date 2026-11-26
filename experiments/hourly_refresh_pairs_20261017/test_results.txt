@@ -1,0 +1,10 @@
+test_all_existing_execution_variants_remain_exact (experiments.hourly_refresh_pairs_20261017.test_hourly.HourlyInferenceTests.test_all_existing_execution_variants_remain_exact) ... ok
+test_future_prices_do_not_change_earlier_predictions_or_calibration (experiments.hourly_refresh_pairs_20261017.test_hourly.HourlyInferenceTests.test_future_prices_do_not_change_earlier_predictions_or_calibration) ... ok
+test_intrahour_mapping_cannot_use_next_complete_bar (experiments.hourly_refresh_pairs_20261017.test_hourly.HourlyInferenceTests.test_intrahour_mapping_cannot_use_next_complete_bar) ... ok
+test_new_hour_uses_new_price_and_keeps_its_own_maturity (experiments.hourly_refresh_pairs_20261017.test_hourly.HourlyInferenceTests.test_new_hour_uses_new_price_and_keeps_its_own_maturity) ... ok
+test_six_hour_control_exact_and_hourly_coefficients_only_use_mature_rows (experiments.hourly_refresh_pairs_20261017.test_hourly.HourlyInferenceTests.test_six_hour_control_exact_and_hourly_coefficients_only_use_mature_rows) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 2.689s
+
+OK

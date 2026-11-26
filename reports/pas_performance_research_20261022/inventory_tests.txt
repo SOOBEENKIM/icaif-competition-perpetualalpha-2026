@@ -1,0 +1,5 @@
+PASS test_entry_filter_does_not_liquidate_surviving_position
+PASS test_exit_and_risk_reduction_always_survive
+PASS test_short_reversal_and_future_prefix
+PASS test_all_ten_markets_are_eligible_both_sides
+4 checks across 5 policies passed
