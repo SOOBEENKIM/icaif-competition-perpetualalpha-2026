@@ -1,5 +1,9 @@
 # Perpetual Alpha — 선택 전략
 
+> **데이터·전체 파일 (Google Drive):** https://drive.google.com/file/d/1WjmRSiIBOREia7xPZ-pFvXeJI6cESZjS/view?usp=drive_link
+>
+> 이 저장소에는 코드와 문서만 들어 있습니다. 시장 데이터(`history/`, `replay_lab/.../data/` 등), 실험 결과, Chronos 모델 가중치(`runtime/pretrained/`), 그 밖에 용량 때문에 올리지 않은 파일과 코드는 위 Google Drive 링크의 원본 폴더 전체 압축본에 있습니다. 실행·재현하려면 받아서 이 저장소 위치에 풀어 주세요.
+
 2026-10-15: 추세＋7일 되돌림을 공통 매매 로직으로 선택했습니다. 고정 규모 보정판을 기본값으로, 원래 규모를 비교 대상으로 사용합니다.
 
 | 프로필 | 원래 규모 대비 | 기존 정책 ID |
